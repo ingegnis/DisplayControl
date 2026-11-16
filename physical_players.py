@@ -56,7 +56,7 @@ def subset(state, sid):
     playlists = [x for x in state['playlists'] if x['id'] in pids]
     for pl in playlists:
         aids.update(x.get('assetId') for x in pl.get('items', []))
-    # Same fallback as the existing player when an explicit fallback is absent.
+    # Reuse the player default when no fallback is assigned.
     poster = next((a for a in state['assets'] if a.get('kind') == 'poster'), None)
     if poster: aids.add(poster['id'])
     return dict(schemaVersion=1, site=state['site'], screens=[screen],
@@ -97,7 +97,7 @@ def _handle(h, path, heartbeats, heartbeat_lock):
     if path == '/api/player/pair' and h.command == 'POST':
         ip = h.client_address[0]
         with LOCK:
-            # Discard old buckets; never accumulate arbitrary clients indefinitely.
+            # Expire buckets to bound client tracking.
             for k in list(ATTEMPTS):
                 while ATTEMPTS[k] and now - ATTEMPTS[k][0] >= 60: ATTEMPTS[k].popleft()
                 if not ATTEMPTS[k]: del ATTEMPTS[k]

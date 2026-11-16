@@ -85,7 +85,7 @@ def parse_script(text: str):
             if title:
                 pending.append(title)
             continue
-        # Preserve deliberate blank lines but avoid unlimited runs.
+        # Preserve blank lines within limits.
         if raw.strip() == '' and lines and lines[-1]['text'] == '':
             continue
         line = {'id': f'l{len(lines)+1}', 'text': raw.rstrip()[:4000]}
@@ -432,7 +432,7 @@ class PromptStore:
                 'backupReady':ready,'syncDeltaVh':sync_delta,'lastOsc':self.last_osc}
 
 
-# ---- OSC 1.0 minimal codec -------------------------------------------------
+# Minimal OSC 1.0 codec.
 def _osc_pad4(n): return (n + 3) & ~3
 
 def _osc_string(data, pos):
@@ -575,7 +575,7 @@ def handle_prompt(h, path):
                 if body is not None: h.reply({'ok':True,'status':store.heartbeat(dev,body)})
                 return True
             raise GatewayError('Endpoint player Prompt non trovato.',404)
-        # Everything below is admin/control-token protected.
+        # Remaining routes require an admin/control token.
         if not h.authorized(): return True
         if path == '/api/prompt/state' and h.command in ('GET','HEAD'):
             value=store.admin_state(); value['osc']=h.server.prompt_osc.status(); h.reply(value); return True

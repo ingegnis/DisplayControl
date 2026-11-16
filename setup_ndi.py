@@ -130,8 +130,7 @@ def verified_ffmpeg_archive(cache: Path) -> Path:
                 return archive
         except (OSError, ValueError, SetupError):
             pass
-    # A publisher can update a floating download URL between two requests.
-    # Retry the pair once; never install a mismatching or incomplete archive.
+    # Floating URLs may change: retry hash/archive once; reject mismatches.
     for attempt in range(2):
         say('FFmpeg: scarico checksum e build Windows x64 da gyan.dev.')
         download(FFMPEG_HASH_URL, checksum, max_bytes=16384)
@@ -243,8 +242,7 @@ def read_settings(root: Path) -> dict:
 
 
 def apply_settings(root: Path) -> None:
-    # A successful repair records tested paths. They take precedence for these
-    # project launchers only. Config_Locale.bat and the system are not edited.
+    # Prefer verified paths for project launchers; preserve local/system settings.
     settings = read_settings(root)
     for key, variable in [('ffmpeg', 'CARISMA_FFMPEG'), ('ndi', 'CARISMA_NDI_LIBRARY')]:
         resolved = resolve_path(root, settings.get(key, ''))
@@ -298,7 +296,7 @@ def install_ndi(root: Path) -> None:
         download(NDI_URL, installer)
     say('NDI: verifica firma digitale e apertura installer ufficiale.')
     say('Leggi e accetta la licenza nella finestra NDI. Windows puo chiedere conferma amministratore.')
-    # No silent EULA acceptance and no untrusted command construction.
+    # Keep license acceptance interactive and commands trusted.
     helper = root / 'Windows_InstallatoreFirmato.ps1'
     p = subprocess.run(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass',
                         '-File', str(helper), '-InstallerPath', str(installer), '-Product', 'NDI'],
@@ -348,7 +346,7 @@ def repair(root: Path) -> dict:
         if not ff['available']:
             raise SetupError(ff['error'])
     os.environ['CARISMA_FFMPEG'] = ff['path']
-    # Save completed work even if a later interactive NDI installation is cancelled.
+    # Save progress before interactive NDI installation.
     save_settings(root, ffmpeg=ff['path'])
     ndi = probe_ndi(root)
     if not ndi['available'] and os.environ.get('CARISMA_NDI_LIBRARY'):

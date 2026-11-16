@@ -137,7 +137,7 @@ class MonitorStore:
                 mediaTime=number(body.get('mediaTime')), bufferSeconds=number(body.get('bufferSeconds')),
                 paused=bool(body.get('paused')), hidden=bool(body.get('hidden')))
             self.accepted[sid] = now
-            # Bounded by normal project limit, also under direct authenticated calls.
+            # Enforce project limits on direct API calls too.
             while len(self.frames) > 200:
                 self.remove(min(self.frames, key=lambda k: self.frames[k]['seq']))
             self.traffic.append((now, len(encoded)))

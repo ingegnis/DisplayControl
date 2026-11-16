@@ -38,7 +38,7 @@ class DeliveryTests(unittest.TestCase):
     def test_connection_refused_allows_real_udp_fallback(self):
         with tempfile.TemporaryDirectory() as d:
             store=PromptStore(Path(d));listener=PromptOscServer(store,bind='127.0.0.1',port=0)
-            # Production can disable OSC with port 0; the test reserves a real port.
+            # Reserve a real OSC port; zero disables production OSC.
             with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as reserve:
                 reserve.bind(('127.0.0.1',0));port=reserve.getsockname()[1]
             listener.port=port;listener.start()

@@ -1,4 +1,4 @@
-# Carisma Prompt v0.8-alpha — comandi OSC UDP
+# Prompt 0.8 — OSC UDP commands
 /carisma/prompt/play
 /carisma/prompt/pause
 /carisma/prompt/toggle
@@ -11,7 +11,7 @@
 /carisma/prompt/cue/<id>
 /carisma/prompt/top
 /carisma/prompt/blackout 1
-/carisma/prompt/message "5 MINUTI"
+/carisma/prompt/message "5 MINUTES"
 /carisma/prompt/message/clear
 /carisma/prompt/take/primary
 /carisma/prompt/take/backup

@@ -1,4 +1,4 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Carisma | Orologio animato</title><style>*{box-sizing:border-box}body{margin:0;background:#0c211e;min-height:100vh;display:flex;align-items:center;justify-content:center}.clock-stage{width:min(100vw,177.7778vh);aspect-ratio:16/9}/* Local clock: CSS and system fonts only. No video, CDN or remote fonts. */
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Carisma | Orologio animato</title><style>*{box-sizing:border-box}body{margin:0;background:#0c211e;min-height:100vh;display:flex;align-items:center;justify-content:center}.clock-stage{width:min(100vw,177.7778vh);aspect-ratio:16/9}/* Local clock styles and system fonts. */
 .dc-time{--dc-bg:#132f2b;--dc-fg:#f1edda;--dc-soft:#adbc9e;--dc-accent:#f0a878;--dc-line:#d6dfb333;position:relative;display:block!important;aspect-ratio:16/9;width:100%;overflow:hidden;isolation:isolate;container-type:inline-size;background:var(--dc-bg)!important;color:var(--dc-fg)!important;font-family:Inter,"Segoe UI",Arial,sans-serif}
 .dc-time.dc-sand{--dc-bg:#eee5d2;--dc-fg:#304438;--dc-soft:#68795f;--dc-accent:#af583b;--dc-line:#5b72552d}
 .dc-time.dc-night{--dc-bg:#18243a;--dc-fg:#f3ede6;--dc-soft:#a1b1cc;--dc-accent:#b7b9f2;--dc-line:#abb9e133}
@@ -37,7 +37,7 @@
 @keyframes dc-breathe{from{transform:translate(-3%,-2%) scale(.96)}to{transform:translate(3%,2%) scale(1.08)}}
 @keyframes dc-pulse{0%,100%{opacity:.38}50%{opacity:.75}}
 @media(prefers-reduced-motion:reduce){.dc-time *,.dc-time::before{animation:none!important;transition:none!important}}
-</style></head><body><main class="clock-stage" id="clock"></main><script>/* Reusable clock renderer. Uses the device clock, including while disconnected. */
+</style></head><body><main class="clock-stage" id="clock"></main><script>/* Shared clock renderer; device time works offline. */
 window.CarismaClock = (() => {
   'use strict';
   const formatters = new Map();
@@ -93,7 +93,7 @@ window.CarismaClock = (() => {
       if (first || resync || (clock._clockTime && Math.abs(instant-clock._clockTime)>4000)) {
         const dot=clock.querySelector('.dc-orbit-dot');
         dot.style.setProperty('--dc-delay',(-second)+'s');
-        // Restart only on initial rendering, resume, or a system-clock jump.
+        // Restart on first render, resume or clock jump.
         dot.style.animationName='none'; void dot.offsetWidth; dot.style.animationName='';
       }
       clock._clockTime=instant;

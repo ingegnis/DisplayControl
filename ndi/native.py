@@ -226,7 +226,7 @@ class Runtime:
             self._dll_dirs.clear()
 
 
-# A small indirection makes path lookup independently testable.
+# Isolate path lookup for tests.
 def ctypes_find_library(name):
     return C.util.find_library(name)
 
@@ -239,7 +239,7 @@ class Receiver:
         self.lock = threading.RLock()
         self.name = source_name.encode('utf-8')
         self.receiver_name = b'Carisma Display Control / Gateway'
-        # Keep the finder alive for discovery / reconnect. Do not persist source IPs.
+        # Keep discovery alive for reconnect; do not persist source IPs.
         runtime.sources()
         settings = RecvSettings(Source(self.name, None), 0, 0 if low_bandwidth else 100,
                                 False, self.receiver_name)

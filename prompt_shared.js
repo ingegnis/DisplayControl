@@ -1,6 +1,4 @@
-/* One layout and one monotonic timeline for console preview and prompt players.
- * Existing offsetVh/rate fields now reference a fixed 1280x720 virtual page.
- * No screen-width, viewport-height or frame-rate dependent text coordinates.
+/* Shared Prompt layout/timeline: offsetVh and rate use a fixed 1280x720 page.
  */
 (() => {
   'use strict';
@@ -12,8 +10,7 @@
       if(!runtime||!Number.isFinite(seq)||!Number.isFinite(Number(runtime.offsetVh)))return false;
       if(this.runtime&&seq<Number(this.runtime.seq))return false;
       if(this.runtime&&seq===Number(this.runtime.seq)){
-        // Same command: retain the local monotonic clock across polls/outages.
-        // Receiving another sample must never restart or rewind the scroll.
+        // Keep the monotonic timeline across duplicate polls and outages.
         return true;
       }
       this.runtime={...runtime};this.received=now;

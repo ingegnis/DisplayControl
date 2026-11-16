@@ -1,6 +1,5 @@
-/* Cache only the application shell. Media and manifests use IndexedDB.
- * Service workers require localhost or HTTPS. No claim of cold-start offline
- * on plain HTTP LAN addresses is made by this browser prototype.
+/* Cache the shell; media/manifests use IndexedDB.
+ * Service workers need localhost/HTTPS; plain LAN HTTP cold-start is unverified.
  */
 const CACHE = 'carisma-shell-v09';
 const SHELL = ['./index.html','./favicon.svg','./branding.js','./prompt_shared.js',

@@ -23,7 +23,7 @@ def build_fixture(folder):
     if shutil.which('gcc'):
         subprocess.run(['gcc','-shared','-fPIC',str(ROOT/'tests/fake_ndi.c'),'-o',str(lib),'-lm'],check=True,capture_output=True)
     else:
-        # vcvars initializes compiler environment; no installation or system changes.
+        # Initialize compiler environment with vcvars; change no system settings.
         setup=folder/'compiler_env.cmd'
         setup.write_text('@echo off\ncall "'+str(VARS)+'" >nul\nif errorlevel 1 exit /b 1\nset\n')
         result=subprocess.run(['cmd','/d','/c',str(setup)],capture_output=True,text=True,check=True)

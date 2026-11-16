@@ -23,8 +23,7 @@ PROFILES = {
     'light': {'label': 'Leggero / 640 x 360 / 15 fps', 'width': 640, 'height': 360, 'fps': 15, 'bitrate': '800k'},
     'standard': {'label': 'Standard / 1280 x 720 / 25 fps', 'width': 1280, 'height': 720, 'fps': 25, 'bitrate': '2200k'},
 }
-# Buffer policy is server-side, fixed and not supplied by an untrusted player.
-# Target buffer is NOT a measurement of source-to-screen latency.
+# Server-owned buffer policy; queue targets are not end-to-end latency.
 PLAYBACK_MODES = {
     'responsive': {'mode': 'responsive', 'label': 'Reattiva / LAN',
                    'segmentSeconds': 0.5, 'targetBufferSeconds': 0.75,
@@ -45,7 +44,7 @@ def playback_policy(mode=None):
 
 
 def keyframe_interval(profile, policy):
-    # Ceiling keeps the actual segment >= 0.5s at 15/25 fps, with HLS targetduration >= 1.
+    # Round up to >= 0.5s at 15/25 fps; HLS targetduration >= 1.
     return max(1, math.ceil(PROFILES[profile]['fps'] * policy['segmentSeconds']))
 
 
@@ -159,7 +158,7 @@ class Stream:
     def output_args(self):
         p = PROFILES[self.profile]
         gop = keyframe_interval(self.profile, self.playback)
-        # One fixed profile, no arbitrary filter/command input from HTTP.
+        # Use fixed profiles; reject arbitrary HTTP encoder options.
         vf = ('scale={width}:{height}:force_original_aspect_ratio=decrease:force_divisible_by=2,'
               'pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1').format(**p)
         return ['-map', '0:v:0', '-map', '1:a:0', '-vf', vf,
@@ -177,7 +176,7 @@ class Stream:
     def new_folder(self):
         parent = self.manager.live_dir / self.id
         parent.mkdir(parents=True, exist_ok=True)
-        # Remove old generations only before restarting. Clients get a generation reset.
+        # Clean old generations before restart; reset clients.
         for entry in parent.iterdir():
             if entry.is_dir():
                 shutil.rmtree(entry, ignore_errors=True)
@@ -318,7 +317,7 @@ class Stream:
             self.stop_process()
             for thread in threads:
                 thread.join(timeout=5)
-            # Never free SDK state while a native capture thread could still use it.
+            # Retain SDK state until capture threads stop.
             if not any(t.is_alive() for t in threads):
                 rx.close()
             self.receiver = None
@@ -394,7 +393,7 @@ class Gateway:
         self.root = Path(root)
         self.live_dir = Path(data_dir) / 'live'
         self.live_dir.mkdir(exist_ok=True, parents=True)
-        # Only transient encoder output lives here, never uploaded library assets.
+        # Temporary encoder output only; uploaded assets stay separate.
         for item in self.live_dir.iterdir():
             if item.is_dir() and SAFE_ID.fullmatch(item.name):
                 shutil.rmtree(item, ignore_errors=True)

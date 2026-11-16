@@ -1,11 +1,7 @@
-CARISMA PROMPT v0.7 - ESEMPI OSC PER QLAB
+PROMPT 0.7 — QLAB OSC EXAMPLES
 
-Destinazione Network Patch QLab:
-  Host: IP del server Carisma
-  Trasporto: UDP
-  Porta: 9000
-
-Esempi Network Cue / OSC Message:
+Network Output Patch: server IP, UDP, port 9000.
+Network Cue / OSC Message examples:
   /carisma/prompt/play
   /carisma/prompt/pause
   /carisma/prompt/cue/scena-balcone
@@ -13,8 +9,8 @@ Esempi Network Cue / OSC Message:
   /carisma/prompt/jog 0.10
   /carisma/prompt/blackout 1
   /carisma/prompt/blackout 0
-  /carisma/prompt/message "5 MINUTI"
+  /carisma/prompt/message "5 MINUTES"
   /carisma/prompt/message/clear
 
-Per cue di spettacolo preferire /carisma/prompt/cue/<id> a /cue/next.
-UDP non garantisce la consegna: mantenere sempre il jog manuale disponibile.
+Prefer absolute /carisma/prompt/cue/<id> for show cues.
+UDP has no delivery acknowledgement; retain manual jog override.

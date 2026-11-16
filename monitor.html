@@ -101,7 +101,7 @@ async function poll(){
  try{
   snapshot=await json('/api/monitor?viewer='+encodeURIComponent(viewer)+'&interval='+interval);clockOffset=snapshot.serverTime-Date.now()/1000;lastPoll=Date.now();serverOK=true;
   $('server-badge').className='badge';$('server-badge').textContent='SERVER LOCALE';note('');render();
-  // Bound parallel requests; never start a live player or a new encoder here.
+  // Bound preview requests; start no live decoder/encoder.
   const queue=snapshot.screens.filter(s=>!tiles.get(s.id)?.card.hidden);let index=0;
   await Promise.all(Array.from({length:Math.min(4,queue.length)},async()=>{while(index<queue.length)await frame(queue[index++]);}));
   $('last').textContent='Ultimo aggiornamento '+new Date(lastPoll).toLocaleTimeString('it-IT')+' / intervallo '+interval+' s';

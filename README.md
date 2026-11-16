@@ -1,51 +1,44 @@
 # DisplayControl
 
-Regia locale per schermi informativi e gobbo elettronico, derivata da Carisma Display Control. **Versione 0.10.0-alpha**.
+Local signage and teleprompter control, derived from Carisma Display Control. **0.10.0-alpha**.
 
-Console web, player browser, copioni TXT/DOCX, cue, controllo OSC e controller USB intercambiabili (AJAZZ, Contour, MSD-TWO e Stream Deck Neo). Il gateway opzionale riceve NDI sul server e lo converte con FFmpeg in video per i browser.
+Web console, browser players, TXT/DOCX scripts, cues, OSC and interchangeable USB controllers. The optional NDI gateway converts server-side NDI to browser video with FFmpeg.
 
-## Avvio
+## Start
 
-Richiede Python 3.9 o successivo. Il server e le API usano la libreria standard; non occorrono dipendenze Python per la console o il gobbo.
+Python 3.9+; the server uses only the standard library.
 
 ```sh
 python server.py
 ```
 
-Apri l'indirizzo stampato dal server e usa la chiave generata localmente. Su macOS/Linux il comando può essere `python3 server.py`. I dati vengono creati in `data/` e restano esclusi da Git.
+Open the printed address and use the locally generated key. On macOS/Linux use `python3` if required. Local data is created in `data/`, excluded from Git.
 
-- Console: `/`
-- Gobbo/regia: `/prompt.html`
-- Player gobbo: `/prompt_player.html`
-- Monitor schermi: `/monitor.html`
-- Abbinamento player signage: `/players.html`
+| Page | Path |
+|---|---|
+| Console | `/` |
+| Prompt control / player | `/prompt.html` / `/prompt_player.html` |
+| Screen monitor | `/monitor.html` |
+| Signage pairing | `/players.html` |
 
-Per una prova LAN esplicita: `python server.py --host 0.0.0.0`. La versione attuale usa HTTP su rete fidata; non pubblicare il server su Internet. Scaricare questo progetto da casa non richiede di esporre la regia.
+For LAN access use `python server.py --host 0.0.0.0`. HTTP is intended for a trusted LAN; do not expose the server to the Internet. Downloading the project from home requires no access to the live server.
 
-## Personalizzazione
+## Organization and Prompt
 
-In **Impostazioni** inserisci il nome dell'organizzazione e carica un logo PNG, JPEG o WebP. L'immagine viene ridimensionata e salvata nel progetto; il software propone un tema derivato dal logo, che puoi scegliere di applicare. Il logo occupa un piccolo spazio nell'intestazione. Copioni, messaggi di spettacolo e uscite video non ricevono sovrimpressioni del logo.
+In Settings, enter the organization name and upload a PNG, JPEG or WebP logo. The app resizes it locally and suggests a color theme for optional application. A small header logo leaves scripts, show messages and video outputs unobstructed. Internal identifiers, filenames, credentials and `/carisma/...` OSC paths remain compatible.
 
-Il nome sostituisce il marchio storico nell'interfaccia e nelle schermate dimostrative. Identificatori interni, percorsi OSC `/carisma/...`, nomi dei file e credenziali esistenti rimangono compatibili.
+Prompt preview and players share `prompt_shared.js`: a fixed 1280×720 page, identical typography and a monotonic timeline. Windows scale without reflow; `offsetVh` and rate refer to the virtual page. Command sequencing rejects stale replies; scrolling continues through server outages. Restart the server and reload every Prompt page after updating. Do not mix 0.8 and 0.9+ pages; check font availability across operating systems.
 
-## Sincronismo del gobbo
+## Optional components
 
-Anteprima e player usano `prompt_shared.js`: stessa superficie virtuale 1280×720, stessi margini, font e interlinea. La finestra visualizza una versione scalata senza reimpaginare il testo. `offsetVh` e velocità fanno riferimento alla pagina virtuale, non alle dimensioni fisiche della finestra. La sequenza dei comandi impedisce di applicare risposte vecchie; lo scorrimento locale usa un orologio monotono e prosegue durante l'assenza del server.
+- USB: install, pair once, then start the background service. Windows: `Installa_Controller_Windows.bat`, `Configura_Controller_Windows.bat`, `Avvia_Controller_Windows.bat`. macOS/Linux: `sh Installa_Controller_Linux_Mac.sh`, then `sh Avvia_Controller_Linux_Mac.sh --setup` and `sh Avvia_Controller_Linux_Mac.sh`.
+- AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, Mars Gaming MSD-TWO and Stream Deck Neo are detected automatically. Swap without pairing again; Prompt may be closed. See [CONTROLLERS.md](CONTROLLERS.md).
+- The controller service needs Python 3.11+, hidapi and Pillow, installed in `.controller-venv/`. Legacy AKP03E launchers use the same service.
+- Each Core needs its own token. Pairing multiple Cores does not replicate scripts, databases or state. OSC fallback is unacknowledged; ambiguous HTTP results do not replay relative commands, and authentication refusals do not fall back to OSC.
+- NDI requires separate FFmpeg and official NDI runtime installations. See [NDI setup](LEGGIMI_NDI.md) and [Windows setup](LEGGIMI_SETUP_WINDOWS_v0.4.1.md). Vendor binaries are excluded.
+- Android TV sources are included; no tested APK is supplied.
 
-**Dopo l'aggiornamento riavvia il server e ricarica tutte le pagine Prompt. Non mescolare regia/player 0.8 e 0.9.** Per il confronto su sistemi operativi diversi va verificata anche la disponibilità dei font di sistema.
-
-## Controller automatici e dipendenze facoltative
-
-- Windows: `Installa_Controller_Windows.bat`, poi `Configura_Controller_Windows.bat` una sola volta e `Avvia_Controller_Windows.bat`.
-- macOS/Linux: `sh Installa_Controller_Linux_Mac.sh`, poi `sh Avvia_Controller_Linux_Mac.sh --setup` e `sh Avvia_Controller_Linux_Mac.sh`.
-- Il servizio riconosce automaticamente AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, Mars Gaming MSD-TWO ed Elgato Stream Deck Neo. Puoi alternarli senza rifare il pairing; la pagina Prompt può essere chiusa o in secondo piano. Dettagli, comandi, permessi e limiti in [CONTROLLERS.md](CONTROLLERS.md).
-- Gli installer usano un ambiente `.controller-venv/` isolato con hidapi e Pillow; il servizio richiede Python 3.11+. Server e gobbo mantengono i requisiti precedenti. I vecchi avvii AKP03E inoltrano al servizio unificato.
-- Ogni Core può essere abbinato separatamente, con il proprio token. Questo non replica database, copioni o stato e non implementa un cluster HA.
-- Il fallback OSC è opzionale e non conferma la ricezione. Un esito HTTP ambiguo non causa la ripetizione automatica di comandi relativi; un rifiuto di autenticazione non viene aggirato con OSC.
-- Per NDI installa separatamente FFmpeg e il runtime NDI ufficiale. I binari e le licenze dei fornitori non sono inclusi. Leggi `LEGGIMI_NDI.md` e `LEGGIMI_SETUP_WINDOWS_v0.4.1.md`.
-- I sorgenti Android TV sono inclusi; non viene distribuito un APK collaudato.
-
-## Test e limiti
+## Verification
 
 ```sh
 python -m unittest discover -s tests -v
@@ -54,18 +47,12 @@ node tests/test_branding.js
 node tests/test_prompt_timeline.js
 ```
 
-FFmpeg/ffprobe e un compilatore C servono alle prove di codifica e ABI simulata. In loro assenza alcuni test vengono saltati: controlla sempre il riepilogo.
+Encoding and simulated ABI tests need FFmpeg/ffprobe and a C compiler; check the summary for skipped tests. The 0.10 release passed **151 Python tests, no failures/errors/skips**, and three JavaScript suites. Controller tests use synthetic HID reports and real loopback HTTP. Historical 0.9 browser checks remain labeled separately. See [TEST_REPORT.md](TEST_REPORT.md).
 
-La verifica di questa release ha completato **151 test Python senza errori o test saltati** e tre suite JavaScript. Sono inclusi scambio dei quattro tipi di controller con un solo pairing via HTTP reale, report HID sintetici e installazione pulita delle dipendenze. Le prove browser del motore Prompt della 0.9 restano documentate come tali. Dettagli in [TEST_REPORT.md](TEST_REPORT.md).
+**No physical controllers, real NDI source, Raspberry/Chromecast, QLab, HDMI switching or HA cluster were validated.** TAKE changes the logical role only. This is an alpha release.
 
-**Controller fisici, sorgente NDI reale, Raspberry/Chromecast, QLab, commutazione HDMI e cluster HA non sono certificati da queste prove.** TAKE cambia il ruolo logico, senza commutare ingressi HDMI. La release rimane alpha.
+## Download and publication
 
-## Download da un altro PC
+Use GitHub **Code → Download ZIP**, a release, or `git clone`. To transfer your installation, back up `data/` privately; it contains credentials, scripts and media and must stay outside the public repository.
 
-Da GitHub puoi usare **Code → Download ZIP**, oppure clonare questo repository. Il pacchetto contiene il software, non la tua installazione con credenziali, copioni e contenuti. Per trasferire anche il lavoro usa un backup privato di `data/`, tenendolo fuori dal repository pubblico.
-
-## Pubblicazione e licenze
-
-La prima pubblicazione esclude dati di esercizio, database, chiavi, configurazioni locali, log storici, cache, binari dei fornitori e materiale di firma. Le credenziali di prova presenti nei test sono valori sintetici.
-
-Non è stata aggiunta una nuova licenza al codice del progetto. La pubblicazione del sorgente non sostituisce la scelta della licenza da parte del titolare. Le dipendenze e i riferimenti tecnici mantengono i propri termini; vedi `SOURCES.md`.
+Public sources exclude operational data, databases, keys, local configuration, historical raw logs, caches, vendor binaries and signing material. Test credentials are synthetic. No project license has been selected; publication does not grant a new license. Dependencies retain their own terms; see [SOURCES.md](SOURCES.md).

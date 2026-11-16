@@ -21,7 +21,7 @@
 @media(max-width:700px){.sidebar{display:none;width:218px}.sidebar.mobile-open{display:flex;box-shadow:5px 0 50px #0003}.shell{margin-left:0}.mobile-menu{display:inline-flex}.topbar{height:60px;padding:0 17px}.top-actions{gap:10px}.topbar .pill{font-size:8px}.breadcrumb{font-size:10px}.body{padding:22px 17px}.page-heading{align-items:flex-start;flex-direction:column;gap:16px;margin-bottom:19px}.heading-actions{width:100%;flex-wrap:wrap}.page-heading h1{font-size:26px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.stat{min-height:82px;padding:14px}.stat-icon{display:grid}.workarea{display:flex;flex-direction:column}.workarea>section,.side-control{width:100%}.screen-grid{grid-template-columns:1fr}.side-control{grid-template-columns:1fr}.notice{align-items:flex-start;font-size:10px}.notice .tag{display:none}.notice svg{margin-top:2px}.asset-grid{grid-template-columns:1fr}.library-bar{flex-wrap:wrap}.search{width:100%}.toast{left:50%;font-size:11px}.page-footer{flex-direction:column;align-items:flex-start;font-size:8px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.modal-shade{padding:12px}.modal-head,.modal-body{padding:18px}.modal-foot{padding:14px 18px}.modal-head h2{font-size:16px}.section-head{flex-wrap:wrap}.player-hud{left:8px;right:8px;bottom:8px;padding:9px;flex-wrap:wrap}.player-hud small{font-size:8px}.player-hud .btn{font-size:9px;padding:6px}.player-badge{top:8px;left:8px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
-/* Local clock: CSS and system fonts only. No video, CDN or remote fonts. */
+/* Local clock styles and system fonts. */
 .dc-time{--dc-bg:#132f2b;--dc-fg:#f1edda;--dc-soft:#adbc9e;--dc-accent:#f0a878;--dc-line:#d6dfb333;position:relative;display:block!important;aspect-ratio:16/9;width:100%;overflow:hidden;isolation:isolate;container-type:inline-size;background:var(--dc-bg)!important;color:var(--dc-fg)!important;font-family:Inter,"Segoe UI",Arial,sans-serif}
 .dc-time.dc-sand{--dc-bg:#eee5d2;--dc-fg:#304438;--dc-soft:#68795f;--dc-accent:#af583b;--dc-line:#5b72552d}
 .dc-time.dc-night{--dc-bg:#18243a;--dc-fg:#f3ede6;--dc-soft:#a1b1cc;--dc-accent:#b7b9f2;--dc-line:#abb9e133}
@@ -79,7 +79,7 @@
 <input id="media-picker" class="hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple>
 <input id="config-picker" class="hidden" type="file" accept="application/json,.json">
 <script>
-/* Reusable clock renderer. Uses the device clock, including while disconnected. */
+/* Shared clock renderer; device time works offline. */
 window.CarismaClock = (() => {
   'use strict';
   const formatters = new Map();
@@ -135,7 +135,7 @@ window.CarismaClock = (() => {
       if (first || resync || (clock._clockTime && Math.abs(instant-clock._clockTime)>4000)) {
         const dot=clock.querySelector('.dc-orbit-dot');
         dot.style.setProperty('--dc-delay',(-second)+'s');
-        // Restart only on initial rendering, resume, or a system-clock jump.
+        // Restart on first render, resume or clock jump.
         dot.style.animationName='none'; void dot.offsetWidth; dot.style.animationName='';
       }
       clock._clockTime=instant;
@@ -337,7 +337,7 @@ function playlistInUse(id){return state.screens.some(s=>(s.base?.type==='playlis
 async function uploadFiles(files){if(!files.length)return;const supported=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];for(const file of files){try{if(!supported.includes(file.type))throw Error('Formato non supportato: '+file.name);if(file.size>300*1024*1024)throw Error('File troppo grande (limite 300 MB): '+file.name);toast('Importazione di '+file.name+'...');let fileInfo;if(mode==='server'){fileInfo=await apiJSON('/api/assets',{method:'POST',headers:{'Content-Type':file.type,'X-File-Name':encodeURIComponent(file.name)},body:file,timeout:180000});}else{if(!crypto.subtle)throw Error('Hash non disponibile. Usa la versione server su localhost.');const digest=await crypto.subtle.digest('SHA-256',await file.arrayBuffer());const sha256=[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join('');fileInfo={fileId:sha256,sha256,size:file.size,mime:file.type};}await dbput('media',fileInfo.fileId,file);if(state.assets.some(a=>a.fileId===fileInfo.fileId)){toast(file.name+' gi\u00e0 presente.');continue;}const item={id:uid('media'),kind:file.type.startsWith('image/')?'image':'video',title:file.name.replace(/\.[^.]+$/,''),fileId:fileInfo.fileId,sha256:fileInfo.sha256,size:file.size,mime:file.type,duration:15};await commit(s=>s.assets.push(item),'Importato '+file.name+'.');}catch(err){toast(err.message,true);}}}
 function downloadJSON(){const payload={...clone(state),exportedAt:new Date().toISOString(),exportNote:'Solo configurazione. File immagine e video esclusi; reimportarli o trasferire data/ nel server.'};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='carisma-progetto-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);toast('Progetto esportato. I file multimediali non sono inclusi.');}
 async function importConfig(file){try{if(file.size>2*1024*1024)throw Error('Configurazione troppo grande.');const imported=JSON.parse(await file.text());if(!validState(imported))throw Error('Formato del progetto non valido.');try{new Intl.DateTimeFormat('it',{timeZone:imported.site.timezone});}catch{throw Error('Fuso orario del progetto non valido.');}if(!confirm('Sostituire il progetto attuale con quello importato? I file multimediali non sono inclusi nel JSON.'))return;await commit(s=>{for(const k of Object.keys(s))delete s[k];Object.assign(s,imported);},'Progetto importato. Verifica e reimporta i file multimediali.');selected=new Set(state.screens.slice(0,1).map(s=>s.id));render();}catch(err){toast(err.message,true);}}
-/* Carisma v0.4: local fMP4 browser gateway. No CDN or browser NDI plug-in. */
+/* Local fMP4 gateway; NDI decoding stays on the server. */
 let ndiInfo=null, ndiSources=[], ndiRefreshBusy=false, ndiLastRefresh=0, ndiPreviewClient=null, ndiSelectedProfile='light';
 const ndiLink='<a href="https://ndi.video/" target="_blank" rel="noopener noreferrer">NDI\u00ae</a>';
 const ndiStage={starting:'Avvio',waiting:'In attesa di video',buffering:'Preparazione buffer',running:'Encoder attivo',error:'Errore / nuovo tentativo',stopped:'Arrestato'};
@@ -368,7 +368,7 @@ function ndiPreview(asset){
  ndiPreviewClient.start();
 }
 
-// Conservative fallback for a pre-0.5.1 server. All numeric fields are bounded.
+// Bounded fallback policy for pre-0.5.1 servers.
 function livePlaybackPolicy(value){
  const v=value||{},number=(key,fallback,low,high)=>{
   const n=Number(v[key]);return Number.isFinite(n)&&n>=low&&n<=high?n:fallback;
@@ -456,7 +456,7 @@ class CarismaLiveClient {
  stop(){if(this.closed)return;this.closed=true;this.releaseSource();}
 }
 
-// Extra handlers are separate from the existing console event dispatcher.
+// Extra handlers extend the console dispatcher.
 document.addEventListener('click',async event=>{
  const b=event.target.closest('[data-action]');if(!b)return;
  const a=b.dataset.action;if(!a.startsWith('ndi-')&&a!=='player-audio'&&a!=='player-live-edge')return;
@@ -545,9 +545,8 @@ async function refreshController(){if(playerId)return;try{if(mode==='server'){co
 const playerState={snapshot:null,revision:-1,lastSignature:'',testOffline:false,connected:false,syncing:false,message:'Avvio del player...',cacheCount:0,activeKey:'',effectiveTitle:'',lastProgress:0,liveRetryAt:0,liveElement:null,ndiClient:null,liveGraceUntil:0,liveError:'',audioEnabled:false};
 function referencedFiles(s,screen){const ids=new Set(),refs=[screen.base,screen.override,...s.schedules.filter(r=>r.enabled&&(r.screenIds||[]).includes(screen.id)).map(r=>r.content)];ids.add(screen.fallbackAssetId);for(const ref of refs){if(!ref)continue;if(ref.type==='asset')ids.add(ref.id);if(ref.type==='playlist'){const p=s.playlists.find(p=>p.id===ref.id);for(const item of p?.items||[])ids.add(item.assetId);}}const files=new Map();for(const id of ids){const a=getAsset(id,s);if(a&&(a.kind==='image'||a.kind==='video')&&a.fileId)files.set(a.fileId,a);}return [...files.values()];}
 async function ensurePlayerCache(s,screen){const files=referencedFiles(s,screen);const sum=files.reduce((n,a)=>n+(+a.size||0),0),limit=(+screen.cacheLimitMb||+s.site.defaultCacheMb||750)*1048576;if(sum>limit)throw Error('Il programma richiede '+bytes(sum)+' e supera la quota di '+bytes(limit)+'.');for(const a of files){let blob=await dbget('media',a.fileId);if(!blob&&mode==='server'){blob=await (await api('/api/assets/'+encodeURIComponent(a.fileId),{timeout:180000})).blob();}if(!blob)throw Error('File non presente: '+a.title+'. Reimportalo nella libreria.');if(blob.size!==+a.size)throw Error('Dimensione non valida per '+a.title+'.');if(a.sha256&&crypto.subtle){const digest=await crypto.subtle.digest('SHA-256',await blob.arrayBuffer());const sha=[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join('');if(sha!==a.sha256)throw Error('Verifica SHA-256 fallita per '+a.title+'.');}await dbput('media',a.fileId,blob);}return files.length;}
-/* Small on-demand thumbnails from the player, never a second live decoder.
-   Video/image = actual decoded frame. HTML posters/clocks = explicit reconstruction.
-   This is not a screenshot of the OS/TV, nor proof that the HDMI display is on. */
+/* On-demand player previews: decoded media frames or labeled HTML reconstructions.
+   No extra decoder; previews do not verify the physical TV/HDMI output. */
 const CarismaPreview = (() => {
  let enabledUntil=0,interval=2,nextAt=0,busy=false,started=false;
  function configure(value){

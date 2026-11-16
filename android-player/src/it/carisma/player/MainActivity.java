@@ -41,9 +41,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.json.JSONObject;
 
-/** Offline shell: only bundled HTML executes; remote server supplies JSON/media.
- * No shared admin secret, remote code, Google Play Services or file URL permissions.
- * Physical-device and Android SDK compilation validation still required.
+/** Offline shell: bundled HTML, scoped JSON/media, no remote code or file URLs.
+ * No Google Play dependency; Android build and physical-device checks remain required.
  */
 public class MainActivity extends Activity {
     private static final String ORIGIN="https://appassets.androidplatform.net";
@@ -87,7 +86,7 @@ public class MainActivity extends Activity {
                 final String newSecret=data.getString("token"),newScreen=data.getString("screenId");
                 if(!newScreen.matches("[A-Za-z0-9_-]{1,120}")||newSecret.length()<20)throw new IOException("Risposta server non valida");
                 runOnUiThread(new Runnable(){public void run(){
-                    // Re-pairing deliberately removes cached programs from a previous installation.
+                    // Clear old cached programs when re-pairing.
                     WebStorage.getInstance().deleteAllData();
                     base=target;secret=newSecret;screen=newScreen;
                     prefs.edit().putString("server",base).putString("token",secret).putString("screen",screen).commit();

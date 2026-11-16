@@ -1,6 +1,3 @@
-# Evidenze
+# Test evidence
 
-`python-tests.txt`, `javascript.json` e `summary.json` descrivono la 0.10.
-`browser-sync.json` conserva le prove browser della 0.9 sul motore Prompt:
-non è una prova USB e non viene presentato come nuovo collaudo fisico della 0.10.
-I percorsi personali sono rimossi dal log pubblicato.
+`python-tests.txt`, `javascript.json` and `summary.json` record the 0.10 release checks. `browser-sync.json` retains 0.9 Prompt browser evidence, not USB or new 0.10 physical testing. Personal paths were removed from published logs. Documentation edits do not rerun or relabel these historical results.

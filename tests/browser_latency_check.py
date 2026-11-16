@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory() as folder:
     def req(path,method='GET',body=None):
         headers={'X-Control-Token':token} if 'token' in locals() else {}
         if isinstance(body,str):headers['Content-Type']='application/json';body=body.encode()
-        # token is loaded once the fresh local server has started.
+        # Load the token after server startup.
         if (Path(folder)/'access.key').exists():headers['X-Control-Token']=(Path(folder)/'access.key').read_text().strip()
         r=urllib.request.Request(origin+path,data=body,headers=headers,method=method)
         try:
@@ -77,12 +77,12 @@ with tempfile.TemporaryDirectory() as folder:
             if args.mode=='responsive':
                 assert statistics.mean(s['buffer'] for s in samples)<1.2,samples
                 checks.append('Mean player queue below 1.2 seconds in this fixture')
-                # Deliberately hold manifest delivery (not reset or source disconnection).
+                # Stall manifest delivery only.
                 before=page.evaluate('v.currentTime');page.evaluate('blockMediaUntil=Date.now()+5000')
                 page.wait_for_timeout(6500)
                 page.wait_for_function('v.readyState>=3 && v.buffered.length>0 && v.currentTime>0 && v.buffered.end(v.buffered.length-1)-v.currentTime<1.3',timeout=8000)
                 checks.append('After a 5-second manifest stall, skips stale segments and returns near live edge')
-                # User-facing recovery action is represented by exactly the method called by its button.
+                # Invoke the live button's recovery method.
                 page.evaluate('v.pause();client.goLive()')
                 page.wait_for_function('!v.paused && v.readyState>=3',timeout=5000)
                 checks.append('Torna alla diretta resumes paused playback')

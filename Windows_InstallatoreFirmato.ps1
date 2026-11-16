@@ -1,4 +1,4 @@
-# Native Windows helper. No silent NDI licence acceptance, no certificate bypass.
+# Windows helper; preserve license prompts and certificate checks.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][string]$InstallerPath,
@@ -21,13 +21,13 @@ try {
     }
     Write-Host "Firma valida. Editore: $publisher"
     if ($Product -eq 'Python') {
-        # Per-user installation. Do not change global aliases, PATH or launchers.
+        # Install per user; preserve global PATH, aliases and launchers.
         $arguments = @('/passive', '/norestart', 'InstallAllUsers=0', 'PrependPath=0',
             'Include_launcher=0', 'Include_test=0', 'Include_doc=0', 'Shortcuts=0')
         $process = Start-Process -FilePath $file -ArgumentList $arguments -Wait -PassThru
     } else {
         Write-Host 'Completa la procedura ufficiale NDI e accetta personalmente la licenza.'
-        # Leave the installer UI visible; elevation is approved through Windows UAC.
+        # Show installer UI and let Windows request UAC approval.
         $process = Start-Process -FilePath $file -Verb RunAs -Wait -PassThru
     }
     if ($process.ExitCode -eq 3010) { Write-Host 'Riavvio richiesto dal fornitore, NON eseguito automaticamente.' }

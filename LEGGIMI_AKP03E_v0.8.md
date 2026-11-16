@@ -1,52 +1,21 @@
-# Carisma Prompt v0.8-alpha — AJAZZ AKP03E diretto USB HID
+# AKP03E — historical 0.8 guide
 
-## Obiettivo
-Questa versione integra AJAZZ AKP03E (USB VID:PID `0300:3002`) come superficie di controllo nativa per Carisma Prompt. Durante lo show **non serve il software AJAZZ**: il servizio `akp03e_controller.py` parla direttamente con il dispositivo USB HID e invia comandi a Carisma con credenziali dedicate e limitate.
+For current automatic detection and interchangeable controllers use [CONTROLLERS.md](CONTROLLERS.md). This guide describes the original direct HID integration (`0300:3002`), implemented from public protocol references. No physical AKP03E was tested here.
 
-Il protocollo e stato implementato sulla base di specifiche pubbliche e confrontato con implementazioni open source gia verificate su hardware. Il dispositivo dell'utente NON e stato fisicamente raggiunto in questo ambiente: la prova USB reale resta necessaria.
+LCD 1–6: PLAY/PAUSE, previous cue, next cue, blackout, TOP, TAKE A/B. Icons reflect play, blackout and target readiness (N/R when unavailable). Encoder 0: speed ±0.015 vh/s per step, press PLAY/PAUSE; encoder 1: jog ±0.08 vh, press STOP; encoder 2: cue −/+, press TAKE. Side keys 7–9: clear message, STOP, TAKE. Events are debounced; USB disconnection triggers reconnection attempts.
 
-## Mapping predefinito
+## Original Windows setup
 
-### Sei tasti LCD
-| LCD | Azione | Stato dinamico |
-|---|---|---|
-| 1 | PLAY / PAUSA | icona cambia PLAY ↔ PAUSA |
-| 2 | CUE precedente | fissa |
-| 3 | CUE successivo | fissa |
-| 4 | BLACKOUT | icona segnala BLACK ON |
-| 5 | TOP | torna all'inizio |
-| 6 | TAKE PRIMARY/BACKUP | mostra TAKE B, TAKE A, oppure N/R se il ramo richiesto non e pronto |
+1. Apply 0.8 over 0.7; restart `Avvia_Server_LAN_Windows.bat`.
+2. Generate a controller code in Prompt's AKP03E panel.
+3. Run `Installa_Controller_AKP03E_Windows.bat`, connect USB-C and run `Test_Controller_AKP03E_Windows.bat` (12-second event display).
+4. Pair with `Configura_Controller_AKP03E_Windows.bat`; start `Avvia_Controller_AKP03E_Windows.bat`.
 
-### Tre encoder premibili
-| Encoder | Rotazione | Pressione |
-|---|---|---|
-| Grande / 0 | velocita ±0,015 vh/s per scatto | PLAY/PAUSA |
-| 1 | jog fine ±0,08 vh | STOP |
-| 2 | cue precedente/successivo | TAKE A/B |
+Original dependency: Python 3.11+, `hidapi==0.15.0`. Current launchers forward to the unified service. Close vendor software during direct access. The private scoped token in `data/akp03e_controller.json` cannot administer the server or edit scripts. Codes are one-use, eight digits, valid ten minutes; use trusted-LAN HTTP only.
 
-### Tre pulsanti non LCD
-- 7: cancella messaggio rapido
-- 8: STOP
-- 9: TAKE A/B
+LCDs use pre-generated 60×60 JPEGs. `iconRotation` accepts 0/90/180/270; default 270 follows a hardware-tested external reference, not a test performed here. Verify your firmware's orientation.
 
-Il servizio applica debounce agli eventi meccanici e si riconnette automaticamente se il controller USB viene scollegato e ricollegato.
-
-## Installazione Windows
-1. Applica la patch v0.8 al server Carisma v0.7 e riavvia `Avvia_Server_LAN_Windows.bat`.
-2. In `prompt.html`, pannello **AJAZZ AKP03E**, premi **Genera codice controller**.
-3. Sul PC di regia esegui `Installa_Controller_AKP03E_Windows.bat`. Installa, solo se manca, `hidapi==0.15.0` come wheel binaria.
-4. Collega l'AKP03E via USB-C.
-5. Esegui `Test_Controller_AKP03E_Windows.bat`: i sei LCD mostrano il layout Carisma e per 12 secondi vengono stampati tasti/encoder rilevati.
-6. Esegui `Configura_Controller_AKP03E_Windows.bat`, inserisci indirizzo Carisma e il codice a otto cifre.
-7. Avvia `Avvia_Controller_AKP03E_Windows.bat` prima dello show.
-
-La configurazione e il token del controller sono salvati in `data/akp03e_controller.json`; non condividere il file. Il token **non e la chiave amministratore** e non permette di cambiare il copione o amministrare il server.
-
-## LCD e rotazione
-AKP03E usa sei immagini JPEG 60x60. La consegna include gia tutte le icone in quattro rotazioni. Il default e `270`, coerente con una implementazione Python verificata su AKP03E reale. Se sul tuo esemplare le scritte risultano ruotate, modifica `iconRotation` in `data/akp03e_controller.json` scegliendo `0`, `90`, `180` o `270`; non serve rigenerare immagini.
-
-## Resilienza
-Il file di configurazione accetta:
+## Endpoints and TAKE
 
 ```json
 {
@@ -55,15 +24,7 @@ Il file di configurazione accetta:
 }
 ```
 
-- `servers`: normalmente usa il VIP Carisma. Puo contenere piu endpoint HTTP; il servizio prova l'ultimo raggiunto e poi gli altri.
-- `oscTargets`: fallback opzionale. Se nessun Core HTTP risponde, i comandi compatibili vengono inviati via OSC UDP a tutti gli endpoint elencati.
-
-Il fallback OSC include PLAY, PAUSA, STOP, velocita, jog, cue, blackout e TAKE. Non sostituisce il quorum/cluster server: serve come ulteriore percorso di controllo durante una transizione HA.
-
-Se il controller o il server smettono di rispondere, i player Prompt continuano lo scroll locale gia ricevuto. Il controller non e quindi nel percorso necessario per mantenere visibile un copione gia in esecuzione.
-
-## TAKE PRIMARY/BACKUP
-v0.8 introduce `activeRole` nel runtime e i comandi:
+Addresses are examples. `servers` lists HTTP endpoints; `oscTargets` enables optional UDP fallback. For current per-Core tokens, ambiguous-result handling and fallback restrictions, follow CONTROLLERS.md. Multiple endpoints do not create an HA cluster. Players retain local scrolling if server/controller access fails.
 
 ```text
 /carisma/prompt/take/primary
@@ -71,22 +32,11 @@ v0.8 introduce `activeRole` nel runtime e i comandi:
 /carisma/prompt/take "PRIMARY"
 ```
 
-Il TAKE e per ora **logico**: registra quale ramo e considerato attivo, aggiorna regia e LCD e prepara l'integrazione con uno switch HDMI/GPIO/OSC. Non commuta fisicamente un ingresso HDMI da solo. Il PRIMARY e il BACKUP continuano a renderizzare in parallelo per restare hot mirror.
+TAKE updates `activeRole`, console and LCD status only; it does not switch HDMI. PRIMARY/BACKUP render in parallel. References below are protocol cross-checks, not bundled runtime components.
 
-## Sicurezza
-- pairing a 8 cifre, monouso, scadenza 10 minuti;
-- token controller separato dall'amministratore;
-- API controller con allow-list di comandi;
-- nessuna possibilita di caricare/modificare copioni tramite token AKP03E;
-- HTTP attuale destinato esclusivamente a LAN fidata, mai Internet.
+## References
 
-## Dipendenze
-Runtime controller: Python 3.11+ e `hidapi==0.15.0`. Nessuna dipendenza grafica e nessun software vendor. Le immagini LCD sono pre-generate.
-
-## Fonti protocollo / verifica incrociata
 - https://github.com/Aiacos/ajazz-control-center/blob/develop/docs/protocols/streamdeck/akp03.md
 - https://github.com/tomekceszke/ajazz-akp03e
 - https://github.com/mishamyrt/ajazz-sdk
 - https://pypi.org/project/hidapi/
-
-Questi progetti non sono componenti runtime di Carisma; `hidapi` e l'unica dipendenza installata.

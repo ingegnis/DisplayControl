@@ -34,7 +34,7 @@ class PhysicalPlayerTests(unittest.TestCase):
         self.sid=self.project['screens'][0]['id']
         self.publish(self.project)
     def tearDown(self):
-        # Windows terminate() is a hard kill: stop encoders before killing server.
+        # Stop encoders before Windows hard-kills the server.
         _,status=self.jsoncall('/api/ndi/status')
         for stream in status.get('streams',[]):
             self.call('/api/ndi/stop','POST',{'id':stream['id']})

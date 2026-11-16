@@ -1,4 +1,4 @@
-/* Restricted transport shared by browser player and the offline Android shell. */
+/* Scoped transport for browser and Android players. */
 'use strict';
 window.CARISMA_PHYSICAL = true;
 (() => {

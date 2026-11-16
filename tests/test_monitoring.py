@@ -64,7 +64,7 @@ class MonitorStoreTests(unittest.TestCase):
         self.store.overview({'screens':[]},1,{});self.assertEqual(self.store.frames,{})
 
 class MonitorApiTests(unittest.TestCase):
-    # Reuse setup helpers only, not the previous test cases.
+    # Reuse setup helpers, excluding inherited tests.
     setUp=helper.PhysicalPlayerTests.setUp
     tearDown=helper.PhysicalPlayerTests.tearDown
     call=helper.PhysicalPlayerTests.call

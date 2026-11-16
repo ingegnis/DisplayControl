@@ -129,7 +129,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == '/api/info':
             return self.reply({'product': 'carisma-display-control', 'version': '0.10.0-alpha', 'authRequired': True, 'serverTime': time.time()})
         if path == '/api/branding':
-            # Deliberately public identity for login/pairing; no project or keys.
+            # Public login/pairing identity; exclude project data and keys.
             with self.db() as conn:
                 row = conn.execute('SELECT payload FROM state WHERE id=1').fetchone()
             state = json.loads(row[0]) if row and row[0] else {}

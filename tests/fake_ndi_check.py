@@ -29,7 +29,7 @@ def run(library, folder):
             raise AssertionError(str(stream.status())+'\n'+str(trace)+'\n'+stream.error_tail())
         m=wait(lambda m:m.get('ready') and m['healthy'] and m['frames']>=120 and len(m.get('segments',[]))>=4)
         assert m['frames']>5
-        # Decode a bounded capture, rather than following an open-ended live playlist.
+        # Decode a bounded capture, not the live playlist.
         combined=folder/'abi-capture.mp4'
         combined.write_bytes((stream.folder/'init.mp4').read_bytes()+b''.join((stream.folder/x['name']).read_bytes() for x in m['segments'][-3:]))
         decoded=subprocess.run(['ffmpeg','-v','error','-i',str(combined),'-f','null','-'],capture_output=True,timeout=15)

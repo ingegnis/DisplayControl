@@ -80,7 +80,7 @@ class Decoder:
         if self.profile.protocol == 'akp2':
             if len(data) < 10: return []
             action = data[9]
-            # Protocol 2 sends discrete clicks, not key-up/key-down pairs.
+            # Protocol 2 reports discrete clicks.
             if action in BUTTON_CODES: return common_event(('button', BUTTON_CODES[action], 0))
             if action in KNOB_PRESS_CODES: return common_event(('knob', KNOB_PRESS_CODES[action], 1))
             if action in KNOB_TURN_CODES:
@@ -96,7 +96,7 @@ class Decoder:
                 ('speed_delta', -.015), ('speed_delta', .015), ('jog', -.08), ('jog', .08)]
             return [commands[i] for i in range(10) if states[i] and not old[i]]
         if self.profile.protocol == 'contour':
-            # hidapi omits the zero report ID on unnumbered 5-byte reports.
+            # hidapi omits report ID zero for unnumbered 5-byte reports.
             if len(data) != 5: return []
             ring = struct.unpack('b', data[:1])[0]
             if not -7 <= ring <= 7: return []
@@ -118,7 +118,7 @@ class Decoder:
                 if mask & (1 << bit) and not old[2] & (1 << bit):
                     if index < 9: result.append((BUTTON_COMMANDS[index], None))
                     else: result.append(pro_extra[index-9])
-            # A centered ring and explicit STOP take precedence in combined reports.
+            # Center/STOP overrides combined actions.
             if ('speed', 0) in result: return [('stop', None)]
             if ('stop', None) in result: return [('stop', None)]
             return result
@@ -149,8 +149,7 @@ class Device(HidDevice):
     def open(self):
         try:
             if self.profile.protocol == 'akp3':
-                # Preserve the established AKP03E double-open handshake, but bind
-                # both opens to this exact path rather than the first USB match.
+                # Keep the AKP03E double-open handshake on this exact USB path.
                 return super().open()
             self.dev = self._open_path(self.path)
             if self.profile.protocol.startswith('akp'):
@@ -178,7 +177,7 @@ class Device(HidDevice):
         if self.profile.protocol == 'neo':
             for report in neo_image_reports(key, jpeg): self.write(report)
         elif self.profile.protocol == 'akp2':
-            # Explicit image length excludes padding used to clear the staging tail.
+            # Image length excludes staging-clear padding.
             self.write(image_announce(key, len(jpeg)))
             data = jpeg.ljust(8192, b'\0')
             for pos in range(0, len(data), 1024): self.write(image_chunk(data[pos:pos+1024]))

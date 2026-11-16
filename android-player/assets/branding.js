@@ -1,4 +1,4 @@
-/* Organization identity. Local images only; no external services or fonts. */
+/* Organization branding with local images and fonts. */
 (() => {
   'use strict';
   const KEY='carisma-branding-v1', ORIGINAL={accent:'#b64528',sidebar:'#202b2a'};
@@ -32,7 +32,7 @@
   function mount(){
     if(!document.body)return;
     observer?.disconnect();
-    // Static interface copy only: scripts, editor fields and show contents are untouched.
+    // Replace static UI text only; preserve scripts, inputs and show content.
     const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
     while(walker.nextNode()){
       const node=walker.currentNode;
@@ -98,7 +98,7 @@
     const css=document.createElement('style');css.textContent='.organization-logo{display:inline-block;vertical-align:middle;object-fit:contain;width:38px;height:32px;margin-right:9px;border-radius:4px;background:#fff;padding:3px;flex-shrink:0}.brand-mark .organization-logo,.brand-icon .organization-logo{margin:0;width:100%;height:100%}.sidebar .brand>div:last-child{min-width:0}.sidebar .brand strong{display:block;white-space:normal;overflow-wrap:anywhere;font-size:14px;line-height:1.25;max-width:150px}.top .brand{max-width:55%;font-size:14px;letter-spacing:.4px}.sidebar,header.top{background:var(--organization-sidebar,var(--sidebar))}.topnav a,.topnav button{color:#fff}.btn.primary{color:#fff}';document.head.append(css);
     try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved)current=clean(saved);}catch{}
     observer=new MutationObserver(records=>{if(scheduled||records.every(r=>r.target.parentElement?.closest('#status,#script,#player-canvas,.preview-script')||r.target.closest?.('#status,#script,#player-canvas,.preview-script')))return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;mount();});});mount();
-    // Pairing pages need the identity only, never project data or access tokens.
+    // Pairing pages fetch public identity only.
     if(location.protocol!=='file:'&&!window.CARISMA_PHYSICAL&&!new URLSearchParams(location.search).has('demo')){
       const update=()=>fetch('/api/branding',{cache:'no-store',signal:AbortSignal.timeout(2500)}).then(r=>r.ok?r.json():Promise.reject()).then(site=>apply(site)).catch(()=>{});
       update();setInterval(update,10000);

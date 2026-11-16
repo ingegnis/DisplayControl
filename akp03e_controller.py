@@ -257,15 +257,14 @@ class CarismaApi:
     def command(self, command, value=None):
         body={"command":command, "requestId":uuid.uuid4().hex}
         if value is not None: body["value"]=value
-        # Relative actions cannot be replayed after an ambiguous HTTP result.
-        # Separate Core databases cannot deduplicate one another's requests.
+        # Do not replay relative actions after ambiguous HTTP; deduplication is per Core.
         absolute = command in {'play','pause','stop','speed','top','cue','message_clear','take','take_primary','take_backup'} or (command == 'blackout' and value is not None)
         for server in self._ordered_servers():
             try:
                 data=self._request(server+"/api/prompt/controller/command","POST",body,token=self._token_for(server),timeout=self.timeout)
                 self.last_server=server; return data, "HTTP"
             except urllib.error.HTTPError as exc:
-                # Rejection must not be bypassed through unauthenticated OSC.
+                # Do not bypass HTTP refusals with OSC.
                 raise RuntimeError('Core rifiuta il comando (HTTP %s); verificare pairing e permessi.' % exc.code) from exc
             except Exception as exc:
                 reason = exc.reason if isinstance(exc, urllib.error.URLError) else exc
@@ -327,7 +326,7 @@ class ControllerService:
         except Exception:pass
 
     def enqueue(self, event):
-        # STOP is never left behind a burst of encoder events.
+        # Prioritize STOP over encoder bursts.
         if event == ('knob',1,1) or (event[0]=='button' and event[1]==7):
             self.clear_events()
         try:self.events.put_nowait((time.monotonic(), event))
@@ -406,8 +405,7 @@ class ControllerService:
         kind, index, value=ev
         command=None; arg=None
         if kind=="button":
-            # Display keys generate both edges; trigger on release. Side keys on
-            # this firmware are commonly release-only, so any side event triggers.
+            # LCD keys trigger on release; side keys accept release-only firmware events.
             if index < 6 and value != 0:return
             if not self._debounced((kind,index),.10):return
             mapping={0:"toggle",1:"cue_prev",2:"cue_next",3:"blackout",4:"top",5:"take_toggle",6:"message_clear",7:"stop",8:"take_toggle"}
@@ -543,7 +541,7 @@ def diagnose(path, seconds=8):
 
 
 def main(argv=None):
-    # Compatibility entry point: one hub and one lock for old and new launchers.
+    # Legacy launchers share the hub and lock.
     from controller_service import main as unified_main
     return unified_main(argv)
 

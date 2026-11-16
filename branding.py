@@ -19,7 +19,7 @@ def valid_branding(site):
             if len(raw) < 45 or raw[:8] != b'\x89PNG\r\n\x1a\n' or raw[12:16] != b'IHDR': return False
             width, height = struct.unpack('>II', raw[16:24])
             if not (1 <= width <= 320 and 1 <= height <= 320): return False
-            # Check chunk boundaries and checksums before serving the embedded image.
+            # Validate PNG chunk bounds and checksums.
             pos = 8
             while pos < len(raw):
                 length = int.from_bytes(raw[pos:pos+4], 'big')

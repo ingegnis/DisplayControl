@@ -4,7 +4,7 @@ const ctx=vm.createContext({window:{}});vm.runInContext(fs.readFileSync(__dirnam
 const {Timeline,WIDTH,HEIGHT}=ctx.window.PromptShared;
 let now=0;const t=new Timeline(()=>now);
 assert(t.receive({seq:10,offsetVh:.5,playing:true,rate:.1},0));now=1000;assert.equal(t.offset(),.6);
-// Duplicated polls, stale samples, delayed replies and a restarted server cannot rewind.
+// Duplicate/stale polls and server restarts must not rewind.
 assert(t.receive({seq:10,offsetVh:.1,playing:true,rate:.1},1000));assert.equal(t.offset(),.6);
 assert.equal(t.receive({seq:9,offsetVh:0,playing:false,rate:0},0),false);
 now=21000;assert.equal(t.offset(),2.6);assert(t.receive({seq:10,offsetVh:2.6,playing:true,rate:.1},21000));assert.equal(t.offset(),2.6);

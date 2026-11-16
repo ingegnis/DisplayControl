@@ -1,4 +1,4 @@
-# Bootstrap for Windows PowerShell 5.1+. Only process-level execution policy is used.
+# PowerShell 5.1+ bootstrap; process-scoped execution policy.
 [CmdletBinding()]
 param([ValidateSet('Repair','Check','Start','StartLan')][string]$Action = 'Repair')
 $ErrorActionPreference = 'Stop'
@@ -9,7 +9,7 @@ $Utf8 = New-Object System.Text.UTF8Encoding($false)
 $OutputEncoding = $Utf8
 $env:PYTHONUTF8 = '1'
 $env:PYTHONUNBUFFERED = '1'
-# Discovery must not trigger automatic downloads through a Python launcher.
+# Disable launcher downloads during discovery.
 $env:PYTHON_MANAGER_AUTOMATIC_INSTALL = 'false'
 Remove-Item Env:PYLAUNCHER_ALLOW_INSTALL -ErrorAction SilentlyContinue
 Set-Location -LiteralPath $Root
@@ -19,7 +19,7 @@ $PythonHash = '92480239264744fe0386a1bd8275786fefa126e3129e56a68e22b52c73329965'
 $Probe = 'import sys,struct,sqlite3,ssl,json,ctypes; print(json.dumps(dict(executable=sys.executable, version=list(sys.version_info[:3]), bits=struct.calcsize("P")*8)))'
 
 function Quote-NativeArgument([string]$Value) {
-    # Windows CommandLineToArgvW quoting, including embedded quotes/backslashes.
+    # CommandLineToArgvW quoting for quotes/backslashes.
     $escaped = [regex]::Replace($Value, '(\\*)"', '$1$1\"')
     $escaped = [regex]::Replace($escaped, '(\\+)$', '$1$1')
     return '"' + $escaped + '"'
@@ -68,7 +68,7 @@ function Find-Python {
         $command = Get-Command $name -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($command) { $candidates.Add($command.Source) }
     }
-    # PEP 514 registry entries, without assuming that Python is on PATH.
+    # Find Python through PEP 514 registry entries.
     foreach ($registry in @('HKCU:\Software\Python\PythonCore', 'HKLM:\Software\Python\PythonCore',
                            'HKLM:\Software\WOW6432Node\Python\PythonCore')) {
         foreach ($key in @(Get-ChildItem -Path $registry -ErrorAction SilentlyContinue)) {
@@ -113,7 +113,7 @@ function Install-Python {
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
         $partial = $installer + '.' + [guid]::NewGuid().ToString('N') + '.part'
         try {
-            # No permanent TLS, security or proxy setting changes.
+            # Preserve global TLS/security/proxy settings.
             Invoke-WebRequest -Uri $PythonUrl -OutFile $partial -UseBasicParsing -TimeoutSec 180
             if ((Get-FileHash -LiteralPath $partial -Algorithm SHA256).Hash -ne $PythonHash) {
                 throw 'SHA-256 Python non valido. Nessun installer viene eseguito.'

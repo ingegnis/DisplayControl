@@ -67,7 +67,7 @@ with tempfile.TemporaryDirectory() as folder:
             assert pages[0].evaluate('CarismaPreview.sample().kind')=='rendered'
             assert pages[2].evaluate('CarismaPreview.sample().kind')=='frame'
             checks.append('Player captures a real decoded FFmpeg video frame; clock marked as reconstructed')
-            # Heartbeat policy remains inactive without an admin monitor.
+            # No preview demand without an admin monitor.
             assert not json.loads(req('/api/player/heartbeat','POST',{'screenId':state['screens'][0]['id']},player=tokens[0])[1])['monitor']['enabled']
             checks.append('No thumbnail demand before opening monitor')
             monitor=context.new_page();monitor.on('pageerror',lambda e:errors.append(str(e)))

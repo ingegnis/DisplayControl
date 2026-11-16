@@ -1,71 +1,17 @@
-> Rapporto storico; non descrive il collaudo corrente. Vedi TEST_REPORT.md.
+> Historical report; see [TEST_REPORT.md](TEST_REPORT.md) for current release checks.
 
-# Carisma v0.4 - Rapporto di verifica
+# QA — 0.4 NDI gateway
 
-## Esito sintetico
+**15 Python tests passed**, about eight seconds in the original environment. Real FFmpeg produced H.264/AAC fMP4, played by Chromium. No official NDI runtime or physical transmitter was available.
 
-**15 test automatici Python superati.** Il client browser riproduce segmenti
-H.264/AAC generati dal vero FFmpeg di questo ambiente. Non e stato disponibile
-un runtime NDI ufficiale o un trasmettitore fisico: non si dichiara collaudo di
-ricezione NDI reale.
+Coverage: protected APIs/segments, wrong keys, SQLite/revisions, uploads/hash/download, rejected payloads/profiles, 64-bit ABI sizes (video v2 72 bytes, audio v2 56), stride copies, planar/interleaved audio, missing-runtime errors, shared encoders/input limits, path traversal and stale-signal health. A locally compiled fake C ABI exercised discovery, frame-sync, buffer counts/padding/audio, raw FFmpeg input and decoding; it did not test the NDI protocol or official SDK.
 
-## Test Python effettuati
+```sh
+python3 -m unittest discover -s tests -v
+```
 
-- API protette, chiave errata, persistenza SQLite e revisione concorrente.
-- Importazione file, hash, download autenticato e payload non validi.
-- API NDI/segmenti protette, profili e JSON rifiutati correttamente.
-- Struct ABI a 64 bit: video v2 72 byte, audio v2 56 byte.
-- Copia righe con stride e conversione audio planare/interleaved.
-- Assenza runtime dichiarata come errore, non come ricezione riuscita.
-- Generatore NON NDI -> FFmpeg -> init MP4 e segmenti reali H.264/AAC.
-- Condivisione encoder, limite ingressi e rifiuto path traversal.
-- Segnale vecchio marcato non sano.
-- Libreria C fittizia compilata localmente: discovery, frame-sync, conteggi,
-  video con padding, audio, passaggio raw a FFmpeg e decodifica dei segmenti.
-  Quest'ultimo test esercita il nostro binding, NON il protocollo o SDK ufficiale.
+Browser fixtures checked 640×360 playback (readyState 4, advancing time, about 1.8 s queue), player assignment, mute toggle, simulated disconnect/reconnect, real encoder-stop fallback/recovery, two pages sharing one encoder and mobile 390 px. No listening test or end-to-end latency measurement.
 
-Comando: `python3 -m unittest discover -s tests -v`.
-Durata dell'ultima esecuzione in questo ambiente: circa 8 secondi.
+Managed browser policy blocked HTTP/file navigation. `set_content` used memory storage and an explicit bridge to real APIs; FFmpeg/MP4 bytes were real. This does not validate direct LAN navigation, service workers, persistent storage or popup permissions. After runner timeout, two-player/mobile checks completed separately; no failed assertion was discarded.
 
-## Test browser effettuati
-
-Chromium headless installato nell'ambiente:
-
-- Sintassi JavaScript valida e nessun page error nelle prove concluse.
-- Player di anteprima: 640x360, currentTime crescente, readyState 4, nessun errore
-  media; buffer rilevato circa 1,8 secondi in una prova, NON latenza end-to-end.
-- Aggiunta player tramite interfaccia, assegnazione test video e apertura logica
-  in una seconda pagina browser.
-- Pulsante audio: video passa da muted a unmuted. Non effettuata prova d'ascolto.
-- Distacco simulato player -> fallback all'orologio locale.
-- Ricollegamento -> riproduzione del flusso ripristinata.
-- Arresto reale encoder tramite API -> fallback; ripartenza automatica -> video.
-- Due pagine player indipendenti riproducono lo stesso flusso con un solo encoder.
-- Console mobile a 390 px senza overflow orizzontale.
-
-### Limite dell'ambiente browser
-
-Il Chromium del container blocca la navigazione HTTP e file tramite policy.
-Non e stata modificata o aggirata la policy. La pagina e stata caricata come
-fixture con `set_content`: nel test il trasporto fetch era sostituito da un
-ponte verso le API locali reali, e IndexedDB/localStorage da storage di test.
-FFmpeg e i byte MP4 erano reali; non e una verifica di accesso HTTP diretto dalla
-LAN, Service Worker, storage persistente o permessi popup del PC dell'utente.
-I test HTTP/API sono stati eseguiti separatamente con il client Python.
-
-Una prima sessione di regressione browser ha raggiunto il limite di durata del
-runner dopo le verifiche di recupero: la prova a due player e il layout mobile
-sono stati completati in una sessione separata. Non sono state ignorate
-asserzioni fallite per dichiarare un esito positivo.
-
-## Ancora da collaudare sul posto
-
-1. Runtime NDI ufficiale e sorgente reale: HB, poi specifico encoder HX/H.265.
-2. Audio percepito, labiale, compatibilita browser e riavvio prolungato.
-3. CPU/temperature del NEXCOM, resa a 360p/720p, numero massimo di ingressi/player.
-4. LAN UniFi, firewall, mDNS/Avahi, interruzione fisica della rete e recupero.
-5. Windows nativo, popup, media autoplay, codec e storage effettivi dell'utente.
-6. Riavvio offline via HTTPS/localhost e futura applicazione Chromecast.
-7. Uso continuativo 24/7, log rotation e revisione sicurezza prima di produzione.
-
-Non e stata installata una ROM, modificato il bootloader o raggiunto un Chromecast.
+Still required: official runtime with HB then specific HX/H.265 source, audible AV sync, NEXCOM capacity/temperature, physical LAN/mDNS/firewall recovery, native Windows/browser permissions, offline cold-start, 24/7 stability/log rotation/security review. No Chromecast, firmware or bootloader changes.

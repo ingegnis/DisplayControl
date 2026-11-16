@@ -76,7 +76,7 @@ class ControllerHub:
             finally:self.last_event = session.device.profile.name+': '+reason
 
     def scan(self):
-        # Failed enumeration must not spuriously close healthy handles.
+        # Keep healthy handles if enumeration fails.
         found = {}
         for info in self.hid.enumerate():
             profile = identify(info)
@@ -115,7 +115,7 @@ class ControllerHub:
         with self.lock:sessions = list(self.sessions.items())
         for path, session in sessions:
             try:
-                # Seed initial held-key state during the connection grace period.
+                # Seed held keys during connection grace.
                 decoder = getattr(session.device, 'decoder', None)
                 if time.monotonic()-session.attached >= .2 and decoder and decoder.profile.protocol == 'neo' and decoder.previous is None:
                     decoder.previous = (0,)*10

@@ -39,7 +39,7 @@ with tempfile.TemporaryDirectory() as folder:
             def bridge(source,args):
                 if not args['path'].startswith('/api/'):raise ValueError('Only API transport')
                 body=args.get('body');data=body.encode() if body else None
-                # Javascript adapter supplies auth, only from the known fixture credentials.
+                # Use known fixture credentials for the JS transport.
                 headers=args.get('headers',{})
                 status,raw=req(args['path'],args.get('method','GET'),data,token=headers.get('x-control-token'),player=headers.get('x-player-token'))
                 return dict(status=status,body=base64.b64encode(raw).decode())
@@ -50,7 +50,7 @@ with tempfile.TemporaryDirectory() as folder:
             window.fetch=async(url,opts={})=>{if(window.qaApiOffline)throw Error('QA transport offline');const r=await window.qaHTTP({path:String(url),method:opts.method||'GET',body:opts.body||null,headers:Object.fromEntries(new Headers(opts.headers||{}).entries())});const b=Uint8Array.from(atob(r.body),c=>c.charCodeAt(0));return new Response(b,{status:r.status,headers:{'Content-Type':'application/json'}});};
             """
             errors=[]
-            # Admin UI fixture: actual API-generated pairing code, no fake device data.
+            # Use an API-generated code in the admin fixture.
             page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             text=(ROOT/'players.html').read_text();text=text.replace("location.origin+'/connect.html'",json.dumps('http://192.168.1.20:8787/connect.html'))
             text=text.replace('<script>','<script>'+shim+'localStorage.setItem("carisma-access-key",'+json.dumps(admin)+');',1)
@@ -69,7 +69,7 @@ with tempfile.TemporaryDirectory() as folder:
                     prefix+='window.qaDB.snapshots.set('+json.dumps(sid)+','+json.dumps(snapshot)+');window.qaApiOffline=true;'
                 text=text.replace('<script src="/physical_boot.js"></script>','<script>'+prefix+transport+'</script>')
                 text=text.replace('new URLSearchParams(location.search)','new URLSearchParams("?player='+sid+'&kiosk=1")')
-                # Storage functions substituted only in fixture. Original remains in distributed app.
+                # Replace storage in fixtures only.
                 text=re.sub(r'async function dbget\(store,key\).*?\n',"async function dbget(store,key){return window.qaDB[store].get(key);}\n",text)
                 text=re.sub(r'async function dbput\(store,key,value\).*?\n',"async function dbput(store,key,value){window.qaDB[store].set(key,value);}\n",text)
                 text=re.sub(r'async function dbdel\(store,key\).*?\n',"async function dbdel(store,key){window.qaDB[store].delete(key);}\n",text)
@@ -81,13 +81,13 @@ with tempfile.TemporaryDirectory() as folder:
             page.wait_for_timeout(700);assert page.locator('.dc-time').count()==1;checks.append('Transport outage holds old clock despite a new server assignment')
             page.evaluate('window.qaApiOffline=false');page.evaluate('syncPlayer()')
             page.wait_for_function('playerState.effectiveTitle==="Intervallo"',timeout=6000);checks.append('Transport restored applies updated content')
-            # Native-shell offline re-open simulation with snapshot injected into test storage.
+            # Simulate offline reopening with an injected snapshot.
             state['screens'][0]['override']={'type':'asset','id':'orologio'};publish();page.evaluate('syncPlayer()')
             page.wait_for_function('playerState.effectiveTitle==="Orologio e data"')
             saved=page.evaluate('window.qaDB.snapshots.get('+json.dumps(sid)+')')
             offline=player_page(saved);offline.wait_for_function('!!document.querySelector(".dc-time")',timeout=6000)
             assert not offline.evaluate('playerState.connected');offline.close();checks.append('Packaged shell boots from injected snapshot while API unavailable (not a persistence test)')
-            # Real fMP4 media via real server + FFmpeg, displayed by Chromium MediaSource.
+            # Play real server/FFmpeg fMP4 through MediaSource.
             state['assets'].append({'id':'test-live','title':'Test NON NDI','kind':'live','protocol':'ndi-test','profile':'light','sourceName':''})
             state['screens'][0]['override']={'type':'asset','id':'test-live'};publish();page.evaluate('syncPlayer()')
             page.wait_for_function('!!document.querySelector("video") && document.querySelector("video").currentTime>0.4',timeout=25000)

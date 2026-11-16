@@ -62,19 +62,19 @@ class RealFragmentTests(unittest.TestCase):
                 expected=m['segmentNominalSeconds']
                 for item in segments:
                     self.assertAlmostEqual(item['duration'],expected,places=4)
-                    # Every fragment starts at an independently decodable keyframe.
+                    # Each fragment starts with a decodable keyframe.
                     temp=Path(d)/'fragment.mp4'
                     temp.write_bytes((s.folder/'init.mp4').read_bytes()+(s.folder/item['name']).read_bytes())
                     r=subprocess.run(['ffprobe','-v','error','-select_streams','v:0','-show_frames','-of','json',str(temp)],capture_output=True,text=True,timeout=8)
                     self.assertEqual(r.returncode,0,r.stderr)
                     frames=json.loads(r.stdout)['frames'];self.assertTrue(frames)
                     self.assertEqual(frames[0]['key_frame'],1)
-                # Verify both streams can be decoded together across adjacent fragments.
+                # Decode adjacent AV fragments together.
                 combined=Path(d)/'combined.mp4'
                 combined.write_bytes((s.folder/'init.mp4').read_bytes()+b''.join((s.folder/x['name']).read_bytes() for x in segments))
                 r=subprocess.run(['ffmpeg','-v','error','-i',str(combined),'-f','null','-'],capture_output=True,timeout=10)
                 self.assertEqual(r.returncode,0,r.stderr.decode(errors='replace'))
-                # Standard HLS metadata must remain valid even though our client uses the JSON manifest.
+                # Keep standard HLS metadata valid alongside the JSON manifest.
                 text=(s.folder/'stream.m3u8').read_text()
                 duration=int(next(x.split(':')[1] for x in text.splitlines() if x.startswith('#EXT-X-TARGETDURATION:')))
                 self.assertGreaterEqual(duration,1)
