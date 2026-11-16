@@ -44,3 +44,8 @@ Consultazione: 2026-10-29. Nessun binario di questi progetti incluso nel pacchet
 - Hardware-tested Python reference: https://github.com/tomekceszke/ajazz-akp03e (MIT; consulted for protocol cross-check, not bundled as runtime)
 - Ajazz SDK reference: https://github.com/mishamyrt/ajazz-sdk
 - hidapi Python distribution: https://pypi.org/project/hidapi/
+
+
+## Controller USB 0.10
+
+Protocolli, identità, dipendenze e riferimenti primari sono elencati in [CONTROLLERS.md](CONTROLLERS.md). Implementazione indipendente; nessun driver esterno incorporato.

@@ -14,11 +14,39 @@ test_zip_traversal_refused (test_android_build.AndroidBuildUtilitiesTests.test_z
 test_corrupt_image_rejected_without_exposing_project (test_branding.BrandingTests.test_corrupt_image_rejected_without_exposing_project) ... ok
 test_embedded_png_theme_export_roundtrip (test_branding.BrandingTests.test_embedded_png_theme_export_roundtrip) ... ok
 test_remote_svg_oversize_and_css_injection_rejected (test_branding.BrandingTests.test_remote_svg_oversize_and_css_injection_rejected) ... ok
+test_play_starts_after_stop_instead_of_zero_rate (test_controller_hub.HubHttpTests.test_play_starts_after_stop_instead_of_zero_rate) ... ok
+test_real_http_one_pairing_four_models_and_no_prompt_page (test_controller_hub.HubHttpTests.test_real_http_one_pairing_four_models_and_no_prompt_page) ... ok
+test_auto_swap_all_four_families_without_pairing_or_browser (test_controller_hub.HubTests.test_auto_swap_all_four_families_without_pairing_or_browser) ... ok
+test_expired_events_and_stop_priority_across_devices (test_controller_hub.HubTests.test_expired_events_and_stop_priority_across_devices) ... ok
+test_failed_enumeration_preserves_live_handle (test_controller_hub.HubTests.test_failed_enumeration_preserves_live_handle) ... ok
+test_initial_grace_has_no_attach_command_and_reconnect_does_not_stop (test_controller_hub.HubTests.test_initial_grace_has_no_attach_command_and_reconnect_does_not_stop) ... ok
+test_msd_staging_padding_and_neo_no_crt_header (test_controller_hub.HubTests.test_msd_staging_padding_and_neo_no_crt_header) ... ok
+test_neo_first_press_after_connection_grace_is_not_swallowed (test_controller_hub.HubTests.test_neo_first_press_after_connection_grace_is_not_swallowed) ... ok
+test_neo_images_are_native_jpeg_dimensions (test_controller_hub.HubTests.test_neo_images_are_native_jpeg_dimensions) ... ok
+test_network_failure_discards_relative_backlog (test_controller_hub.HubTests.test_network_failure_discards_relative_backlog) ... ok
+test_protocol_writes_use_exact_path_and_no_contour_output (test_controller_hub.HubTests.test_protocol_writes_use_exact_path_and_no_contour_output) ... ok
+test_singleton_prevents_two_instances_and_releases_on_close (test_controller_hub.HubTests.test_singleton_prevents_two_instances_and_releases_on_close) ... ok
+test_slow_status_poll_does_not_block_stop_dispatch (test_controller_hub.HubTests.test_slow_status_poll_does_not_block_stop_dispatch) ... ok
+test_status_excludes_usb_paths_serials_and_tokens (test_controller_hub.HubTests.test_status_excludes_usb_paths_serials_and_tokens) ... ok
+test_unplug_and_replug_cannot_replay_old_session_queue (test_controller_hub.HubTests.test_unplug_and_replug_cannot_replay_old_session_queue) ... ok
+test_usb_lcd_loss_removes_session_and_stale_commands (test_controller_hub.HubTests.test_usb_lcd_loss_removes_session_and_stale_commands) ... ok
+test_ajazz_release_and_encoder_mapping_remain_compatible (test_controller_hub.ProtocolTests.test_ajazz_release_and_encoder_mapping_remain_compatible) ... ok
+test_contour_center_overrides_combined_report_jog_and_button (test_controller_hub.ProtocolTests.test_contour_center_overrides_combined_report_jog_and_button) ... ok
+test_contour_jog_wrap_both_directions_and_all_button_edges (test_controller_hub.ProtocolTests.test_contour_jog_wrap_both_directions_and_all_button_edges) ... ok
+test_contour_ring_signed_speed_center_stop_and_initial_arming (test_controller_hub.ProtocolTests.test_contour_ring_signed_speed_center_stop_and_initial_arming) ... ok
+test_msd_discrete_events_do_not_require_a_release_byte (test_controller_hub.ProtocolTests.test_msd_discrete_events_do_not_require_a_release_byte) ... ok
+test_neo_edges_held_keys_and_touch_keys (test_controller_hub.ProtocolTests.test_neo_edges_held_keys_and_touch_keys) ... ok
+test_neo_packets_boundary_headers_padding_and_content (test_controller_hub.ProtocolTests.test_neo_packets_boundary_headers_padding_and_content) ... ok
+test_only_exact_supported_ids_and_interfaces_are_claimed (test_controller_hub.ProtocolTests.test_only_exact_supported_ids_and_interfaces_are_claimed) ... ok
 test_atomic_replay_survives_store_restart_and_rejects_conflict (test_controller_resilience.DeduplicationTests.test_atomic_replay_survives_store_restart_and_rejects_conflict) ... ok
 test_non_finite_motion_rejected (test_controller_resilience.DeduplicationTests.test_non_finite_motion_rejected) ... ok
 test_absolute_command_can_failover_with_dedicated_token (test_controller_resilience.DeliveryTests.test_absolute_command_can_failover_with_dedicated_token) ... ok
 test_connection_refused_allows_real_udp_fallback (test_controller_resilience.DeliveryTests.test_connection_refused_allows_real_udp_fallback) ... ok
 test_revocation_does_not_bypass_auth_through_osc (test_controller_resilience.DeliveryTests.test_revocation_does_not_bypass_auth_through_osc) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'rejected'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'rejected'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'rejected'>
   _warnings.warn(self.warn_message, ResourceWarning)
 ok
 test_timeout_does_not_replay_relative_command (test_controller_resilience.DeliveryTests.test_timeout_does_not_replay_relative_command) ... ok
@@ -30,13 +58,7 @@ test_short_write_detected (test_controller_resilience.QueueAndUsbTests.test_shor
 test_stop_overtakes_encoder_burst (test_controller_resilience.QueueAndUsbTests.test_stop_overtakes_encoder_burst) ... ok
 test_default_launch_still_loopback_only (test_lan_launcher.LANLauncherTests.test_default_launch_still_loopback_only) ... ok
 test_lan_is_explicit_and_preserves_dependency_settings (test_lan_launcher.LANLauncherTests.test_lan_is_explicit_and_preserves_dependency_settings) ... ok
-test_default_is_responsive (test_latency.LatencyPolicyTests.test_default_is_responsive) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 409: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 500: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_default_is_responsive (test_latency.LatencyPolicyTests.test_default_is_responsive) ... ok
 test_environment_and_explicit_override (test_latency.LatencyPolicyTests.test_environment_and_explicit_override) ... ok
 test_invalid_mode_fails (test_latency.LatencyPolicyTests.test_invalid_mode_fails) ... ok
 test_keyframes_rounded_up_at_each_fps (test_latency.LatencyPolicyTests.test_keyframes_rounded_up_at_each_fps) ... ok
@@ -85,7 +107,9 @@ test_testpattern_shared_and_security (test_ndi.GatewayTests.test_testpattern_sha
 test_admin_required_for_pair_code_and_list (test_physical_players.PhysicalPlayerTests.test_admin_required_for_pair_code_and_list) ... ok
 test_admin_secret_not_accepted_as_player (test_physical_players.PhysicalPlayerTests.test_admin_secret_not_accepted_as_player) ... ok
 test_code_one_use_and_hashed_storage (test_physical_players.PhysicalPlayerTests.test_code_one_use_and_hashed_storage) ... ok
-test_concurrent_claim_single_winner (test_physical_players.PhysicalPlayerTests.test_concurrent_claim_single_winner) ... ok
+test_concurrent_claim_single_winner (test_physical_players.PhysicalPlayerTests.test_concurrent_claim_single_winner) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 500: 'rejected'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
 test_deleted_screen_blocks_player (test_physical_players.PhysicalPlayerTests.test_deleted_screen_blocks_player) ... ok
 test_expired_code_rejected (test_physical_players.PhysicalPlayerTests.test_expired_code_rejected) ... ok
 test_heartbeat_bounded_and_visible (test_physical_players.PhysicalPlayerTests.test_heartbeat_bounded_and_visible) ... ok
@@ -141,8 +165,8 @@ FFmpeg: checksum NON coincidente. Il file non viene usato.
 test_hash_mismatch_stops_installation (test_setup.FileSafetyTests.test_hash_mismatch_stops_installation) ... ok
 test_hash_parsing (test_setup.FileSafetyTests.test_hash_parsing) ... ok
 test_http_redirect_rejected (test_setup.FileSafetyTests.test_http_redirect_rejected) ... ok
-Vecchia cartella FFmpeg conservata in: <USER_HOME>\AppData\Local\Temp\tmpvos1gckm\bin\ffmpeg.backup-20261116-075618-1794812178958868200
-FFmpeg installato nel progetto: <USER_HOME>\AppData\Local\Temp\tmpvos1gckm\bin\ffmpeg\bin\ffmpeg.exe
+Vecchia cartella FFmpeg conservata in: <USER_HOME>\AppData\Local\Temp\tmp4zuc_xj7\bin\ffmpeg.backup-20261116-085044-1794815444787915000
+FFmpeg installato nel progetto: <USER_HOME>\AppData\Local\Temp\tmp4zuc_xj7\bin\ffmpeg\bin\ffmpeg.exe
 test_install_staged_and_preserves_previous_build (test_setup.FileSafetyTests.test_install_staged_and_preserves_previous_build) ... ok
 test_non_https_rejected (test_setup.FileSafetyTests.test_non_https_rejected) ... ok
 test_safe_extract_valid (test_setup.FileSafetyTests.test_safe_extract_valid) ... ok
@@ -150,14 +174,12 @@ test_settings_are_portable_and_preserve_data (test_setup.FileSafetyTests.test_se
 test_size_limit (test_setup.FileSafetyTests.test_size_limit) ... ok
 test_symlink_rejected (test_setup.FileSafetyTests.test_symlink_rejected) ... ok
 test_zip_traversal (test_setup.FileSafetyTests.test_zip_traversal) ... ok
-test_absent_ndi_installs_then_rechecks (test_setup.RepairLogicTests.test_absent_ndi_installs_then_rechecks) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_absent_ndi_installs_then_rechecks (test_setup.RepairLogicTests.test_absent_ndi_installs_then_rechecks) ... ok
 test_all_present_never_installs (test_setup.RepairLogicTests.test_all_present_never_installs) ... ok
 test_final_failure_not_reported_success (test_setup.RepairLogicTests.test_final_failure_not_reported_success) ... ok
 test_user_case_installs_only_ffmpeg (test_setup.RepairLogicTests.test_user_case_installs_only_ffmpeg) ... ok
 
 ----------------------------------------------------------------------
-Ran 127 tests in 45.721s
+Ran 151 tests in 46.914s
 
 OK

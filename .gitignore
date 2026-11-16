@@ -22,6 +22,8 @@ qa_v*/
 node_modules/
 Config_Locale.sh
 akp03e_controller.json
+*.controller.lock
+.controller-venv/
 __pycache__/
 *.pyc
 *.log

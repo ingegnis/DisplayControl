@@ -26,7 +26,7 @@ import urllib.parse
 import urllib.request
 import uuid
 
-VERSION = "0.9.0-alpha"
+VERSION = "0.10.0-alpha"
 VID = 0x0300
 PID = 0x3002
 USAGE_PAGE = 0xFFA0
@@ -501,11 +501,11 @@ def normalize_server(value):
 
 def interactive_setup(path):
     cfg=load_config(path)
-    print("CARISMA / CONFIGURAZIONE CONTROLLER AKP03E\n")
+    print("DISPLAYCONTROL / CONFIGURAZIONE CONTROLLER USB\n")
     current=(cfg.get("servers") or ["http://127.0.0.1:8787"])[0]
     entered=input(f"Server Core, separati da virgola [{current}]: ").strip() or current
     servers=list(dict.fromkeys(normalize_server(x) for x in entered.split(',') if x.strip()))
-    name=input("Nome controller [AKP03E Regia]: ").strip() or "AKP03E Regia"
+    name=input("Nome controller [Controller regia]: ").strip() or "Controller regia"
     osc=input("Fallback OSC opzionali, es. 192.168.10.11:9000,192.168.10.12:9000 [vuoto]: ").strip()
     cfg.update({"servers":servers,"serverTokens":{},"oscTargets":[x.strip() for x in osc.split(',') if x.strip()],"brightness":65,"iconRotation":270,"timeout":0.6})
     api=CarismaApi(cfg)
@@ -543,14 +543,9 @@ def diagnose(path, seconds=8):
 
 
 def main(argv=None):
-    ap=argparse.ArgumentParser(description="Controller USB AJAZZ AKP03E per Carisma Prompt")
-    ap.add_argument("--config",default=str(DEFAULT_CONFIG))
-    ap.add_argument("--setup",action="store_true")
-    ap.add_argument("--diagnose",action="store_true")
-    ap.add_argument("--diagnose-seconds",type=int,default=8)
-    args=ap.parse_args(argv);path=Path(args.config)
-    if args.setup:interactive_setup(path);return 0
-    if args.diagnose:return diagnose(path,max(2,min(60,args.diagnose_seconds)))
-    ControllerService(path).run();return 0
+    # Compatibility entry point: one hub and one lock for old and new launchers.
+    from controller_service import main as unified_main
+    return unified_main(argv)
+
 
 if __name__=="__main__":raise SystemExit(main())

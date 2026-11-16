@@ -66,7 +66,7 @@ class Server(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'CarismaDisplay/0.9.0-alpha'
+    server_version = 'CarismaDisplay/0.10.0-alpha'
 
     def log_message(self, fmt, *args):
         if not any(p in str(args) for p in ('/api/state', '/api/runtime', '/api/ndi/manifest/', '/api/ndi/media/', '/api/heartbeat', '/api/player/', '/api/preview', '/api/monitor', '/api/prompt')):
@@ -127,7 +127,7 @@ class Handler(BaseHTTPRequestHandler):
         if handle_players(self, path, HEARTBEATS, HEARTBEATS_LOCK):
             return
         if path == '/api/info':
-            return self.reply({'product': 'carisma-display-control', 'version': '0.9.0-alpha', 'authRequired': True, 'serverTime': time.time()})
+            return self.reply({'product': 'carisma-display-control', 'version': '0.10.0-alpha', 'authRequired': True, 'serverTime': time.time()})
         if path == '/api/branding':
             # Deliberately public identity for login/pairing; no project or keys.
             with self.db() as conn:
@@ -341,7 +341,7 @@ def main():
                              ffmpeg=args.ffmpeg, extra_ips=args.ndi_extra_ips,
                              max_streams=args.ndi_max_streams, live_mode=args.live_mode)
     url = 'http://127.0.0.1:%d/?key=%s' % (args.port, token)
-    print('\nCARISMA / DISPLAY CONTROL v0.9.0-alpha / PROMPT + AKP03E\n')
+    print('\nCARISMA / DISPLAY CONTROL v0.10.0-alpha / PROMPT + AKP03E\n')
     print('Apri nel browser: ' + url)
     print('Diretta: ' + server.gateway.playback['label'])
     print('Dati: ' + str(server.data_dir))

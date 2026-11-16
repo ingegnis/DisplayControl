@@ -225,9 +225,13 @@ class PromptStore:
             rt = self.runtime()
             proj = self.project()
             cmd = str(command or '').lower()
-            if cmd == 'play': rt['playing'] = True
+            if cmd == 'play':
+                rt['playing'] = True
+                if abs(float(rt.get('rate',0))) < .0001: rt['rate'] = .11
             elif cmd == 'pause': rt['playing'] = False
-            elif cmd == 'toggle': rt['playing'] = not bool(rt.get('playing'))
+            elif cmd == 'toggle':
+                rt['playing'] = not bool(rt.get('playing'))
+                if rt['playing'] and abs(float(rt.get('rate',0))) < .0001: rt['rate'] = .11
             elif cmd == 'stop': rt.update(playing=False, rate=0.0)
             elif cmd == 'speed':
                 try: rate = float(value)
@@ -276,7 +280,7 @@ class PromptStore:
     def controller_command(self, ctl, body):
         request_id = body.get('requestId')
         if request_id is None:  # Older controller clients remain compatible.
-            return self.command(body['command'], body.get('value'), source='AKP03E:'+ctl['id'])
+            return self.command(body['command'], body.get('value'), source='USB:'+ctl['id'])
         if not isinstance(request_id, str) or not re.fullmatch(r'[a-f0-9]{32}', request_id):
             raise GatewayError('ID richiesta controller non valido.', 400)
         fingerprint = digest(json.dumps([body['command'], body.get('value')], sort_keys=True, allow_nan=False))
@@ -287,7 +291,7 @@ class PromptStore:
             if row:
                 if row[0] != fingerprint: raise GatewayError('ID richiesta riutilizzato con altro comando.', 409)
                 return json.loads(row[1])
-            response = self.command(body['command'], body.get('value'), source='AKP03E:'+ctl['id'], connection=c)
+            response = self.command(body['command'], body.get('value'), source='USB:'+ctl['id'], connection=c)
             c.execute('DELETE FROM prompt_controller_requests WHERE created<?', (time.time()-86400,))
             c.execute('INSERT INTO prompt_controller_requests VALUES(?,?,?,?,?)',
                       (ctl['id'], request_id, fingerprint, json.dumps(response), time.time()))
@@ -376,6 +380,8 @@ class PromptStore:
             'vid': str(body.get('vid', ''))[:16], 'pid': str(body.get('pid', ''))[:16],
             'lastEvent': str(body.get('lastEvent', ''))[:160],
             'version': str(body.get('version', ''))[:40],
+            'devices': [{'model':str(d.get('model',''))[:40], 'name':str(d.get('name',''))[:80], 'vid':str(d.get('vid',''))[:4], 'pid':str(d.get('pid',''))[:4]} for d in (body.get('devices') if isinstance(body.get('devices'),list) else [])[:8] if isinstance(d,dict)],
+            'droppedEvents': max(0,min(1000000,int(body.get('droppedEvents',0) or 0))),
         }
         with self.lock: self.controller_status[ctl['id']] = item
         return item

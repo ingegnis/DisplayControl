@@ -1,51 +1,70 @@
-# Test DisplayControl 0.9.0-alpha
+# Test DisplayControl 0.10.0-alpha
 
-Verifica completata il 16 novembre 2026 su Windows x64, Python 3.14.7 e Node.js.
+Eseguiti il 16 novembre 2026 su Windows x64, Python 3.14.7, Node.js,
+hidapi 0.15.0, Pillow 13.0.0, FFmpeg/ffprobe e compilatore Visual C.
 
-## Esito
+## Esito attuale
 
-- **127 test Python completati: 0 errori, 0 fallimenti, 0 saltati.**
-- Tre suite JavaScript superate: policy diretta, palette/contrasto/logo, timeline Prompt.
-- Sintassi di 20 script JavaScript verificata; compilazione sintattica dei moduli Python completata.
+- **151 test Python: 0 errori, 0 fallimenti, 0 saltati**, inclusi 24 test del nuovo hub.
+- Tre suite JavaScript superate e sintassi di 20 script verificata.
+- Installazione da zero in un ambiente Python isolato completata; avvio compatibile
+  `akp03e_controller.py --list` riuscito con il nuovo servizio.
+- Enumerazione HID reale: **0 controller supportati collegati**.
 
-| Area | Prova | Esito e portata |
+| Area | Verifica | Portata |
 |---|---|---|
-| Prompt | Copioni/cue, tre opzioni grafiche, API e pairing | Superata sul software |
-| Sincronismo | 20 JOG+, anteprima ridotta contro player a schermo intero | Identici margini, font, coordinate delle righe e posizione a pausa |
-| Ridimensionamento | Finestre 800×600 e 1920×1080 | Nessuna reimpaginazione; coordinate virtuali identiche |
-| Guasto server | Processo del server di prova arrestato mantenendo aperti regia e player | Scorrimento locale proseguito; player ha indicato offline |
-| Riavvio | Stessa cartella dati, browser rimasti aperti | Riconnessione automatica; scarto dall'avanzamento atteso 0.239 pixel virtuali nella misura raccolta |
-| Controller | Eventi HID e LCD simulati, code scadute, STOP prioritario, USB/LCD persi | Superata con dispositivo fittizio; nessuna prova di USB reale |
-| Pairing | Codici scaduti/monouso, revoca, token limitati, richieste concorrenti duplicate | Superata via HTTP reale su loopback e SQLite |
-| Fallback | Core rifiutato, timeout ambiguo, cambio endpoint e UDP OSC vero su loopback | Nessun aggiramento della revoca e nessuna ripetizione relativa dopo esito incerto |
-| FFmpeg | Test pattern, frammenti H.264/AAC, profili 360p/720p, keyframe e decodifica | Superata con FFmpeg/ffprobe reali |
-| Interfaccia NDI C | DLL di test compilata con Visual C, ricezione simulata, perdita/ripresa segnale e decodifica FFmpeg | Superata; la DLL non implementa il protocollo NDI |
-| Monitor | Miniature, domanda di anteprima, permessi, revoca e dati assegnati | Superata tramite API e fixture; nessun display fisico coinvolto |
-| Player signage | Abbinamento, cache/configurazione assegnata, accesso ai segmenti FFmpeg | Superata via API; non certifica Raspberry/Chromecast |
-| Nome/logo/tema | Upload PNG sintetico nel browser, proposta palette, applicazione, salvataggio e ricaricamento | Superata in modalità demo; persistenza server/esportazione verificata anche via API |
-| Android | Verifiche dei sorgenti, policy e coerenza degli asset inclusi | Superata; APK non compilato né eseguito qui |
+| Identificazione | VID/PID, interfacce, esclusione di tastiere/dispositivi sconosciuti | Metadati sintetici |
+| AJAZZ | Encoder, pulsanti, firma ACK, entrambe le identità AKP03E | Report sintetici |
+| MSD-TWO | Protocollo 2, clic senza fronte di rilascio, LCD e padding | Report e trasporto HID simulati |
+| Contour Xpress/PRO v2 | Ghiera firmata, ritorno al centro, jog con wrap, pulsanti simultanei e mappa PRO estesa | Report sintetici |
+| Neo | Otto tasti, due touch, fronti, immagini JPEG 96×96, pacchetti e feature brightness | Pillow reale, HID simulato |
+| Scambio | AJAZZ → MSD-TWO → Contour → Neo senza pagina Prompt, con un solo pairing | API HTTP reale su loopback, USB simulato |
+| Hot unplug | Vecchie code respinte dopo nuova generazione della connessione | USB simulato |
+| Doppio avvio | Blocco del file di configurazione e rilascio alla chiusura | File lock Windows reale |
+| Reattività | STOP prioritario, eventi scaduti, polling bloccato che non ferma il thread comandi | Test concorrenti con attese controllate |
+| Riservatezza stato | Niente token, percorsi USB o seriali negli heartbeat del servizio | API e fixture |
+| PLAY | Ripresa dopo STOP con velocità zero | API HTTP reale |
+| Regressione | Server, pairing, token, revoca, Prompt, Monitor e player | Suite completa |
+| FFmpeg | 360p/720p, frammenti, keyframe, accesso e decodifica audio/video | FFmpeg reale |
+| NDI | Binding C, perdita/ripresa segnale e percorso di codifica | DLL ABI simulata; non è una sorgente NDI reale |
+| Android | Policy, manifest e coerenza degli asset | Sorgenti; APK non compilato/eseguito |
 
-## Correzioni rilevanti
+La prova dell'API controller non apre alcuna pagina web e non genera scorciatoie
+tastiera: verifica il percorso usato dal servizio esterno, indipendente dal focus.
+Non certifica il comportamento di un driver USB reale o le autorizzazioni di un OS.
 
-- Chiuse esplicitamente le connessioni SQLite per evitare file bloccati su Windows.
-- Motore condiviso Prompt con pagina virtuale 1280×720 e timeline monotona; risposte più vecchie non riportano indietro lo scorrimento.
-- Cache del player limitata a una scrittura al secondo anziché riscrivere l'intero copione a ogni polling.
-- Controller: configurazione atomica, token distinti per endpoint, code limitate e senza recupero tardivo; scritture HID incomplete rilevate; errori LCD riportano il dispositivo in riconnessione.
-- Richieste controller con identificativo deduplicate in transazione insieme allo stato, conservate per 24 ore sul singolo Core. Non sono una deduplicazione fra database indipendenti.
-- Nome, logo ridimensionato e tema restano nel progetto; nessun logo viene applicato al copione.
+## Verifiche storiche
 
-## Limiti e collaudo necessario
+Il motore di sincronismo Prompt della 0.9 resta incluso. Le misure browser
+800×600/1920×1080 e di arresto/riavvio sono conservate in
+`test-results/browser-sync.json` come evidenze della **0.9**, senza attribuirle
+a un nuovo collaudo fisico. Il precedente rapporto è nel tag GitHub `v0.9.0-alpha`.
+Per la 0.10 i controlli JavaScript sono di sintassi e regressione automatica.
 
-Nessun AKP03E, Raspberry, Chromecast, monitor HDMI, sorgente NDI di rete o QLab fisico è stato collaudato. Restano da verificare sul posto enumerazione USB, orientamento LCD, numerazione encoder, hot unplug, rendering con font installati su sistemi diversi, latenza della LAN e prestazioni a pieno carico.
+## Limiti
 
-Il cambio Core HTTP non replica lo spettacolo e non implementa quorum, VIP, witness o fencing. Preparare e abbinare ogni endpoint separatamente; TAKE rimane logico. OSC UDP non offre autenticazione o conferma di consegna e deve restare sulla rete di controllo fidata. Lo STOP è prioritario nella coda ma non è un comando hardware di emergenza: eventuali attese di rete ne influenzano la latenza.
+Nessun controller AJAZZ, Contour, Mars Gaming o Elgato fisico è stato disponibile.
+Restano da verificare firmware, identificazione reale, pulsanti, LCD, numerazione,
+orientamento, conflitti con software del produttore, hot unplug e latenza sul palco.
+macOS/Linux non sono stati collaudati qui; verificare accesso HID e permessi udev.
 
-Un'interruzione improvvisa del processo Windows può lasciare un encoder esterno da chiudere; le prove arrestano gli encoder prima della pulizia. Non è verificata qui la tenuta dopo sospensione completa del sistema operativo. La continuità di un player già aperto non certifica l'avvio a freddo offline su indirizzi LAN HTTP.
+Il riconoscimento automatico opera sugli identificativi documentati, non su qualunque
+revisione dello stesso marchio. Un controller sconosciuto non viene aperto. Per
+diagnosticare un'unità reale usare i comandi descritti in CONTROLLERS.md.
 
-Ricaricare regia e player dopo la patch, senza mescolare versioni 0.8 e 0.9. Le unità dei comandi preesistenti ora rappresentano pagine virtuali: ricontrollare le velocità operative e i cue prima di uno spettacolo. Il copione viene impaginato con font di sistema; per confronti fra OS diversi installare gli stessi font.
+Il servizio deve essere avviato e il server deve essere raggiungibile per ricevere
+nuovi comandi. La lettura USB è separata dalle richieste di rete. Le richieste HTTP
+già in corso possono ritardare quelle successive; STOP non è un arresto hardware
+in tempo reale. Scollegare un controller non ferma lo spettacolo; centrare la ghiera
+Contour invia STOP. La deduplicazione riguarda il singolo Core e OSC non conferma
+la consegna.
 
-## Riproducibilità
+Nessuna prova di NDI di rete reale, Raspberry, Chromecast, QLab, cluster HA o
+commutazione HDMI. TAKE resta logico. La release rimane alpha.
 
-Comandi nel README; log e misure sanitizzati in `test-results/`. I rapporti `QA*` inclusi sono documentazione storica e non attestano questa release. Il test ABI usa soltanto `tests/fake_ndi.c`; i binari NDI proprietari non sono inclusi.
+## Evidenze e ripetizione
 
-Riferimenti per le correzioni: [gestione connessioni SQLite in Python](https://docs.python.org/3/library/sqlite3.html#how-to-use-the-connection-context-manager), [muxer HLS FFmpeg](https://ffmpeg.org/ffmpeg-formats.html#hls-2). Gli esiti sopra provengono dall'esecuzione locale dei test, non dai riferimenti.
+Log sanitizzato, riepilogo e risultati JavaScript in `test-results/`.
+Comandi nel README e istruzioni per controller in CONTROLLERS.md. Per evitare
+test saltati servono le dipendenze controller, FFmpeg/ffprobe e un compilatore C.
+Non distribuire la cartella dati, token o ambienti virtuali su GitHub.

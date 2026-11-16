@@ -1,8 +1,8 @@
 # DisplayControl
 
-Regia locale per schermi informativi e gobbo elettronico, derivata da Carisma Display Control. **Versione 0.9.0-alpha**.
+Regia locale per schermi informativi e gobbo elettronico, derivata da Carisma Display Control. **Versione 0.10.0-alpha**.
 
-Console web, player browser, copioni TXT/DOCX, cue, controllo OSC e controller AJAZZ AKP03E tramite USB HID. Il gateway opzionale riceve NDI sul server e lo converte con FFmpeg in video per i browser.
+Console web, player browser, copioni TXT/DOCX, cue, controllo OSC e controller USB intercambiabili (AJAZZ, Contour, MSD-TWO e Stream Deck Neo). Il gateway opzionale riceve NDI sul server e lo converte con FFmpeg in video per i browser.
 
 ## Avvio
 
@@ -34,9 +34,12 @@ Anteprima e player usano `prompt_shared.js`: stessa superficie virtuale 1280×72
 
 **Dopo l'aggiornamento riavvia il server e ricarica tutte le pagine Prompt. Non mescolare regia/player 0.8 e 0.9.** Per il confronto su sistemi operativi diversi va verificata anche la disponibilità dei font di sistema.
 
-## AKP03E e dipendenze facoltative
+## Controller automatici e dipendenze facoltative
 
-- Controller: `python setup_akp03e.py`, poi `python akp03e_controller.py --setup`. Servono il controller e la dipendenza `hidapi` per l'uso reale; i test usano un dispositivo simulato.
+- Windows: `Installa_Controller_Windows.bat`, poi `Configura_Controller_Windows.bat` una sola volta e `Avvia_Controller_Windows.bat`.
+- macOS/Linux: `sh Installa_Controller_Linux_Mac.sh`, poi `sh Avvia_Controller_Linux_Mac.sh --setup` e `sh Avvia_Controller_Linux_Mac.sh`.
+- Il servizio riconosce automaticamente AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, Mars Gaming MSD-TWO ed Elgato Stream Deck Neo. Puoi alternarli senza rifare il pairing; la pagina Prompt può essere chiusa o in secondo piano. Dettagli, comandi, permessi e limiti in [CONTROLLERS.md](CONTROLLERS.md).
+- Gli installer usano un ambiente `.controller-venv/` isolato con hidapi e Pillow; il servizio richiede Python 3.11+. Server e gobbo mantengono i requisiti precedenti. I vecchi avvii AKP03E inoltrano al servizio unificato.
 - Ogni Core può essere abbinato separatamente, con il proprio token. Questo non replica database, copioni o stato e non implementa un cluster HA.
 - Il fallback OSC è opzionale e non conferma la ricezione. Un esito HTTP ambiguo non causa la ripetizione automatica di comandi relativi; un rifiuto di autenticazione non viene aggirato con OSC.
 - Per NDI installa separatamente FFmpeg e il runtime NDI ufficiale. I binari e le licenze dei fornitori non sono inclusi. Leggi `LEGGIMI_NDI.md` e `LEGGIMI_SETUP_WINDOWS_v0.4.1.md`.
@@ -53,9 +56,9 @@ node tests/test_prompt_timeline.js
 
 FFmpeg/ffprobe e un compilatore C servono alle prove di codifica e ABI simulata. In loro assenza alcuni test vengono saltati: controlla sempre il riepilogo.
 
-La verifica di questa release ha completato **127 test Python senza errori o test saltati**, tre suite JavaScript e prove nel browser. Dettagli in [TEST_REPORT.md](TEST_REPORT.md).
+La verifica di questa release ha completato **151 test Python senza errori o test saltati** e tre suite JavaScript. Sono inclusi scambio dei quattro tipi di controller con un solo pairing via HTTP reale, report HID sintetici e installazione pulita delle dipendenze. Le prove browser del motore Prompt della 0.9 restano documentate come tali. Dettagli in [TEST_REPORT.md](TEST_REPORT.md).
 
-**AKP03E fisico, sorgente NDI reale, Raspberry/Chromecast, QLab, commutazione HDMI e cluster HA non sono certificati da queste prove.** TAKE cambia il ruolo logico, senza commutare ingressi HDMI. La release rimane alpha.
+**Controller fisici, sorgente NDI reale, Raspberry/Chromecast, QLab, commutazione HDMI e cluster HA non sono certificati da queste prove.** TAKE cambia il ruolo logico, senza commutare ingressi HDMI. La release rimane alpha.
 
 ## Download da un altro PC
 

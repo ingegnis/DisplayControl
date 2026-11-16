@@ -1,20 +1,21 @@
 {
-  "version": "0.9.0-alpha",
+  "version": "0.10.0-alpha",
   "reviewDate": "2026-11-16",
-  "textFilesScanned": 119,
+  "filesReviewed": 182,
+  "textFilesScanned": 135,
   "findings": [],
-  "excludedFiles": 71,
   "excludedCategories": [
-    "runtime data and databases",
-    "keys and local configuration",
-    "historical raw QA logs/screenshots",
-    "compiled/vendor binaries and caches"
+    "runtime data and credentials",
+    "databases and pairing files",
+    "virtual environments",
+    "USB paths and serial numbers",
+    "private QA logs and screenshots",
+    "vendor binaries and signing material"
   ],
   "notes": [
-    "Tests use synthetic values only.",
-    "No prior Git history is imported.",
-    "Automated pattern scan plus manual review; not a guarantee against every possible secret.",
-    "Installation-specific town removed from demo templates; final staged tree rescanned without findings."
-  ],
-  "filesReviewed": 166
+    "Exact tracked/new publication tree scanned with credential patterns and manually reviewed.",
+    "Published test credentials and reports are synthetic; log paths are sanitized.",
+    "No real controller attached; no hardware certification.",
+    "Pattern scanning cannot guarantee the absence of every possible secret."
+  ]
 }

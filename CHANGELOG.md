@@ -1,3 +1,13 @@
+# 0.10.0-alpha
+
+- Servizio controller unificato con riconoscimento HID e cambio a caldo, indipendente dalla pagina Prompt.
+- AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, Mars Gaming MSD-TWO e Stream Deck Neo.
+- Adattatori distinti, priorità STOP, scadenza comandi e isolamento fra generazioni USB.
+- Lettura HID, invio comandi e telemetria su percorsi separati; file lock contro il doppio avvio.
+- Installer isolati e avvii compatibili con i vecchi nomi AKP03E.
+- PLAY avvia il testo anche dopo un comando STOP che aveva azzerato la velocità.
+- 151 test Python superati; hardware non disponibile. Vedi TEST_REPORT.md.
+
 # 0.9.0-alpha
 
 - Sincronismo Prompt indipendente dalla larghezza della finestra; timeline condivisa e recupero dopo riavvio.
