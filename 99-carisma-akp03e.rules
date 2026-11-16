@@ -1,0 +1,2 @@
+# AJAZZ AKP03E - Carisma Prompt. Replug after installing this rule.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="0300", ATTRS{idProduct}=="3002", MODE="0660", TAG+="uaccess"

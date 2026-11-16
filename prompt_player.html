@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Carisma Prompt Player</title>
+<script src="./branding.js"></script><script src="./prompt_shared.js"></script>
+<style>
+:root{--bg:#000;--fg:#f4f4f0;--accent:#f0a15a;--muted:#888;--reading:#de5e37;--font:Arial,"Liberation Sans",sans-serif;--size:5.7vh}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--fg);overflow:hidden;font-family:var(--font)}
+body.font-classic{--font:Arial,"Liberation Sans",sans-serif}body.font-wide{--font:Verdana,"DejaVu Sans",sans-serif}body.font-serif{--font:Georgia,"Liberation Serif",serif}
+body.size-medium{--size:4.5vh}body.size-large{--size:5.7vh}body.size-xlarge{--size:7vh}
+body.theme-white{--bg:#000;--fg:#f4f4f0;--accent:#ddd;--reading:#de5e37}body.theme-amber{--bg:#050403;--fg:#ffc56b;--accent:#e99b32;--reading:#ff7b3d}body.theme-inverse{--bg:#f1f0e9;--fg:#111;--accent:#555;--reading:#c33d27}
+#viewport{position:absolute;inset:0;overflow:hidden;background:var(--bg)}
+#script{position:absolute;left:9vw;right:9vw;top:0;padding-top:38vh;padding-bottom:70vh;font-size:var(--size);line-height:1.33;font-weight:600;letter-spacing:.01em;will-change:transform}
+.line{min-height:1.33em;margin:0 0 .45em;white-space:pre-wrap;overflow-wrap:anywhere}.line.blank{min-height:.75em;margin:0}.line.cue{position:relative}.line.cue::before{content:attr(data-cue-title);position:absolute;right:101%;top:.2em;color:var(--accent);font:600 1.25vh Arial,sans-serif;letter-spacing:.12em;opacity:.5;white-space:nowrap}
+#reading{position:absolute;left:4vw;right:4vw;top:38vh;height:2px;background:var(--reading);opacity:.85;z-index:5;box-shadow:0 0 12px color-mix(in srgb,var(--reading) 50%,transparent)}
+#reading:before{content:"";position:absolute;left:-1.2vw;top:-.65vh;border-top:.7vh solid transparent;border-bottom:.7vh solid transparent;border-left:1vw solid var(--reading)}
+#blackout{position:fixed;inset:0;background:#000;z-index:100;display:none}#blackout.on{display:block}
+#message{position:fixed;left:7vw;right:7vw;top:5vh;padding:1.7vh 2.4vw;background:#ba4a29;color:#fff;border-radius:1vh;z-index:80;text-align:center;font:700 3vh Arial,sans-serif;letter-spacing:.02em;display:none;box-shadow:0 1vh 4vh #0008}#message.on{display:block}
+#status{position:fixed;left:1.5vw;bottom:1.5vh;z-index:90;background:#141b18dd;border:1px solid #4d6257;color:#dce8de;border-radius:8px;padding:8px 11px;font:600 11px Arial,sans-serif;display:none}body.debug #status{display:block}#status.off{background:#663d28dd;border-color:#98694f}
+#pair{position:fixed;inset:0;z-index:200;background:#17211d;color:#e7eee8;display:grid;place-items:center;padding:24px;font-family:Arial,sans-serif}.pairbox{width:min(520px,100%);background:#223029;border:1px solid #405148;border-radius:18px;padding:30px;box-shadow:0 24px 80px #0004}.pairbox h1{margin:0 0 8px;font-size:26px}.pairbox p{color:#aebdb3;line-height:1.7}.pairbox label{display:block;margin:18px 0 6px;font-size:12px;font-weight:700}.pairbox input{width:100%;padding:13px;border-radius:9px;border:1px solid #52675a;background:#18241e;color:#fff;font-size:18px}.pairbox button{width:100%;margin-top:18px;padding:13px;border:0;border-radius:9px;background:#de5e37;color:white;font-weight:700;cursor:pointer}.pairbox .err{color:#ffab8d;min-height:22px;margin-top:12px}.small{font-size:11px;color:#87978d}
+</style>
+</head>
+<body class="font-classic size-large theme-white">
+<div id="viewport"><div id="script"></div></div><div id="reading"></div><div id="message"></div><div id="blackout"></div><div id="status"></div>
+<div id="pair"><div class="pairbox"><h1>CARISMA / PROMPT</h1><p>Abbina questo monitor al gobbo. Il copione verra salvato localmente e potra continuare a scorrere durante una perdita temporanea della rete.</p><label>Nome dispositivo</label><input id="pname" value="Prompt palco"><label>Codice di abbinamento</label><input id="pcode" inputmode="numeric" maxlength="8" autocomplete="one-time-code" placeholder="8 cifre"><button id="pairbtn">ABBINA PLAYER</button><div class="err" id="perr"></div><div class="small">LAN privata Carisma. Nessun servizio cloud.</div></div></div>
+<script>
+'use strict';
+const TOKEN_KEY='carisma-prompt-token-v1', CACHE_KEY='carisma-prompt-cache-v1';
+const params=new URLSearchParams(location.search); if(params.get('debug')==='1') document.body.classList.add('debug');
+let token=localStorage.getItem(TOKEN_KEY)||'', project=null, runtime=null, device=null, projectVersion=0;
+let receivePerf=performance.now(), online=false, lastPoll=0, lastBeat=0, renderY=0, fpsCount=0, fpsAt=performance.now(), fps=0, polling=false;
+const timeline=new PromptShared.Timeline();
+const promptView=new PromptShared.Viewport(document.getElementById('viewport'),document.getElementById('script'),document.getElementById('reading'),document.getElementById('message'),document.getElementById('blackout'));
+let lastCache=0;
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function saveCache(force=false){const now=Date.now();if(!force&&now-lastCache<1000)return;try{localStorage.setItem(CACHE_KEY,JSON.stringify({project,projectVersion,runtime:timeline.snapshot(),device,cachedAt:now}));lastCache=now;}catch{}}
+function loadCache(){try{const x=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(x&&x.project){project=x.project;projectVersion=x.projectVersion||x.project.version||0;runtime=x.runtime||runtime;device=x.device||device;timeline.restore(runtime,x.cachedAt);runtime=timeline.runtime;return true}}catch{}return false}
+function api(path,opt={}){return fetch(path,{cache:'no-store',signal:AbortSignal.timeout(1200),...opt,headers:{'X-Prompt-Token':token,...opt.headers}}).then(async r=>{let b={};try{b=await r.json()}catch{}if(!r.ok){const error=Error(b.error||'HTTP '+r.status);error.status=r.status;throw error};return b})}
+function applySettings(){if(project)promptView.settings(project.settings||{});}
+function renderProject(){if(project){promptView.render(project);renderY=promptView.draw(timeline.runtime,timeline.offset());}}
+function cueBase(cueId){return promptView.target(cueId,0);}
+function currentOffset(){return timeline.offset();}
+function targetY(){return runtime&&project?promptView.target(runtime.anchor,currentOffset()):0;}
+function applyRuntime(r,sent){if(timeline.receive(r,sent)){runtime=timeline.runtime;saveCache();}}
+async function poll(){if(!token||polling)return;polling=true;const sent=performance.now();try{const d=await api('/api/prompt/player/state?projectVersion='+encodeURIComponent(projectVersion));online=true;device=d.device;if(d.project&&d.projectVersion>=projectVersion){project=d.project;projectVersion=d.projectVersion;renderProject()}if(d.runtime)applyRuntime(d.runtime,sent);saveCache();document.getElementById('pair').style.display='none'}catch(e){online=false;if(e.status===401||/revocato|abbinato/i.test(e.message)){token='';localStorage.removeItem(TOKEN_KEY);document.getElementById('pair').style.display='grid';document.getElementById('perr').textContent=e.message}}finally{polling=false}}
+
+async function beat(){if(!token||!device||!runtime)return;try{await api('/api/prompt/player/heartbeat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seq:runtime.seq||0,projectVersion,anchor:runtime.anchor||'',offsetVh:currentOffset(),online,fps,message:online?'OK':'Offline locale'})})}catch{}}
+function frame(){renderY=promptView.draw(timeline.runtime,currentOffset());fpsCount++;const now=performance.now();if(now-fpsAt>1000){fps=Math.round(fpsCount*1000/(now-fpsAt));fpsCount=0;fpsAt=now}const st=document.getElementById('status');if(document.body.classList.contains('debug')){st.className=online?'':'off';st.textContent=(device?device.role+' / '+device.name:'PROMPT')+' · '+(online?'LAN':'OFFLINE LOCALE')+' · '+(runtime?.playing?'SCORRE '+(runtime.rate||0).toFixed(2)+' pagine/s':'PAUSA')+' · '+fps+' fps';}requestAnimationFrame(frame)}
+
+async function pair(){const code=document.getElementById('pcode').value.trim(),name=document.getElementById('pname').value.trim();document.getElementById('perr').textContent='';try{const r=await fetch('/api/prompt/pair',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,name})});const d=await r.json();if(!r.ok)throw Error(d.error||'Abbinamento fallito');token=d.token;device=d;localStorage.setItem(TOKEN_KEY,token);await poll()}catch(e){document.getElementById('perr').textContent=e.message}}
+document.getElementById('pairbtn').onclick=pair;document.getElementById('pcode').addEventListener('keydown',e=>{if(e.key==='Enter')pair()});
+if(token){document.getElementById('pair').style.display='none';if(loadCache()){renderProject();if(runtime)applyRuntime(runtime)}}
+setInterval(()=>{poll();},50);setInterval(()=>beat(),1000);window.addEventListener('resize',()=>{promptView.fit();renderY=targetY()});window.addEventListener('pagehide',()=>saveCache(true));requestAnimationFrame(frame);poll();
+</script>
+</body></html>

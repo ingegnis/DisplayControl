@@ -1,0 +1,11 @@
+{
+  "version": "0.8.0-alpha",
+  "base": "0.7.0-alpha",
+  "feature": "AJAZZ AKP03E direct USB HID controller",
+  "preserve": ["data/", "bin/", ".setup/", "Config_Locale.bat"],
+  "notes": [
+    "Controller has a dedicated scoped token; it does not use the admin key.",
+    "TAKE PRIMARY/BACKUP is logical; physical HDMI switching is not performed.",
+    "Run the Windows installer/test/configuration scripts on the control PC."
+  ]
+}

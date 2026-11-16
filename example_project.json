@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "site": {
+    "name": "Teatro Carisma",
+    "timezone": "Europe/Rome",
+    "defaultCacheMb": 750,
+    "description": "Regia schermi informativi"
+  },
+  "assets": [
+    {
+      "id": "orologio",
+      "kind": "clock",
+      "title": "Orologio e data",
+      "theme": "forest",
+      "timezone": "",
+      "label": "TEATRO CARISMA",
+      "showSeconds": true,
+      "duration": 30,
+      "size": 0
+    },
+    {
+      "id": "benvenuto",
+      "kind": "poster",
+      "title": "Benvenuti al Carisma",
+      "design": "welcome",
+      "headline": "Le storie\niniziano qui.",
+      "subtitle": "Benvenuti al Teatro Carisma.\nUno spazio da vivere, insieme.",
+      "footer": "ACCOGLIENZA / TEATRO CARISMA",
+      "duration": 15,
+      "size": 0
+    },
+    {
+      "id": "programma",
+      "kind": "poster",
+      "title": "Il programma della serata",
+      "design": "program",
+      "headline": "Questa sera,\ninsieme.",
+      "subtitle": "19:30  Apertura delle porte\n20:30  Inizio dello spettacolo",
+      "footer": "PROGRAMMA DIMOSTRATIVO",
+      "duration": 20,
+      "size": 0
+    },
+    {
+      "id": "intervallo",
+      "kind": "poster",
+      "title": "Intervallo",
+      "design": "interval",
+      "headline": "Una pausa.\nPoi si riparte.",
+      "subtitle": "Lo spettacolo riprende tra poco.\nGrazie di essere qui.",
+      "footer": "TEATRO CARISMA / INTERVALLO",
+      "duration": 15,
+      "size": 0
+    },
+    {
+      "id": "ingresso",
+      "kind": "poster",
+      "title": "Indicazioni per il pubblico",
+      "design": "info",
+      "headline": "Il tuo posto\nti aspetta.",
+      "subtitle": "Biglietti pronti. Telefoni silenziosi.\nIl personale ti accompagna in sala.",
+      "footer": "ACCOGLIENZA / TEATRO CARISMA",
+      "duration": 15,
+      "size": 0
+    },
+    {
+      "id": "diretta",
+      "kind": "live",
+      "title": "Diretta dal palco",
+      "protocol": "ndi",
+      "url": "",
+      "sourceName": "Palco / NDI",
+      "duration": 30,
+      "size": 0
+    }
+  ],
+  "playlists": [
+    {
+      "id": "accoglienza",
+      "title": "Accoglienza pubblico",
+      "items": [
+        {
+          "assetId": "benvenuto",
+          "duration": 15
+        },
+        {
+          "assetId": "programma",
+          "duration": 20
+        },
+        {
+          "assetId": "ingresso",
+          "duration": 15
+        }
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "id": "foyer-ingresso",
+      "name": "Foyer / ingresso",
+      "group": "Pubblico",
+      "location": "Piano terra",
+      "base": {
+        "type": "playlist",
+        "id": "accoglienza"
+      },
+      "fallbackAssetId": "benvenuto",
+      "override": {
+        "type": "asset",
+        "id": "benvenuto",
+        "since": 1793083557996
+      },
+      "cacheLimitMb": 750,
+      "demoDisconnected": false
+    },
+    {
+      "id": "ingresso-sala",
+      "name": "Ingresso sala",
+      "group": "Pubblico",
+      "location": "Accesso platea",
+      "base": {
+        "type": "asset",
+        "id": "programma"
+      },
+      "fallbackAssetId": "ingresso",
+      "override": null,
+      "cacheLimitMb": 750,
+      "demoDisconnected": false
+    },
+    {
+      "id": "camerini",
+      "name": "Camerini",
+      "group": "Palco",
+      "location": "Area artisti",
+      "base": {
+        "type": "asset",
+        "id": "diretta"
+      },
+      "fallbackAssetId": "intervallo",
+      "override": null,
+      "cacheLimitMb": 750,
+      "demoDisconnected": false
+    },
+    {
+      "id": "bar-foyer",
+      "name": "Bar / foyer",
+      "group": "Pubblico",
+      "location": "Punto ristoro",
+      "base": {
+        "type": "asset",
+        "id": "benvenuto"
+      },
+      "fallbackAssetId": "benvenuto",
+      "override": null,
+      "cacheLimitMb": 750,
+      "demoDisconnected": false
+    }
+  ],
+  "schedules": [
+    {
+      "id": "prima-spettacolo",
+      "title": "Prima dello spettacolo",
+      "days": [
+        5,
+        6,
+        0
+      ],
+      "start": "18:30",
+      "end": "20:30",
+      "screenIds": [
+        "foyer-ingresso",
+        "ingresso-sala",
+        "bar-foyer"
+      ],
+      "content": {
+        "type": "playlist",
+        "id": "accoglienza"
+      },
+      "priority": 10,
+      "enabled": true
+    },
+    {
+      "id": "pausa",
+      "title": "Pausa / intervallo",
+      "days": [
+        5,
+        6,
+        0
+      ],
+      "start": "21:30",
+      "end": "21:45",
+      "screenIds": [
+        "foyer-ingresso",
+        "bar-foyer"
+      ],
+      "content": {
+        "type": "asset",
+        "id": "intervallo"
+      },
+      "priority": 20,
+      "enabled": true
+    }
+  ],
+  "events": [
+    {
+      "at": 1793083557996,
+      "text": "Progetto dimostrativo inizializzato."
+    }
+  ],
+  "features": {
+    "clockBuiltinV1": true,
+    "ndiGatewayV1": true
+  }
+}

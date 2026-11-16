@@ -1,0 +1,10 @@
+FFmpeg is not bundled.
+Install FFmpeg via your OS package manager, put ffmpeg.exe here on Windows,
+or set CARISMA_FFMPEG to its absolute path.
+Required encoders: libx264 and AAC. No libndi-enabled FFmpeg build is needed.
+The Python module receives NDI using the official runtime, then gives raw video
+and audio to FFmpeg using loopback TCP only.
+
+Patch Windows 0.4.1: Verifica_NDI_Windows.bat puo installare la build completa
+in bin/ffmpeg/. Percorso eseguibile: bin/ffmpeg/bin/ffmpeg.exe.
+Nessuna modifica del PATH globale; le licenze del distributore restano nella cartella.

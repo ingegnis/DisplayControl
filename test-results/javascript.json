@@ -1,0 +1,29 @@
+{
+  "syntax": [
+    "anteprima_orologio.html:script0",
+    "connect.html:script1",
+    "demo_compatta.html:script0",
+    "demo_compatta.html:script1",
+    "demo_compatta.html:script2",
+    "index.html:script1",
+    "index.html:script2",
+    "monitor.html:script1",
+    "player.html:script2",
+    "player.html:script3",
+    "players.html:script1",
+    "prompt.html:script2",
+    "prompt_player.html:script2",
+    "branding.js",
+    "physical_boot.js",
+    "prompt_shared.js",
+    "sw.js",
+    "tests/test_branding.js",
+    "tests/test_live_policy.js",
+    "tests/test_prompt_timeline.js"
+  ],
+  "tests": {
+    "test_branding.js": "Branding: palette, transparency, contrast and local-only image checks passed.",
+    "test_prompt_timeline.js": "Prompt timeline: offline continuity, same-sequence reconnect, stale response rejection, STOP and shared layout passed.",
+    "test_live_policy.js": "17 JS latency/recovery checks passed."
+  }
+}

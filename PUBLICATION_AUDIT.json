@@ -1,0 +1,20 @@
+{
+  "version": "0.9.0-alpha",
+  "reviewDate": "2026-11-16",
+  "textFilesScanned": 119,
+  "findings": [],
+  "excludedFiles": 71,
+  "excludedCategories": [
+    "runtime data and databases",
+    "keys and local configuration",
+    "historical raw QA logs/screenshots",
+    "compiled/vendor binaries and caches"
+  ],
+  "notes": [
+    "Tests use synthetic values only.",
+    "No prior Git history is imported.",
+    "Automated pattern scan plus manual review; not a guarantee against every possible secret.",
+    "Installation-specific town removed from demo templates; final staged tree rescanned without findings."
+  ],
+  "filesReviewed": 166
+}

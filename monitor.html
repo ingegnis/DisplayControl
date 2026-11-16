@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><title>Monitor schermi | Carisma</title>
+<link rel="icon" href="/favicon.svg">
+<script src="./branding.js"></script>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#24372f;background:#f3f5f1;font-size:14px;--green:#244c3b;--orange:#d96442;--line:#dce3d9;--muted:#798777}
+*{box-sizing:border-box}body{margin:0}button,select,input{font:inherit;color:inherit}button,select{cursor:pointer}button,a,input,select{outline-offset:4px}button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #e38e63}button,a{text-decoration:none}button{border:1px solid var(--line);background:white;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:600}button:hover{background:#f8faf5}button:disabled{opacity:.5;cursor:default}header{height:76px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 32px;gap:18px}.brand{display:flex;gap:12px;align-items:center;color:#294736}.brand-icon{width:36px;height:36px;border-radius:10px;background:var(--orange);display:grid;place-items:center;color:white;font-size:21px}.brand strong{font-size:17px;letter-spacing:2px;display:block}.brand small{font-size:9px;letter-spacing:1.5px;color:#879481}.header-right{display:flex;align-items:center;gap:16px}.header-right a{font-size:11px;color:#65745f}.badge{display:inline-flex;align-items:center;gap:7px;border-radius:6px;font-size:10px;padding:6px 8px;background:#eaf1e7;color:#527448;font-weight:600}.badge:before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}.badge.orange{background:#fff0de;color:#9d6a30}.badge.red{background:#f5e9e5;color:#a15a40}.badge.gray{background:#eef0ec;color:#7b8575}.version{font-size:10px;color:#9aa492}main{max-width:1680px;padding:28px 32px;margin:auto}h1,h2,p{margin:0}.eyebrow{font-size:9px;font-weight:650;letter-spacing:1.6px;color:#8e9a87;margin-bottom:7px}.heading{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:23px}h1{font-size:30px;letter-spacing:-1px;font-weight:650}.subtitle{font-size:12px;color:#7d8b75;margin-top:8px;line-height:1.65}.head-actions{display:flex;gap:8px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.stat{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between}.stat label{font-size:10px;color:#8b9882;display:block;margin-bottom:6px}.stat strong{font-size:27px;font-weight:500}.stat span{font-size:10px;color:#a1ab98;margin-left:8px}.stat-icon{width:36px;height:36px;border-radius:9px;background:#f1f5ec;color:#8ba07e;display:grid;place-items:center;font-size:18px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:19px;flex-wrap:wrap}.filters,.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.toolbar label{font-size:10px;color:#819176}.toolbar select{border:1px solid var(--line);background:white;border-radius:7px;padding:9px 11px;font-size:11px;max-width:220px}.tools .label{font-size:11px;color:#6e7f62}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.grid[data-cols="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}.grid[data-cols="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}.card{border:1px solid var(--line);background:white;border-radius:13px;overflow:hidden}.card-head{padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px}.name{font-size:12px;font-weight:650;word-break:break-word}.place{font-size:9px;color:#9aa48f;margin-top:4px}.thumb{position:relative;aspect-ratio:16/9;margin:0 12px;border-radius:8px;background:#e9ede5;overflow:hidden;border:1px solid #00000005}.thumb img{width:100%;height:100%;display:block;object-fit:contain;position:absolute;inset:0;background:#101711}.thumb img[hidden]{display:none}.placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;font-size:11px;color:#7d8c74;line-height:1.6;background:repeating-linear-gradient(135deg,#e9ede5,#e9ede5 15px,#edf0e8 15px,#edf0e8 30px)}.placeholder strong{font-size:18px;font-weight:400;margin-bottom:8px}.capture-kind{position:absolute;left:8px;bottom:8px;padding:4px 6px;font-size:8px;background:#192e26dc;color:#eaf0e6;border-radius:4px;letter-spacing:.25px}.stale{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#14211940;pointer-events:none}.stale span{background:#16271fdc;border:1px solid #b9c8b459;border-radius:6px;color:#edf2e7;font-size:10px;padding:8px 10px}.stale[hidden]{display:none}.card-foot{padding:13px 15px}.title{font-size:11px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:17px}.detail{font-size:9px;color:#909d83;line-height:1.65;margin:5px 0 10px;min-height:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #edf0e8;padding-top:10px;font-size:9px;color:#929d88}.meta .buffer{color:#7b8b6c}.alert{background:#fff1df;color:#94632c;border:1px solid #eddbbd;padding:12px 15px;font-size:12px;line-height:1.6;border-radius:9px;margin-bottom:18px}.alert[hidden]{display:none}.legend{display:flex;gap:25px;justify-content:space-between;flex-wrap:wrap;margin-top:21px;border:1px solid #dce4d4;background:#edf2e7;border-radius:10px;padding:14px 17px;color:#7c8e6d;font-size:10px;line-height:1.75}.legend strong{color:#5d7550}.footer{display:flex;justify-content:space-between;gap:15px;margin-top:19px;color:#99a68d;font-size:9px;padding-bottom:8px}.empty{grid-column:1/-1;padding:70px 20px;text-align:center;border:1px dashed #ccd7c4;border-radius:13px;color:#87977a;font-size:13px;line-height:1.8}dialog{padding:26px;border:1px solid var(--line);border-radius:15px;width:min(440px,92vw);color:#263d2f}dialog::backdrop{background:#152b2590;backdrop-filter:blur(3px)}dialog h2{font-size:20px;letter-spacing:-.4px}dialog p{font-size:12px;line-height:1.7;margin:12px 0;color:#718266}dialog input{display:block;width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;margin:15px 0}.primary{background:var(--orange);border-color:var(--orange);color:white}.primary:hover{background:#c45332}.autherror{color:#a45139;font-size:11px;min-height:17px}dialog button{width:100%;margin-top:10px}.hidden{display:none!important}#network{font-size:10px;color:#7e8e71}.compact .place,.compact .detail{display:none}.compact .card-head,.compact .card-foot{padding:10px 12px}
+@media(min-width:1400px){.grid{gap:21px}}
+@media(max-width:1050px){.grid,.grid[data-cols="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}header{padding:0 23px}main{padding:25px 23px}.stat span{display:none}}
+@media(max-width:660px){header{height:65px;padding:0 17px}.header-right{gap:9px}.header-right .version{display:none}.brand strong{font-size:14px}.brand small{font-size:8px}.brand-icon{width:30px;height:30px}.header-right a{font-size:10px}main{padding:23px 17px}.heading{align-items:flex-start;flex-direction:column;gap:13px}h1{font-size:27px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{padding:12px}.stat strong{font-size:24px}.stat-icon{display:none}.grid,.grid[data-cols="2"],.grid[data-cols="4"]{grid-template-columns:1fr}.toolbar{align-items:flex-start;gap:12px}.tools .label{font-size:10px}.legend{gap:8px;font-size:10px}.footer{flex-direction:column;gap:6px}.thumb{margin:0 10px}.card-head{padding:13px}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="/"><span class="brand-icon" aria-hidden="true">&#9638;</span><span><strong>CARISMA</strong><small>DISPLAY CONTROL</small></span></a><div class="header-right"><span id="server-badge" class="badge gray">Collegamento...</span><a href="/">Torna alla regia &#8599;</a><span class="version">v0.9.0-alpha</span></div></header>
+<main>
+<div class="heading"><div><div class="eyebrow">MONITORAGGIO / RETE LOCALE</div><h1>Tutti gli schermi. Un solo sguardo.</h1><p class="subtitle">Il contenuto confermato dai player, senza aprire una diretta per ogni schermo.</p></div><div class="head-actions"><button id="fullscreen">Schermo intero</button><button id="pause">Metti in pausa</button></div></div>
+<div id="alert" class="alert" role="status" hidden></div>
+<div class="stats"><div class="stat"><div><label>Postazioni</label><strong id="stat-total">0</strong><span>configurate</span></div><div class="stat-icon">&#9638;</div></div><div class="stat"><div><label>Player raggiungibili</label><strong id="stat-online">0</strong><span>in rete</span></div><div class="stat-icon">&#9679;</div></div><div class="stat"><div><label>Contenuto di riserva</label><strong id="stat-fallback">0</strong><span>fallback</span></div><div class="stat-icon">&#8634;</div></div><div class="stat"><div><label>Da verificare</label><strong id="stat-offline">0</strong><span>assenti / mai visti</span></div><div class="stat-icon">!</div></div></div>
+<div class="toolbar"><div class="filters"><label for="group">Gruppo</label><select id="group"><option value="">Tutti i gruppi</option></select><label for="filter">Stato</label><select id="filter"><option value="all">Tutti gli schermi</option><option value="online">Raggiungibili</option><option value="offline">Da verificare</option><option value="fallback">In fallback</option></select></div><div class="tools"><span class="label">Aggiorna ogni</span><select id="interval" aria-label="Intervallo aggiornamento"><option value="1">1 secondo</option><option value="2" selected>2 secondi</option><option value="5">5 secondi / risparmio banda</option></select><select id="columns" aria-label="Colonne"><option value="2">2 colonne</option><option value="3" selected>3 colonne</option><option value="4">4 colonne</option></select></div></div>
+<section id="grid" class="grid" data-cols="3" aria-label="Anteprime degli schermi"><p class="empty">Collegamento al server locale...</p></section>
+<div class="legend"><div><strong>Fotogramma dal player</strong><br>Video e immagini: miniatura del contenuto decodificato.</div><div><strong>Grafica ricostruita</strong><br>Orologi e schermate: contenuto confermato dal player, non screenshot.</div><div><strong>Ultima anteprima</strong><br>Una postazione assente resta visibile con l'eta dell'ultimo dato.</div></div>
+<div class="footer"><span id="last">Nessun aggiornamento ricevuto.</span><span id="network">Miniature fino a 480 x 270 / nessun nuovo encoder</span></div>
+<p class="subtitle" style="font-size:10px;margin-top:8px">Il monitor osserva il software player, non l'accensione del televisore. Miniature inviate solo mentre almeno un monitor le richiede; nessuna registrazione.</p>
+</main>
+<dialog id="auth"><form id="auth-form"><h2>Apri il monitor locale.</h2><p>Usa la chiave amministratore della regia, presente in <b>data/access.key</b>. Non usare il codice di abbinamento del player.</p><label for="key">Chiave amministratore</label><input id="key" type="password" autocomplete="off" required><div class="autherror" id="auth-error"></div><button class="primary">Accedi al monitor</button></form></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const storage={get(k){try{return localStorage.getItem(k);}catch{return null;}},set(k,v){try{localStorage.setItem(k,v);}catch{}}};
+const viewer='mon-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+let token=storage.get('carisma-access-key')||'',snapshot=null,interval=Number(storage.get('carisma-monitor-interval'))||2,paused=false,fetching=false,timer=null,lastPoll=0,clockOffset=0,bytes=0,traffic=[],serverOK=false;
+const tiles=new Map(),kindLabels={frame:'FOTOGRAMMA DAL PLAYER',rendered:'GRAFICA RICOSTRUITA',black:'SCHERMO NERO',unavailable:'ANTEPRIMA NON DISPONIBILE'};
+if(![1,2,5].includes(interval))interval=2;$('interval').value=String(interval);
+const savedCols=storage.get('carisma-monitor-columns');if(['2','3','4'].includes(savedCols))$('columns').value=savedCols;
+$('grid').dataset.cols=$('columns').value;
+function note(text){$('alert').hidden=!text;$('alert').textContent=text;}
+function auth(message=''){$('auth-error').textContent=message;if(!$('auth').open)$('auth').showModal();}
+async function request(path,opts={}){
+ const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),3500);
+ try{
+  const r=await fetch(path,{...opts,headers:{'X-Control-Token':token,...opts.headers},cache:'no-store',signal:ctrl.signal});
+  if(r.status===401){auth('Chiave non valida o non presente.');throw Error('Accesso amministratore richiesto.');}
+  if(!r.ok)throw Error('Risposta server '+r.status);
+  const blob=await r.blob();bytes+=blob.size;traffic.push([performance.now(),blob.size]);return blob;
+ }finally{clearTimeout(timeout);}
+}
+async function json(path,opts){return JSON.parse(await (await request(path,opts)).text());}
+function now(){return Date.now()/1000+clockOffset;}
+function age(t){if(!t)return 'mai ricevuta';const value=Math.max(0,Math.round(now()-t));if(value<2)return 'ora';return value<60?value+' s fa':Math.floor(value/60)+' min fa';}
+function flags(s){const p=s.preview,h=s.heartbeat,seen=Math.max(h?.lastSeen||0,p?.receivedAt||0),offlineTest=!!h?.offlineTest;return {seen,online:!!seen&&now()-seen<13&&!offlineTest,offlineTest,fallback:!!p?.fallback,stale:!p||now()-p.receivedAt>Math.max(8,interval*2.5)};}
+function make(s){
+ const card=document.createElement('article');card.className='card';card.dataset.sid=s.id;
+ card.innerHTML='<div class="card-head"><div><div class="name"></div><div class="place"></div></div><span class="badge gray"></span></div><div class="thumb"><div class="placeholder"><strong>&#9635;</strong><span></span></div><img alt="Anteprima dal player" hidden><span class="capture-kind"></span><div class="stale" hidden><span></span></div></div><div class="card-foot"><div class="title"></div><div class="detail"></div><div class="meta"><span class="age"></span><span class="buffer"></span></div></div>';
+ const q=selector=>card.querySelector(selector);return {card,q,url:'',hash:'',wanted:'',error:false};
+}
+function update(s){
+ let t=tiles.get(s.id);if(!t){t=make(s);tiles.set(s.id,t);$('grid').append(t.card);}
+ const p=s.preview,h=s.heartbeat,f=flags(s);t.q('.name').textContent=s.name;t.q('.place').textContent=[s.group,s.location].filter(Boolean).join(' / ');
+ const status=!f.seen?'Mai collegato':f.offlineTest?'Test offline':!f.online?'Non raggiungibile':f.fallback?'Fallback locale':'Player attivo';
+ const badge=t.q('.badge');badge.textContent=status;badge.className='badge '+(!f.seen?'gray':!f.online?'orange':f.fallback?'orange':'');
+ t.q('.title').textContent=p?.title||h?.title||'In attesa del player';
+ const differs=!!p&&!!h&&h.title!==p.title&&h.lastSeen>p.receivedAt;
+ t.q('.detail').textContent=p?.error||(differs?'Cambio contenuto: attendo una nuova miniatura':p&&p.revision<snapshot.revision?'Configurazione precedente / sincronizzazione in corso':h?.message||'Ricarica il player aggiornato per attivare le miniature.');
+ t.q('.detail').title=t.q('.detail').textContent;
+ t.q('.capture-kind').textContent=kindLabels[p?.kind||'unavailable'];
+ const placeholder=t.q('.placeholder');placeholder.hidden=!!p?.hash&&!t.error&&t.hash===p.hash;
+ placeholder.querySelector('span').textContent=p?.error||(h&&!p?'Player presente. Attendo la prima anteprima...':'Nessuna anteprima ricevuta dal player.');
+ t.q('img').hidden=!p?.hash||t.hash!==p.hash||t.error;
+ const stale=t.q('.stale');stale.hidden=!p||(!f.stale&&f.online&&!paused&&serverOK&&!differs);
+ stale.querySelector('span').textContent=paused?'MONITOR IN PAUSA':!serverOK?'SERVER NON RAGGIUNGIBILE':differs?'ANTEPRIMA PRECEDENTE':'ULTIMA ANTEPRIMA / '+age(p?.receivedAt);
+ t.q('.age').textContent=p?'Ricevuta '+age(p.receivedAt):h?'Contatto '+age(h.lastSeen):'Nessun contatto';
+ t.q('.buffer').textContent=p?.bufferSeconds!=null?'Coda '+p.bufferSeconds.toFixed(2)+' s':p?.hidden?'Scheda player nascosta':p?.paused?'Video in pausa':'';
+ t.q('.buffer').title='Coda video nel player, non latenza totale NDI.';
+ const group=$('group').value,filter=$('filter').value;
+ t.card.hidden=(!!group&&s.group!==group)||(filter==='online'&&!f.online)||(filter==='offline'&&f.online)||(filter==='fallback'&&(!f.online||!f.fallback));
+ return t;
+}
+function render(){
+ if(!snapshot)return;
+ const ids=new Set(snapshot.screens.map(s=>s.id));for(const [id,t]of tiles)if(!ids.has(id)){t.card.remove();if(t.url)URL.revokeObjectURL(t.url);tiles.delete(id);}
+ $('grid').querySelector('.empty')?.remove();
+ const groups=[...new Set(snapshot.screens.map(s=>s.group).filter(Boolean))].sort();
+ const signature=JSON.stringify(groups);if($('group').dataset.sig!==signature){const current=$('group').value;$('group').replaceChildren(new Option('Tutti i gruppi',''),...groups.map(g=>new Option(g,g)));$('group').value=groups.includes(current)?current:'';$('group').dataset.sig=signature;}
+ const states=snapshot.screens.map(s=>flags(s));$('stat-total').textContent=snapshot.screens.length;$('stat-online').textContent=states.filter(x=>x.online).length;$('stat-fallback').textContent=states.filter(x=>x.online&&x.fallback).length;$('stat-offline').textContent=states.filter(x=>!x.online).length;
+ snapshot.screens.forEach(update);
+ if(!snapshot.screens.length){const p=document.createElement('p');p.className='empty';p.textContent='Nessuno schermo configurato. Aggiungilo dalla regia, poi abbina il player.';$('grid').append(p);}
+}
+async function frame(s){
+ const p=s.preview,t=tiles.get(s.id);if(!p?.hash||!t||t.card.hidden||t.hash===p.hash)return;
+ t.wanted=p.hash;
+ try{const b=await request('/api/monitor/frame/'+encodeURIComponent(s.id));if(t.wanted!==p.hash||!tiles.has(s.id))return;
+  const u=URL.createObjectURL(new Blob([b],{type:'image/jpeg'})),old=t.url;t.url=u;t.hash=p.hash;t.error=false;t.q('img').src=u;if(old)URL.revokeObjectURL(old);update(s);
+ }catch{t.error=true;update(s);}
+}
+async function poll(){
+ if(fetching||paused||document.hidden||!token||$('auth').open)return;
+ fetching=true;
+ try{
+  snapshot=await json('/api/monitor?viewer='+encodeURIComponent(viewer)+'&interval='+interval);clockOffset=snapshot.serverTime-Date.now()/1000;lastPoll=Date.now();serverOK=true;
+  $('server-badge').className='badge';$('server-badge').textContent='SERVER LOCALE';note('');render();
+  // Bound parallel requests; never start a live player or a new encoder here.
+  const queue=snapshot.screens.filter(s=>!tiles.get(s.id)?.card.hidden);let index=0;
+  await Promise.all(Array.from({length:Math.min(4,queue.length)},async()=>{while(index<queue.length)await frame(queue[index++]);}));
+  $('last').textContent='Ultimo aggiornamento '+new Date(lastPoll).toLocaleTimeString('it-IT')+' / intervallo '+interval+' s';
+  if(snapshot.policy.interval<interval)$('last').textContent+=' / un altro monitor richiede '+snapshot.policy.interval+' s';
+ }catch(e){serverOK=false;$('server-badge').className='badge orange';$('server-badge').textContent='REGIA ASSENTE';note('Il server non risponde. Le miniature restano ferme: non rappresentano un aggiornamento in tempo reale. '+e.message);render();}
+ finally{fetching=false;clearTimeout(timer);timer=setTimeout(poll,interval*1000);}
+}
+async function release(){if(!token)return;try{await json('/api/monitor/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({viewer})});}catch{}}
+function resume(){clearTimeout(timer);poll();}
+$('interval').onchange=()=>{interval=Number($('interval').value);storage.set('carisma-monitor-interval',String(interval));resume();};
+$('columns').onchange=()=>{$('grid').dataset.cols=$('columns').value;storage.set('carisma-monitor-columns',$('columns').value);};
+$('group').onchange=$('filter').onchange=()=>{render();resume();};
+$('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'Riprendi monitor':'Metti in pausa';if(paused){clearTimeout(timer);release();}else resume();render();};
+$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{note('Schermo intero non consentito dal browser: usa il suo comando Schermo intero.');}};
+$('auth-form').onsubmit=async e=>{e.preventDefault();token=$('key').value.trim();storage.set('carisma-access-key',token);$('auth').close();resume();};
+$('auth').addEventListener('cancel',e=>e.preventDefault());
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(timer);release();}else resume();});
+window.addEventListener('beforeunload',()=>{for(const t of tiles.values())if(t.url)URL.revokeObjectURL(t.url);});
+setInterval(()=>{if(document.hidden)return;render();const cut=performance.now()-15000;traffic=traffic.filter(x=>x[0]>cut);const b=traffic.reduce((a,x)=>a+x[1],0);$('network').textContent='Traffico ricevuto ~'+(b*8/15/1000).toFixed(1)+' kbit/s (ultimi 15 s) / miniature, non streaming';},1000);
+if(!token)auth();else poll();
+</script>
+</body></html>

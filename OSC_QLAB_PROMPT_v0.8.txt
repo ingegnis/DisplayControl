@@ -1,0 +1,18 @@
+# Carisma Prompt v0.8-alpha — comandi OSC UDP
+/carisma/prompt/play
+/carisma/prompt/pause
+/carisma/prompt/toggle
+/carisma/prompt/stop
+/carisma/prompt/speed 0.12
+/carisma/prompt/speed/delta 0.02
+/carisma/prompt/jog 0.10
+/carisma/prompt/cue/next
+/carisma/prompt/cue/prev
+/carisma/prompt/cue/<id>
+/carisma/prompt/top
+/carisma/prompt/blackout 1
+/carisma/prompt/message "5 MINUTI"
+/carisma/prompt/message/clear
+/carisma/prompt/take/primary
+/carisma/prompt/take/backup
+/carisma/prompt/take "PRIMARY"

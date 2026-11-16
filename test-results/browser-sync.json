@@ -1,0 +1,357 @@
+{
+  "resizeResults": [
+    {
+      "size": {
+        "width": 800,
+        "height": 600
+      },
+      "equal": true,
+      "geometry": {
+        "font": "41.04px",
+        "lines": [
+          [
+            "l1",
+            274,
+            164
+          ],
+          [
+            "l2",
+            456,
+            164
+          ],
+          [
+            "l3",
+            638,
+            164
+          ],
+          [
+            "l4",
+            820,
+            164
+          ],
+          [
+            "l5",
+            1002,
+            164
+          ],
+          [
+            "l6",
+            1185,
+            164
+          ]
+        ],
+        "stage": "1280px",
+        "transform": "translate3d(0px, -1728.4px, 0px)",
+        "width": 1050
+      }
+    },
+    {
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "equal": true,
+      "geometry": {
+        "font": "41.04px",
+        "lines": [
+          [
+            "l1",
+            274,
+            164
+          ],
+          [
+            "l2",
+            456,
+            164
+          ],
+          [
+            "l3",
+            638,
+            164
+          ],
+          [
+            "l4",
+            820,
+            164
+          ],
+          [
+            "l5",
+            1002,
+            164
+          ],
+          [
+            "l6",
+            1185,
+            164
+          ]
+        ],
+        "stage": "1280px",
+        "transform": "translate3d(0px, -1728.4px, 0px)",
+        "width": 1050
+      }
+    }
+  ],
+  "beforeOutage": {
+    "regia": {
+      "font": "41.04px",
+      "lines": [
+        [
+          "l1",
+          274,
+          164
+        ],
+        [
+          "l2",
+          456,
+          164
+        ],
+        [
+          "l3",
+          638,
+          164
+        ],
+        [
+          "l4",
+          820,
+          164
+        ],
+        [
+          "l5",
+          1002,
+          164
+        ],
+        [
+          "l6",
+          1185,
+          164
+        ]
+      ],
+      "stage": "1280px",
+      "transform": "translate3d(0px, -0.4px, 0px)",
+      "width": 1050
+    },
+    "player": {
+      "font": "41.04px",
+      "lines": [
+        [
+          "l1",
+          274,
+          164
+        ],
+        [
+          "l2",
+          456,
+          164
+        ],
+        [
+          "l3",
+          638,
+          164
+        ],
+        [
+          "l4",
+          820,
+          164
+        ],
+        [
+          "l5",
+          1002,
+          164
+        ],
+        [
+          "l6",
+          1185,
+          164
+        ]
+      ],
+      "stage": "1280px",
+      "transform": "translate3d(0px, -0.4px, 0px)",
+      "width": 1050
+    },
+    "at": 1794811779621
+  },
+  "offlineState": {
+    "regia": {
+      "font": "41.04px",
+      "lines": [
+        [
+          "l1",
+          274,
+          164
+        ],
+        [
+          "l2",
+          456,
+          164
+        ],
+        [
+          "l3",
+          638,
+          164
+        ],
+        [
+          "l4",
+          820,
+          164
+        ],
+        [
+          "l5",
+          1002,
+          164
+        ],
+        [
+          "l6",
+          1185,
+          164
+        ]
+      ],
+      "stage": "1280px",
+      "transform": "translate3d(0px, -5540.6px, 0px)",
+      "width": 1050
+    },
+    "player": {
+      "font": "41.04px",
+      "lines": [
+        [
+          "l1",
+          274,
+          164
+        ],
+        [
+          "l2",
+          456,
+          164
+        ],
+        [
+          "l3",
+          638,
+          164
+        ],
+        [
+          "l4",
+          820,
+          164
+        ],
+        [
+          "l5",
+          1002,
+          164
+        ],
+        [
+          "l6",
+          1185,
+          164
+        ]
+      ],
+      "stage": "1280px",
+      "transform": "translate3d(0px, -5542.15px, 0px)",
+      "width": 1050
+    },
+    "status": "PRIMARY / Browser QA primario \u00c2\u00b7 OFFLINE LOCALE \u00c2\u00b7 SCORRE 0.11 pagine/s \u00c2\u00b7 60 fps",
+    "at": 1794811849578
+  },
+  "afterRestart": {
+    "regia": {
+      "font": "41.04px",
+      "lines": [
+        [
+          "l1",
+          274,
+          164
+        ],
+        [
+          "l2",
+          456,
+          164
+        ],
+        [
+          "l3",
+          638,
+          164
+        ],
+        [
+          "l4",
+          820,
+          164
+        ],
+        [
+          "l5",
+          1002,
+          164
+        ],
+        [
+          "l6",
+          1185,
+          164
+        ]
+      ],
+      "stage": "1280px",
+      "transform": "translate3d(0px, -5796.6px, 0px)",
+      "width": 1050
+    },
+    "player": {
+      "font": "41.04px",
+      "lines": [
+        [
+          "l1",
+          274,
+          164
+        ],
+        [
+          "l2",
+          456,
+          164
+        ],
+        [
+          "l3",
+          638,
+          164
+        ],
+        [
+          "l4",
+          820,
+          164
+        ],
+        [
+          "l5",
+          1002,
+          164
+        ],
+        [
+          "l6",
+          1185,
+          164
+        ]
+      ],
+      "stage": "1280px",
+      "transform": "translate3d(0px, -5796.6px, 0px)",
+      "width": 1050
+    },
+    "at": 1794811952384
+  },
+  "briefOffline": {
+    "regia": {
+      "at": 1794812225937,
+      "status": "PRIMARY ONLINE",
+      "y": 1692.46
+    },
+    "player": {
+      "at": 1794812225951,
+      "status": "PRIMARY / Browser QA primario \u00c2\u00b7 OFFLINE LOCALE \u00c2\u00b7 SCORRE 0.11 pagine/s \u00c2\u00b7 60 fps",
+      "y": 1693.91
+    }
+  },
+  "briefRecovered": {
+    "regia": {
+      "at": 1794812264400,
+      "status": "PRIMARY ONLINE",
+      "y": 4738.82
+    },
+    "player": {
+      "at": 1794812264412,
+      "status": "PRIMARY / Browser QA primario \u00c2\u00b7 LAN \u00c2\u00b7 SCORRE 0.11 pagine/s \u00c2\u00b7 60 fps",
+      "y": 4740.26
+    }
+  },
+  "recoveryErrorVirtualPx": 0.23880000000008295
+}

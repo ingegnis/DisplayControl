@@ -1,0 +1,7 @@
+NDI binaries are not included.
+Install the official 64-bit NDI runtime / SDK, read and accept its own license.
+Set CARISMA_NDI_LIBRARY to its actual .dll / .so / .dylib path.
+Alternatively place a legitimately obtained, compatible runtime here, retaining
+its own license and required libraries. Never download DLLs from unofficial mirrors.
+This application does not need an online activation server implemented by Carisma.
+NDI SDK terms and platform codec availability remain applicable.

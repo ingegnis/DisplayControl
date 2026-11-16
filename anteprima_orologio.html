@@ -1,0 +1,110 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Carisma | Orologio animato</title><style>*{box-sizing:border-box}body{margin:0;background:#0c211e;min-height:100vh;display:flex;align-items:center;justify-content:center}.clock-stage{width:min(100vw,177.7778vh);aspect-ratio:16/9}/* Local clock: CSS and system fonts only. No video, CDN or remote fonts. */
+.dc-time{--dc-bg:#132f2b;--dc-fg:#f1edda;--dc-soft:#adbc9e;--dc-accent:#f0a878;--dc-line:#d6dfb333;position:relative;display:block!important;aspect-ratio:16/9;width:100%;overflow:hidden;isolation:isolate;container-type:inline-size;background:var(--dc-bg)!important;color:var(--dc-fg)!important;font-family:Inter,"Segoe UI",Arial,sans-serif}
+.dc-time.dc-sand{--dc-bg:#eee5d2;--dc-fg:#304438;--dc-soft:#68795f;--dc-accent:#af583b;--dc-line:#5b72552d}
+.dc-time.dc-night{--dc-bg:#18243a;--dc-fg:#f3ede6;--dc-soft:#a1b1cc;--dc-accent:#b7b9f2;--dc-line:#abb9e133}
+.dc-time::before{content:"";position:absolute;inset:-45%;background:radial-gradient(ellipse at 70% 56%,var(--dc-accent),transparent 43%);opacity:.12;animation:dc-breathe 18s ease-in-out infinite alternate;pointer-events:none;z-index:-1}
+.dc-time::after{content:"";position:absolute;inset:0;border:1px solid var(--dc-line);pointer-events:none}
+.dc-top{position:absolute;left:7%;right:7%;top:10%;display:flex;justify-content:space-between;align-items:center;font-size:1.75cqw;font-weight:600;letter-spacing:.26cqw}
+.dc-brand{display:flex;align-items:center;gap:1.4cqw;white-space:nowrap}
+.dc-mark{display:block;width:2.9cqw;height:2.9cqw;border:1px solid var(--dc-accent);border-radius:.65cqw;position:relative}
+.dc-mark::after{content:"";position:absolute;inset:24%;border:1px solid var(--dc-accent);border-radius:50%}
+.dc-local{font-size:1.4cqw;color:var(--dc-soft);letter-spacing:.2cqw;display:flex;align-items:center;gap:.9cqw}
+.dc-local::before{content:"";width:.65cqw;height:.65cqw;border-radius:50%;background:var(--dc-soft)}
+.dc-face{position:absolute;left:7%;top:30%;width:58%}
+.dc-weekday{font-size:2.4cqw;font-weight:450;letter-spacing:.36cqw;text-transform:uppercase;color:var(--dc-soft)}
+.dc-digits{display:flex;align-items:baseline;gap:.3cqw;margin:1.4cqw 0 1.9cqw;font-size:17cqw;font-weight:300;line-height:1.06;letter-spacing:-1cqw;font-variant-numeric:tabular-nums;font-feature-settings:"tnum";white-space:nowrap}
+.dc-unit{display:inline-block;overflow:hidden;padding:0 .15cqw;line-height:1.08}
+.dc-unit>span{display:inline-block}
+.dc-colon{font-size:13cqw;line-height:1;position:relative;top:-.75cqw;margin:0 .35cqw;opacity:.65;animation:dc-pulse 2s ease-in-out infinite}
+.dc-date{display:flex;align-items:baseline;gap:1.6cqw;font-size:3.1cqw;font-weight:400;letter-spacing:-.04cqw;white-space:nowrap}
+.dc-year{font-size:2.2cqw;letter-spacing:.13cqw;color:var(--dc-soft)}
+.dc-orbit{position:absolute;right:6.5%;top:28%;width:27cqw;aspect-ratio:1}
+.dc-orbit::before{content:"";position:absolute;inset:9%;border:1px solid var(--dc-line);border-radius:50%}
+.dc-orbit::after{content:"";position:absolute;inset:19%;border:1px solid var(--dc-line);border-radius:50%;opacity:.6}
+.dc-track{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -0.3deg,var(--dc-soft) 0deg .7deg,transparent .7deg 6deg);mask:radial-gradient(transparent 67%,#000 67.4%,#000 69%,transparent 69.4%);opacity:.55}
+.dc-orbit svg{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;transform:rotate(-90deg);color:var(--dc-accent)}
+.dc-progress{fill:none;stroke:currentColor;stroke-width:.65;stroke-linecap:round;opacity:.7;stroke-dasharray:0 60}
+.dc-orbit-dot{position:absolute;inset:0;animation:dc-revolve 60s linear infinite;animation-delay:var(--dc-delay,0s)}
+.dc-orbit-dot::before{content:"";position:absolute;left:calc(50% - .5cqw);top:1.12cqw;width:1cqw;height:1cqw;border-radius:50%;background:var(--dc-accent);box-shadow:0 0 1.5cqw var(--dc-accent)}
+.dc-seconds-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6cqw}
+.dc-seconds{font-size:7.5cqw;font-weight:300;line-height:1.1;letter-spacing:-.25cqw;font-variant-numeric:tabular-nums;display:block;overflow:hidden}
+.dc-seconds-label{font-size:1.3cqw;letter-spacing:.3cqw;color:var(--dc-soft)}
+.dc-time[data-clock-seconds="0"] .dc-seconds-wrap{opacity:0}
+.dc-bottom{position:absolute;left:7%;right:7%;bottom:9%;display:flex;align-items:center;justify-content:space-between;gap:2cqw;color:var(--dc-soft);font-size:1.5cqw;letter-spacing:.13cqw}
+.dc-bottom-line{flex:1;height:1px;background:var(--dc-line);max-width:22%}
+.dc-zone{font-size:1.3cqw;letter-spacing:.08cqw}
+@keyframes dc-revolve{to{transform:rotate(360deg)}}
+@keyframes dc-breathe{from{transform:translate(-3%,-2%) scale(.96)}to{transform:translate(3%,2%) scale(1.08)}}
+@keyframes dc-pulse{0%,100%{opacity:.38}50%{opacity:.75}}
+@media(prefers-reduced-motion:reduce){.dc-time *,.dc-time::before{animation:none!important;transition:none!important}}
+</style></head><body><main class="clock-stage" id="clock"></main><script>/* Reusable clock renderer. Uses the device clock, including while disconnected. */
+window.CarismaClock = (() => {
+  'use strict';
+  const formatters = new Map();
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function formatter(zone) {
+    if (!formatters.has(zone)) {
+      let f;
+      try { f = new Intl.DateTimeFormat('it-IT', {timeZone:zone,hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23',weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+      catch { f = new Intl.DateTimeFormat('it-IT', {timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23',weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+      if (formatters.size > 40) formatters.clear();
+      formatters.set(zone, f);
+    }
+    return formatters.get(zone);
+  }
+  function html({theme='forest',timezone='Europe/Rome',label='TEATRO CARISMA',showSeconds=true}={}) {
+    const safeTheme = ['forest','sand','night'].includes(theme) ? theme : 'forest';
+    return `<div class="visual dc-time dc-${safeTheme}" data-clock-zone="${escapeHTML(timezone)}" data-clock-seconds="${showSeconds===false?'0':'1'}" role="timer" aria-live="off" aria-label="Orologio e data">
+      <div class="dc-top"><div class="dc-brand"><i class="dc-mark" aria-hidden="true"></i><span>${escapeHTML(label)}</span></div><span class="dc-local">ORA LOCALE</span></div>
+      <div class="dc-face"><div class="dc-weekday" data-time-part="weekday">Oggi</div><div class="dc-digits"><span class="dc-unit"><span data-time-part="hour">--</span></span><span class="dc-colon" aria-hidden="true">:</span><span class="dc-unit"><span data-time-part="minute">--</span></span></div><div class="dc-date"><span data-time-part="date">Orologio locale</span><span class="dc-year" data-time-part="year"></span></div></div>
+      <div class="dc-orbit" aria-hidden="true"><div class="dc-track"></div><svg viewBox="0 0 100 100"><circle class="dc-progress" cx="50" cy="50" r="44" pathLength="60"/></svg><div class="dc-orbit-dot"></div><div class="dc-seconds-wrap"><span class="dc-seconds" data-time-part="second">--</span><span class="dc-seconds-label">SECONDI</span></div></div>
+      <div class="dc-bottom"><span>IL TUO TEMPO, QUI.</span><span class="dc-bottom-line"></span><span class="dc-zone">${escapeHTML(timezone)}</span></div>
+    </div>`;
+  }
+  function write(el, value, animate) {
+    if (el.textContent === value) return;
+    const first = !el.dataset.initialized;
+    el.textContent = value;
+    el.dataset.initialized = '1';
+    if (!first && animate && !reduced.matches && el.animate) {
+      el.getAnimations().forEach(a => a.cancel());
+      el.animate([{transform:'translateY(35%)',opacity:.15},{transform:'translateY(0)',opacity:1}], {duration:500,easing:'cubic-bezier(.22,1,.36,1)'});
+    }
+  }
+  function refresh(root=document, instant=Date.now(), resync=false) {
+    const clocks = [...root.querySelectorAll('.dc-time')];
+    if (root.matches?.('.dc-time')) clocks.unshift(root);
+    const stamp = Math.floor(instant/1000);
+    const partsByZone = new Map();
+    for (const clock of clocks) {
+      if (clock.dataset.clockStamp === String(stamp) && !resync) continue;
+      const zone = clock.dataset.clockZone || 'Europe/Rome';
+      if (!partsByZone.has(zone)) partsByZone.set(zone, Object.fromEntries(formatter(zone).formatToParts(new Date(instant)).filter(p=>p.type!=='literal').map(p=>[p.type,p.value])));
+      const p = partsByZone.get(zone);
+      const values = {...p,date:p.day+' '+p.month};
+      const first = !clock.dataset.clockStamp;
+      for (const el of clock.querySelectorAll('[data-time-part]')) {
+        const part = el.dataset.timePart;
+        write(el,values[part]||'', ['hour','minute','second'].includes(part));
+      }
+      const second = Number(p.second) + (instant%1000)/1000;
+      clock.querySelector('.dc-progress').style.strokeDasharray = `${second} 60`;
+      if (first || resync || (clock._clockTime && Math.abs(instant-clock._clockTime)>4000)) {
+        const dot=clock.querySelector('.dc-orbit-dot');
+        dot.style.setProperty('--dc-delay',(-second)+'s');
+        // Restart only on initial rendering, resume, or a system-clock jump.
+        dot.style.animationName='none'; void dot.offsetWidth; dot.style.animationName='';
+      }
+      clock._clockTime=instant;
+      clock.dataset.clockStamp=String(stamp);
+      clock.setAttribute('aria-label',`${p.hour}:${p.minute}, ${p.weekday} ${p.day} ${p.month} ${p.year}. Fuso ${zone}.`);
+    }
+  }
+  setInterval(() => { if (!document.hidden) refresh(); }, 250);
+  document.addEventListener('visibilitychange', () => {if(!document.hidden) refresh(document,Date.now(),true);});
+  return {html,refresh};
+})();
+
+document.getElementById('clock').innerHTML=CarismaClock.html();CarismaClock.refresh();
+</script></body></html>
