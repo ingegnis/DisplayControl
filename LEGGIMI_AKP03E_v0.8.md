@@ -40,3 +40,11 @@ TAKE updates `activeRole`, console and LCD status only; it does not switch HDMI.
 - https://github.com/tomekceszke/ajazz-akp03e
 - https://github.com/mishamyrt/ajazz-sdk
 - https://pypi.org/project/hidapi/
+
+## Current controller panel
+
+Legacy AKP03E launchers now use the unified service. Its pairing/status panel is shown below in the unpaired state; no hardware test is implied.
+
+![Unified USB controller panel](docs/screenshots/prompt-controllers.png)
+
+[Current controller guide](CONTROLLERS.md) · [Other pages](docs/SCREENSHOTS.md).

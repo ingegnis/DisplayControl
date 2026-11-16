@@ -13,3 +13,7 @@ This filename is retained for existing links; documentation is now in English. S
 | AKP03E 0.8 | [AKP03E](LEGGIMI_AKP03E_v0.8.md) | [QA](QA_AKP03E_v0.8.md) |
 
 Historical reports describe their original environments, not current release validation. No tested Chromecast APK, native NDI browser decoder or modified firmware is supplied. Current interchangeable-controller setup: [CONTROLLERS.md](CONTROLLERS.md).
+
+## Illustrated guide
+
+Screenshots of the current main pages: [Interface guide](docs/SCREENSHOTS.md). Captures use demonstration browser players and are distinct from historical hardware/test claims.

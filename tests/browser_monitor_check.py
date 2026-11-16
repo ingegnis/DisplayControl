@@ -75,6 +75,7 @@ with tempfile.TemporaryDirectory() as folder:
             monitor.set_content(text,wait_until='domcontentloaded')
             monitor.wait_for_function('document.querySelectorAll(".card img:not([hidden])").length===4 && [...document.querySelectorAll(".card img")].every(i=>i.naturalWidth===480)',timeout=20000)
             checks.append('All four authenticated players upload actual JPEG previews and monitor displays them')
+            monitor.click('#more')
             monitor.select_option('#columns','2');monitor.screenshot(path=str(QA/'monitor-desktop.png'),full_page=True)
             frames=monitor.evaluate('snapshot.screens.map(s=>({id:s.id,bytes:s.preview.bytes,kind:s.preview.kind}))')
             assert len(json.loads(req('/api/ndi/status',token=admin)[1])['streams'])==1

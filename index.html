@@ -685,7 +685,7 @@ async function boot(){
  const suppliedKey=params.get('key');if(suppliedKey){token=suppliedKey;safeLocal.set(TOKEN_KEY,token);const u=new URL(location.href);u.searchParams.delete('key');history.replaceState(null,'',u);params.delete('key');}else token=token||safeLocal.get(TOKEN_KEY)||'';
  state=localState()||defaultState();
  if(mode==='server'){
-  if(!token){showPair();return;}
+  if(!token&&!window.CARISMA_PHYSICAL){showPair();return;}
   try{const r=await apiJSON('/api/state');revision=r.revision;if(r.state){if(!validState(r.state))throw Error('Il progetto sul server non \u00e8 valido.');state=r.state;}else if(!playerId){const saved=await apiJSON('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision,state})});revision=saved.revision;}serverReachable=true;safeLocal.set(STORE,JSON.stringify(state));}
   catch(err){serverReachable=false;if(err.status===401){showPair(err.message);return;}if(!playerId&&!localState()){showPair('Server non raggiungibile. Avvia server.py e riprova.');return;}}
  }else{if(!localState())safeLocal.set(STORE,JSON.stringify(state));}

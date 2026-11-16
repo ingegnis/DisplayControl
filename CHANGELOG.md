@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Monitor opens with the panel matrix; More/Less toggles controls and details without pausing collection. Errors and stale indicators stay visible.
+- Illustrated guides with 16 screenshots of current pages, using disposable browser demo data.
+- Paired signage players start with their scoped token instead of requesting an administrator key; browser regression covers the real pairing flow.
+- Refresh the offline shell cache for the updated pages.
+
 ## 0.10.0-alpha
 
 - Background USB hub: automatic detection and hot swap for AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, MSD-TWO and Stream Deck Neo.

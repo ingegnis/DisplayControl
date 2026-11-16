@@ -43,3 +43,13 @@ Commands: [README.md](README.md). Sanitized logs and summaries: [test-results/](
 ## Editorial revision — 2026-11-16
 
 After compacting English comments and documentation, all 151 Python tests passed again (43.948 s, no skips), as did three JavaScript suites and 20 syntax checks. Python AST/token comparison and non-comment source comparison found no executable changes. Shared Android/browser assets matched; 56 local documentation links resolved and original external reference URLs were retained. Original release evidence files and attachment checksums remain unchanged.
+
+## Interface update — 2026-11-16
+
+The unreleased matrix/More update passed all 151 Python tests again (47.004 s, no failures/errors/skips), three JavaScript suites and 20 script syntax checks. The shared browser/Android player assets remain identical.
+
+Eight browser scenarios passed in local Chrome using real HTTP navigation and native browser storage: four players paired through `/connect.html` without an administrator key; default/collapsed views; keyboard More; columns, interval and group controls; pause/resume; continued polling and reload defaults; 390px layout; visible server-failure/recovery states. No page errors. Results: [browser-interface.json](test-results/browser-interface.json).
+
+The run captured 16 screenshots with disposable demo data and no displayed credentials. Local documentation links resolved and screenshots were visually inspected. [Illustrated guide](docs/SCREENSHOTS.md).
+
+This also fixes a pre-existing browser startup guard that requested administrator credentials after player pairing. The fix uses the existing scoped player transport; API authorization is unchanged. Offline shell cache was refreshed. No physical panels, USB controllers, official NDI source, Chromecast or Android APK was tested by this browser run. Original tagged release attachments and checksums are unchanged.

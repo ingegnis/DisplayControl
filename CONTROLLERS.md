@@ -85,3 +85,11 @@ Independent implementation; no external driver is bundled or executed. Reference
 - https://github.com/LinuxCNC/linuxcnc/blob/master/src/hal/user_comps/shuttle.c
 - https://github.com/abcminiuser/python-elgato-streamdeck/blob/master/src/StreamDeck/Devices/StreamDeckNeo.py
 - https://github.com/abcminiuser/python-elgato-streamdeck/blob/master/src/StreamDeck/ProductIDs.py
+
+## Controller panel
+
+In Prompt, **Controller USB** generates the service pairing code and displays device status. This screenshot shows the unpaired state; no physical controller is represented as connected.
+
+![USB controller panel](docs/screenshots/prompt-controllers.png)
+
+[Full Prompt console and other pages](docs/SCREENSHOTS.md).

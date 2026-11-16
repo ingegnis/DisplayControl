@@ -47,3 +47,11 @@ The 0.4.1 report used Linux tests and real FFmpeg conversion, not native Windows
 - https://docs.python.org/3.14/using/windows.html
 - https://docs.ndi.video/all/developing-with-ndi/sdk/dynamic-loading-of-ndi-libraries
 - https://docs.ndi.video/all/developing-with-ndi/sdk/software-distribution
+
+## Interface reference
+
+After setup, check dependencies in **Ingressi NDI**:
+
+![Current NDI dependency page](docs/screenshots/console-ndi.png)
+
+This is a current browser capture, not a historical Windows-installer test. [All main pages](docs/SCREENSHOTS.md).

@@ -75,3 +75,11 @@ NDI(R) is a registered trademark of Vizrt NDI AB. Its runtime is proprietary and
 - https://ffmpeg.org/download.html
 - https://ndi.video/for-developers/ndi-sdk/
 - https://ndi.video/
+
+## Current NDI page
+
+The capture shows the actual dependency status of the demonstration environment, without a real NDI source. It is not a reception test.
+
+![NDI inputs and dependency status](docs/screenshots/console-ndi.png)
+
+[Other main pages](docs/SCREENSHOTS.md).

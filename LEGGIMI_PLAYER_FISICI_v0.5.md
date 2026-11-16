@@ -57,3 +57,13 @@ Open players can retain programs through server loss; live needs LAN/source/gate
 - https://developer.android.com/studio
 - https://learn.microsoft.com/en-us/windows/dev-environment/java
 - https://learn.microsoft.com/en-us/powershell/module/netsecurity/new-netfirewallrule
+
+## Current browser pairing screens
+
+These screenshots use temporary browser players, not Chromecast or physical panels. No active pairing code is displayed.
+
+![Player pairing administration](docs/screenshots/player-pairing.png)
+
+![Browser pairing form](docs/screenshots/player-connect.png)
+
+[Paired output and other pages](docs/SCREENSHOTS.md).

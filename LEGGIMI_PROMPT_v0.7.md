@@ -68,3 +68,13 @@ Pair PRIMARY and BACKUP separately. Both receive the full script/state; readines
 The Raspberry generator offers Signage or Prompt; Prompt includes its page on SD and retains identity/script. Physical boot, Chromium cache after power loss, HDMI/video acceleration and SD reliability remain unverified.
 
 Test at least ten cues: play/pause, jog, forward/reverse speeds, blackout and absolute OSC. Disconnect PRIMARY LAN while scrolling; check BACKUP readiness and reconnection, then repeat on actual Raspberry and under power loss. Run extended rehearsal and retain an emergency script copy. API/parser/loopback OSC results, not physical-stage certification: [QA_PROMPT_v0.7.md](QA_PROMPT_v0.7.md).
+
+## Current Prompt interface
+
+Current console and player, using a synthetic rehearsal script. These are browser captures, not historical 0.7 or physical-stage test evidence.
+
+![Prompt console](docs/screenshots/prompt-console.png)
+
+![Prompt player](docs/screenshots/prompt-player.png)
+
+[Other main pages](docs/SCREENSHOTS.md).

@@ -56,3 +56,13 @@ Encoding and simulated ABI tests need FFmpeg/ffprobe and a C compiler; check the
 Use GitHub **Code → Download ZIP**, a release, or `git clone`. To transfer your installation, back up `data/` privately; it contains credentials, scripts and media and must stay outside the public repository.
 
 Public sources exclude operational data, databases, keys, local configuration, historical raw logs, caches, vendor binaries and signing material. Test credentials are synthetic. No project license has been selected; publication does not grant a new license. Dependencies retain their own terms; see [SOURCES.md](SOURCES.md).
+
+## Interface preview
+
+Default monitor: panel matrix with **More** for controls. **Less** collapses them; reloading restores the matrix. Polling and visible error/stale states continue in either view.
+
+![Default panel matrix](docs/screenshots/monitor-matrix.png)
+
+![Screen control console](docs/screenshots/console-screens.png)
+
+See the [illustrated interface guide](docs/SCREENSHOTS.md) for Prompt, settings/logo, content, schedules, pairing and NDI. Captures use synthetic content and browser players; they do not certify physical hardware.

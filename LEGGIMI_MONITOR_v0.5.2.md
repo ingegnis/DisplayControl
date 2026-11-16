@@ -34,3 +34,13 @@ Android sources have manifest 0.5.2-alpha/versionCode 52, but no APK was built h
 - https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos
 - https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
 - https://ffmpeg.org/ffmpeg-formats.html
+
+## Current monitor interface
+
+These screenshots show the updated interface, not the historical 0.5.2 test run. Default: only the matrix and **More**. Click **More** for filters, refresh/column controls, statistics, pause/fullscreen and help; **Less** returns to the matrix. Reload always starts collapsed. Monitoring continues while controls are hidden; failures and stale previews remain visible.
+
+![Default panel matrix](docs/screenshots/monitor-matrix.png)
+
+![More reveals monitor controls](docs/screenshots/monitor-more.png)
+
+Demonstration browser players only. [All main pages](docs/SCREENSHOTS.md).

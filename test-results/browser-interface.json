@@ -1,0 +1,35 @@
+{
+  "checks": [
+    "Four browser players paired through the real connect page and HTTP API",
+    "Default monitor shows the matrix and More; every details region is hidden",
+    "Keyboard More reveals all details; column, interval and group controls work",
+    "Pause/stale indicators and resume survive collapsing details",
+    "Matrix keeps polling; reload returns to the default collapsed view",
+    "Matrix and expanded controls fit a 390px mobile viewport",
+    "Main pages captured via normal HTTP navigation with disposable demo data and no displayed credentials",
+    "Server failure remains visible in matrix mode and recovers on reconnect"
+  ],
+  "images": [
+    "monitor-matrix.png",
+    "monitor-more.png",
+    "monitor-mobile.png",
+    "console-screens.png",
+    "console-contents.png",
+    "console-playlists.png",
+    "console-schedules.png",
+    "console-ndi.png",
+    "console-diagnostics.png",
+    "console-settings.png",
+    "prompt-player.png",
+    "prompt-console.png",
+    "prompt-controllers.png",
+    "player-pairing.png",
+    "player-connect.png",
+    "signage-player.png"
+  ],
+  "pageErrors": [],
+  "limits": [
+    "Local Chrome and loopback HTTP only",
+    "Browser players with synthetic demonstration content; no physical panels/controllers/NDI"
+  ]
+}
