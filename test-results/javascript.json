@@ -13,16 +13,18 @@
     "players.html:script1",
     "prompt.html:script2",
     "prompt_player.html:script2",
+    "show.html:script1",
     "branding.js",
     "physical_boot.js",
     "prompt_shared.js",
+    "station_sw.js",
     "sw.js",
     "tests/test_branding.js",
     "tests/test_live_policy.js",
     "tests/test_prompt_timeline.js"
   ],
   "tests": {
-    "test_branding.js": "Branding: palette, transparency, contrast and local-only image checks passed.",
+    "test_branding.js": "Branding: palette, contrast, local images and technical identifiers passed.",
     "test_prompt_timeline.js": "Prompt timeline: offline continuity, same-sequence reconnect, stale response rejection, STOP and shared layout passed.",
     "test_live_policy.js": "17 JS latency/recovery checks passed."
   }

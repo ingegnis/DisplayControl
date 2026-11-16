@@ -1,10 +1,10 @@
 /* Cache the shell; media/manifests use IndexedDB.
  * Service workers need localhost/HTTPS; plain LAN HTTP cold-start is unverified.
  */
-const CACHE = 'carisma-shell-v010-monitor';
+const CACHE = 'carisma-shell-v011-show';
 const SHELL = ['./index.html','./favicon.svg','./branding.js','./prompt_shared.js',
   './prompt.html','./prompt_player.html','./monitor.html','./players.html',
-  './connect.html','./player.html','./physical_boot.js'];
+  './show.html','./connect.html','./player.html','./physical_boot.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));
   self.skipWaiting();

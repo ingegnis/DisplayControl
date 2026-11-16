@@ -2,6 +2,12 @@
 
 Screenshots show the current interface with disposable demonstration data in local Chrome. All connected players are browser instances, not physical panels. No real controller, NDI source or Chromecast validation is implied. Guides are in English; interface labels remain Italian.
 
+## SHOW PACKAGE
+
+Export the full show, validate a portable package, review its contents, activate in STOP or restore the previous show. Core availability is reported on the same page. See [SHOW PACKAGE](SHOW_PACKAGE.md) and [cluster setup](CLUSTER.md).
+
+![SHOW PACKAGE and Core status](screenshots/show-package.png)
+
 ## Screen console
 
 Create players, select destinations and assign content from **Schermi**. Open **Monitor schermi** to inspect player previews.
@@ -36,7 +42,7 @@ Build ordered content in **Playlist**, then assign weekly rules in **Palinsesti*
 
 ## NDI inputs
 
-**Ingressi NDI** reports installed dependencies, discovery and gateway streams. This capture has no real NDI runtime/source. The local **NON NDI** generator tests the encoding/browser path only. See [NDI setup](../LEGGIMI_NDI.md).
+**Ingressi NDI** reports installed dependencies, discovery and gateway streams. This capture detects the installed NDI runtime; no real source is exercised, and FFmpeg is not configured in this demo process. The local **NON NDI** generator tests the encoding/browser path only. See [NDI setup](../LEGGIMI_NDI.md).
 
 ![NDI input page with actual dependency status](screenshots/console-ndi.png)
 

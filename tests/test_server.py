@@ -68,7 +68,8 @@ class ControllerTests(unittest.TestCase):
             with urllib.request.urlopen(req, timeout=5) as r:
                 return r.status, r.read(), dict(r.headers)
         except urllib.error.HTTPError as err:
-            return err.code, err.read(), dict(err.headers)
+            with err:
+                return err.code, err.read(), dict(err.headers)
 
     def test_authentication(self):
         self.assertEqual(self.request('/api/info', token='')[0], 200)

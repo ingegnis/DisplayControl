@@ -14,6 +14,15 @@ test_zip_traversal_refused (test_android_build.AndroidBuildUtilitiesTests.test_z
 test_corrupt_image_rejected_without_exposing_project (test_branding.BrandingTests.test_corrupt_image_rejected_without_exposing_project) ... ok
 test_embedded_png_theme_export_roundtrip (test_branding.BrandingTests.test_embedded_png_theme_export_roundtrip) ... ok
 test_remote_svg_oversize_and_css_injection_rejected (test_branding.BrandingTests.test_remote_svg_oversize_and_css_injection_rejected) ... ok
+test_live_lease_cannot_be_preempted (test_cluster.AuthorityTests.test_live_lease_cannot_be_preempted) ... ok
+test_missing_coordinator_history_cannot_bootstrap_existing_cores (test_cluster.AuthorityTests.test_missing_coordinator_history_cannot_bootstrap_existing_cores) ... ok
+test_new_process_cannot_inherit_unexpired_grant (test_cluster.AuthorityTests.test_new_process_cannot_inherit_unexpired_grant) ... ok
+test_only_initial_core_can_bootstrap (test_cluster.AuthorityTests.test_only_initial_core_can_bootstrap) ... ok
+test_osc_relay_enforces_namespace_sender_and_active_lease (test_cluster.AuthorityTests.test_osc_relay_enforces_namespace_sender_and_active_lease) ... ok
+test_restart_waits_out_preexisting_grants (test_cluster.AuthorityTests.test_restart_waits_out_preexisting_grants) ... ok
+test_stale_replica_never_promoted (test_cluster.AuthorityTests.test_stale_replica_never_promoted) ... ok
+test_replication_failover_recovery_and_witness_loss (test_cluster.ClusterProcessTests.test_replication_failover_recovery_and_witness_loss) ... ok
+test_expired_lease_rolls_back_before_commit (test_cluster.CommitFenceTests.test_expired_lease_rolls_back_before_commit) ... ok
 test_play_starts_after_stop_instead_of_zero_rate (test_controller_hub.HubHttpTests.test_play_starts_after_stop_instead_of_zero_rate) ... ok
 test_real_http_one_pairing_four_models_and_no_prompt_page (test_controller_hub.HubHttpTests.test_real_http_one_pairing_four_models_and_no_prompt_page) ... ok
 test_auto_swap_all_four_families_without_pairing_or_browser (test_controller_hub.HubTests.test_auto_swap_all_four_families_without_pairing_or_browser) ... ok
@@ -42,13 +51,7 @@ test_atomic_replay_survives_store_restart_and_rejects_conflict (test_controller_
 test_non_finite_motion_rejected (test_controller_resilience.DeduplicationTests.test_non_finite_motion_rejected) ... ok
 test_absolute_command_can_failover_with_dedicated_token (test_controller_resilience.DeliveryTests.test_absolute_command_can_failover_with_dedicated_token) ... ok
 test_connection_refused_allows_real_udp_fallback (test_controller_resilience.DeliveryTests.test_connection_refused_allows_real_udp_fallback) ... ok
-test_revocation_does_not_bypass_auth_through_osc (test_controller_resilience.DeliveryTests.test_revocation_does_not_bypass_auth_through_osc) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_revocation_does_not_bypass_auth_through_osc (test_controller_resilience.DeliveryTests.test_revocation_does_not_bypass_auth_through_osc) ... ok
 test_timeout_does_not_replay_relative_command (test_controller_resilience.DeliveryTests.test_timeout_does_not_replay_relative_command) ... ok
 test_communication_failure_discards_pending_events (test_controller_resilience.QueueAndUsbTests.test_communication_failure_discards_pending_events) ... ok
 test_config_replacement_leaves_no_partial_file (test_controller_resilience.QueueAndUsbTests.test_config_replacement_leaves_no_partial_file) ... ok
@@ -68,22 +71,12 @@ test_stable_encoder_arguments (test_latency.LatencyPolicyTests.test_stable_encod
 test_responsive_360p (test_latency.RealFragmentTests.test_responsive_360p) ... ok
 test_responsive_720p (test_latency.RealFragmentTests.test_responsive_720p) ... ok
 test_stable_360p (test_latency.RealFragmentTests.test_stable_360p) ... ok
-test_cross_player_upload_read_forbidden (test_monitoring.MonitorApiTests.test_cross_player_upload_read_forbidden) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
-test_deleted_screen_frame_not_leaked (test_monitoring.MonitorApiTests.test_deleted_screen_frame_not_leaked) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 410: 'Gone'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_cross_player_upload_read_forbidden (test_monitoring.MonitorApiTests.test_cross_player_upload_read_forbidden) ... ok
+test_deleted_screen_frame_not_leaked (test_monitoring.MonitorApiTests.test_deleted_screen_frame_not_leaked) ... ok
 test_heartbeat_announces_demand_and_stops (test_monitoring.MonitorApiTests.test_heartbeat_announces_demand_and_stops) ... ok
-test_legacy_admin_player_and_bad_interval (test_monitoring.MonitorApiTests.test_legacy_admin_player_and_bad_interval) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_legacy_admin_player_and_bad_interval (test_monitoring.MonitorApiTests.test_legacy_admin_player_and_bad_interval) ... ok
 test_no_device_secret_in_monitor_response (test_monitoring.MonitorApiTests.test_no_device_secret_in_monitor_response) ... ok
-test_revoke_drops_snapshot_and_rejects_future_upload (test_monitoring.MonitorApiTests.test_revoke_drops_snapshot_and_rejects_future_upload) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 404: 'Not Found'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_revoke_drops_snapshot_and_rejects_future_upload (test_monitoring.MonitorApiTests.test_revoke_drops_snapshot_and_rejects_future_upload) ... ok
 test_shell_public_data_private (test_monitoring.MonitorApiTests.test_shell_public_data_private) ... ok
 test_upload_read_frame_and_metadata (test_monitoring.MonitorApiTests.test_upload_read_frame_and_metadata) ... ok
 test_deleted_screen_is_removed (test_monitoring.MonitorStoreTests.test_deleted_screen_is_removed) ... ok
@@ -107,9 +100,7 @@ test_testpattern_shared_and_security (test_ndi.GatewayTests.test_testpattern_sha
 test_admin_required_for_pair_code_and_list (test_physical_players.PhysicalPlayerTests.test_admin_required_for_pair_code_and_list) ... ok
 test_admin_secret_not_accepted_as_player (test_physical_players.PhysicalPlayerTests.test_admin_secret_not_accepted_as_player) ... ok
 test_code_one_use_and_hashed_storage (test_physical_players.PhysicalPlayerTests.test_code_one_use_and_hashed_storage) ... ok
-test_concurrent_claim_single_winner (test_physical_players.PhysicalPlayerTests.test_concurrent_claim_single_winner) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 500: 'rejected'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_concurrent_claim_single_winner (test_physical_players.PhysicalPlayerTests.test_concurrent_claim_single_winner) ... ok
 test_deleted_screen_blocks_player (test_physical_players.PhysicalPlayerTests.test_deleted_screen_blocks_player) ... ok
 test_expired_code_rejected (test_physical_players.PhysicalPlayerTests.test_expired_code_rejected) ... ok
 test_heartbeat_bounded_and_visible (test_physical_players.PhysicalPlayerTests.test_heartbeat_bounded_and_visible) ... ok
@@ -118,13 +109,14 @@ test_new_code_invalidates_old_code (test_physical_players.PhysicalPlayerTests.te
 test_pair_replaces_previous_token (test_physical_players.PhysicalPlayerTests.test_pair_replaces_previous_token) ... ok
 test_player_cannot_admin_or_other_screen (test_physical_players.PhysicalPlayerTests.test_player_cannot_admin_or_other_screen) ... ok
 test_public_shell_and_connection_page (test_physical_players.PhysicalPlayerTests.test_public_shell_and_connection_page) ... ok
-test_rate_limit (test_physical_players.PhysicalPlayerTests.test_rate_limit) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 429: 'Too Many Requests'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_rate_limit (test_physical_players.PhysicalPlayerTests.test_rate_limit) ... ok
 test_real_ffmpeg_scoped_segments (test_physical_players.PhysicalPlayerTests.test_real_ffmpeg_scoped_segments) ... ok
 test_revoke_removes_access_and_heartbeat (test_physical_players.PhysicalPlayerTests.test_revoke_removes_access_and_heartbeat) ... ok
 test_scope_asset_and_hash_download (test_physical_players.PhysicalPlayerTests.test_scope_asset_and_hash_download) ... ok
 test_state_scoped_to_assigned_contents (test_physical_players.PhysicalPlayerTests.test_state_scoped_to_assigned_contents) ... ok
+test_pairing_persists_locally_and_shell_survives_server_outage (test_player_station.StationHttpTests.test_pairing_persists_locally_and_shell_survives_server_outage) ... ok
+test_admin_and_cluster_apis_are_never_forwarded (test_player_station.StationPermissionTests.test_admin_and_cluster_apis_are_never_forwarded) ... ok
+test_station_modes_have_separate_token_scopes (test_player_station.StationPermissionTests.test_station_modes_have_separate_token_scopes) ... ok
 test_import_txt (test_prompt.PromptHttpTests.test_import_txt) ... ok
 test_pair_scoped_player_and_commands (test_prompt.PromptHttpTests.test_pair_scoped_player_and_commands) ... ok
 test_public_pages_and_admin_auth (test_prompt.PromptHttpTests.test_public_pages_and_admin_auth) ... ok
@@ -133,9 +125,7 @@ test_osc_message_and_bundle (test_prompt.PromptUnitTests.test_osc_message_and_bu
 test_pair_primary_backup_and_ready (test_prompt.PromptUnitTests.test_pair_primary_backup_and_ready) ... ok
 test_runtime_commands_and_three_presets (test_prompt.PromptUnitTests.test_runtime_commands_and_three_presets) ... ok
 test_script_cues_and_default (test_prompt.PromptUnitTests.test_script_cues_and_default) ... ok
-test_concurrent_duplicate_request_executes_once (test_prompt_controller_api.ControllerApiTests.test_concurrent_duplicate_request_executes_once) ... C:\Python314\Lib\tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 409: 'Conflict'>
-  _warnings.warn(self.warn_message, ResourceWarning)
-ok
+test_concurrent_duplicate_request_executes_once (test_prompt_controller_api.ControllerApiTests.test_concurrent_duplicate_request_executes_once) ... ok
 test_expiry_single_use_and_revocation (test_prompt_controller_api.ControllerApiTests.test_expiry_single_use_and_revocation) ... ok
 test_osc_take_mapping_via_unit_import (test_prompt_controller_api.ControllerApiTests.test_osc_take_mapping_via_unit_import) ... ok
 test_pair_scoped_commands_and_take (test_prompt_controller_api.ControllerApiTests.test_pair_scoped_commands_and_take) ... ok
@@ -165,8 +155,8 @@ FFmpeg: checksum NON coincidente. Il file non viene usato.
 test_hash_mismatch_stops_installation (test_setup.FileSafetyTests.test_hash_mismatch_stops_installation) ... ok
 test_hash_parsing (test_setup.FileSafetyTests.test_hash_parsing) ... ok
 test_http_redirect_rejected (test_setup.FileSafetyTests.test_http_redirect_rejected) ... ok
-Vecchia cartella FFmpeg conservata in: <USER_HOME>\AppData\Local\Temp\tmp4zuc_xj7\bin\ffmpeg.backup-20261116-085044-1794815444787915000
-FFmpeg installato nel progetto: <USER_HOME>\AppData\Local\Temp\tmp4zuc_xj7\bin\ffmpeg\bin\ffmpeg.exe
+Vecchia cartella FFmpeg conservata in: <user>\AppData\Local\Temp\tmp0vvqfd6l\bin\ffmpeg.backup-20261116-172951-1794846591652430600
+FFmpeg installato nel progetto: <user>\AppData\Local\Temp\tmp0vvqfd6l\bin\ffmpeg\bin\ffmpeg.exe
 test_install_staged_and_preserves_previous_build (test_setup.FileSafetyTests.test_install_staged_and_preserves_previous_build) ... ok
 test_non_https_rejected (test_setup.FileSafetyTests.test_non_https_rejected) ... ok
 test_safe_extract_valid (test_setup.FileSafetyTests.test_safe_extract_valid) ... ok
@@ -178,8 +168,22 @@ test_absent_ndi_installs_then_rechecks (test_setup.RepairLogicTests.test_absent_
 test_all_present_never_installs (test_setup.RepairLogicTests.test_all_present_never_installs) ... ok
 test_final_failure_not_reported_success (test_setup.RepairLogicTests.test_final_failure_not_reported_success) ... ok
 test_user_case_installs_only_ffmpeg (test_setup.RepairLogicTests.test_user_case_installs_only_ffmpeg) ... ok
+test_authenticated_live_urls_not_exported (test_show_package.ShowPackageTests.test_authenticated_live_urls_not_exported) ... ok
+test_controller_history_stays_bounded_for_checkpoint_size (test_show_package.ShowPackageTests.test_controller_history_stays_bounded_for_checkpoint_size) ... ok
+test_expired_preview_is_deleted (test_show_package.ShowPackageTests.test_expired_preview_is_deleted) ... ok
+test_export_omits_machine_secrets_pairing_and_history (test_show_package.ShowPackageTests.test_export_omits_machine_secrets_pairing_and_history) ... ok
+test_hash_mismatch_blocks_import_without_changing_project (test_show_package.ShowPackageTests.test_hash_mismatch_blocks_import_without_changing_project) ... ok
+test_invalid_references_block_export (test_show_package.ShowPackageTests.test_invalid_references_block_export) ... ok
+test_missing_or_corrupt_media_blocks_export (test_show_package.ShowPackageTests.test_missing_or_corrupt_media_blocks_export) ... ok
+test_prompt_revision_conflict_rejected (test_show_package.ShowPackageTests.test_prompt_revision_conflict_rejected) ... ok
+test_restart_discards_staged_uploads (test_show_package.ShowPackageTests.test_restart_discards_staged_uploads) ... ok
+test_revision_conflict_retains_preview_and_project (test_show_package.ShowPackageTests.test_revision_conflict_retains_preview_and_project) ... ok
+test_rollback_archive_restores_previous_show (test_show_package.ShowPackageTests.test_rollback_archive_restores_previous_show) ... ok
+test_round_trip_preserves_content_and_local_pairing_stops_runtime (test_show_package.ShowPackageTests.test_round_trip_preserves_content_and_local_pairing_stops_runtime) ... ok
+test_traversal_and_extra_credentials_file_rejected (test_show_package.ShowPackageTests.test_traversal_and_extra_credentials_file_rejected) ... ok
+test_unknown_format_and_missing_media_rejected (test_show_package.ShowPackageTests.test_unknown_format_and_missing_media_rejected) ... ok
 
 ----------------------------------------------------------------------
-Ran 151 tests in 46.914s
+Ran 177 tests in 71.018s
 
 OK

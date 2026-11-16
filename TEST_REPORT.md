@@ -1,55 +1,46 @@
-# DisplayControl 0.10.0-alpha test report
+# DisplayControl 0.11.0-alpha test report
 
-Release checks: 2026-11-16, Windows x64, Python 3.14.7, Node.js, hidapi 0.15.0, Pillow 13.0.0, FFmpeg/ffprobe and Visual C.
+2026-11-16, Windows x64, Python 3.14.7, Node.js, portable OpenJDK 21.0.13, FFmpeg/ffprobe, Visual C, hidapi 0.15.0 and Pillow 13.0.0.
 
-**151 Python tests passed: no errors, failures or skips**, including 24 hub tests. Three JavaScript suites passed; 20 scripts passed syntax checks. Clean isolated dependency installation and legacy `akp03e_controller.py --list` succeeded. Real HID enumeration found **zero supported physical controllers**.
+**177 Python tests passed in 71.018 s: no failures, errors or skips.** Three JavaScript suites passed; 22 scripts passed syntax checks. Thirty desktop Java NetworkPolicy checks passed; these are not Android Activity/SDK/device tests.
 
-| Area | Coverage | Method |
+## Added in 0.11
+
+| Area | Verified behavior | Evidence boundary |
 |---|---|---|
-| Detection | VID/PID, interfaces, unknown-device/keyboard exclusion | Synthetic metadata |
-| AJAZZ | Encoders, buttons, ACK signature, both identities | Synthetic reports |
-| MSD-TWO | Protocol 2 clicks, LCD and padding | Simulated HID |
-| Contour | Signed ring, center STOP, jog wrap, simultaneous buttons, PRO map | Synthetic reports |
-| Neo | Eight keys, two touch buttons, edges, JPEG 96×96, packets, brightness | Real Pillow; simulated HID |
-| Swap | AJAZZ → MSD-TWO → Contour → Neo, one pairing, no Prompt page | Real loopback HTTP; simulated USB |
-| Unplug | Stale queues rejected after reconnection | Simulated USB |
-| Duplicate start | Configuration lock and process-exit release | Real Windows file lock |
-| Responsiveness | STOP priority, expiry, blocked polling leaves commands running | Controlled concurrent tests |
-| Status privacy | No tokens, USB paths or serials in heartbeats | API and fixtures |
-| PLAY | Resume from STOP at zero speed | Real HTTP |
-| Regression | Server, pairing, tokens, revocation, Prompt, Monitor, players | Full suite |
-| FFmpeg | 360p/720p, fragments, keyframes, access, audio/video decoding | Real FFmpeg |
-| NDI | C binding, signal loss/recovery, encoding | Fake ABI DLL; no real NDI source |
-| Android | Policy, manifest, asset consistency | Sources only; APK not built/run |
+| SHOW PACKAGE | Complete metadata/media round trip, SHA-256, missing/corrupt media, path rejection, revision conflicts, STOP activation, local identity preservation, rollback and expired preview cleanup | 13 automated tests; real ZIP/files/SQLite |
+| Cluster authority | Bootstrap selection, no preemption, stale-replica exclusion, restart delay, process incarnation, namespace/sender-gated OSC relay | Unit tests and real UDP sockets |
+| Commit fencing | Expired lease rolls SQLite transaction back before commit | Real SQLite transaction |
+| Core failover | Three real processes; replicated state/identity; active-Core termination, reserve promotion, deduplicated controller request, continued writes, old-Core recovery, witness loss/restart | Real loopback HTTP and private checkpoints; no physical LAN/power claim |
+| Local station | Scoped proxy, blocked administrator APIs, persisted token, shell availability through server outage | Real HTTP processes |
+| Browser station | Prompt and signage pair at localhost; native cache survives reload and station-service restart with remote server stopped; Prompt scrolling continues | Actual Chrome/HTTP/localStorage/IndexedDB, no transport/storage adapters |
+| Interface | Default monitor matrix, More/Less and keyboard, mobile 390px, pause/filter/refresh/columns, continued polling, failure/recovery; SHOW PACKAGE download/preview/activation/rollback; revoked player returns to pairing | Actual Chrome and loopback HTTP |
 
-The controller API test runs without browser pages or keyboard shortcuts. It verifies the background command path, not physical drivers or OS permissions.
+Full regression retains server/API/pairing, organization branding, Prompt timeline, Monitor, controller protocols/queues, real FFmpeg 360p/720p fragments/keyframes/AV decoding and a compiled fake NDI ABI with signal loss/recovery. The fake ABI is not the official runtime or an NDI transmitter.
 
-## Historical evidence
+## Evidence and repeatability
 
-`test-results/browser-sync.json` records **0.9** browser checks at 800×600 and 1920×1080, including server restart. These are historical Prompt measurements, not new 0.10 browser or hardware tests. The preceding report is in tag `v0.9.0-alpha`; 0.10 JavaScript checks cover syntax and automated regression.
+- [Python log](test-results/python-tests.txt), [summary](test-results/summary.json), [JavaScript](test-results/javascript.json).
+- [Interface checks](test-results/browser-interface.json), [local station checks](test-results/browser-station.json).
+- [17 illustrated main-page screenshots](docs/SCREENSHOTS.md), captured with disposable demo data; no active pairing codes or administrator keys displayed.
+- Historical 0.9 browser-sync evidence remains labeled in `test-results/browser-sync.json`; previous release reports are retained in their Git tags.
 
-## Unverified
+```sh
+python -m unittest discover -s tests -v
+node tests/test_live_policy.js
+node tests/test_branding.js
+node tests/test_prompt_timeline.js
+# Development-only Playwright and installed Chrome:
+python tests/browser_docs_check.py
+python tests/browser_station_check.py
+```
 
-No physical AJAZZ, Contour, Mars Gaming or Elgato was available. Firmware, real USB identities, button numbering, LCD orientation, vendor conflicts, unplug recovery and stage latency require device tests. macOS/Linux HID access and udev permissions were not tested here. Unknown USB revisions are ignored; use [controller diagnostics](CONTROLLERS.md).
+FFmpeg/ffprobe and a C compiler are needed for non-skipped encoding/ABI tests. Server, coordinator and station use Python's standard library; HID/image dependencies are isolated for the controller service. Tests create disposable private data, never the installation's show directory.
 
-Server and service must run to receive new commands. USB reads are separate from networking, but in-flight HTTP can delay commands. STOP is not a hardware emergency stop. Unplugging does not stop scrolling; centering Contour does. Deduplication is per Core; OSC has no acknowledgement.
+## Practical limits
 
-No real network NDI, Raspberry, Chromecast, QLab, HA cluster or HDMI switching tests. TAKE is logical. The release remains alpha.
+The coordinator is a required single lease authority and private recovery store. Its loss suspends new writes after lease expiry; open synchronized players retain local playback. Only configured Core failover is automatic. Live NDI pipelines may restart and use fallback. Unacknowledged/ambiguous mutations must not be blindly repeated; OSC has no delivery acknowledgement. HA files contain credentials and must remain private; SHOW PACKAGE excludes them.
 
-## Reproduce
+Kiosk/service generators produce files; actual Linux/Raspberry desktop startup, SD cache durability, firmware, USB permissions, HDMI, audio, clocks, temperatures, physical network/power interruption and sustained load require on-site tests. No controller, Raspberry, Chromecast, QLab or real NDI source was available. TAKE remains logical, with external/manual HDMI switching.
 
-Commands: [README.md](README.md). Sanitized logs and summaries: [test-results/](test-results/README.md). Full coverage needs controller dependencies, FFmpeg/ffprobe and a C compiler. Keep data, tokens and virtual environments private.
-
-## Editorial revision — 2026-11-16
-
-After compacting English comments and documentation, all 151 Python tests passed again (43.948 s, no skips), as did three JavaScript suites and 20 syntax checks. Python AST/token comparison and non-comment source comparison found no executable changes. Shared Android/browser assets matched; 56 local documentation links resolved and original external reference URLs were retained. Original release evidence files and attachment checksums remain unchanged.
-
-## Interface update — 2026-11-16
-
-The unreleased matrix/More update passed all 151 Python tests again (47.004 s, no failures/errors/skips), three JavaScript suites and 20 script syntax checks. The shared browser/Android player assets remain identical.
-
-Eight browser scenarios passed in local Chrome using real HTTP navigation and native browser storage: four players paired through `/connect.html` without an administrator key; default/collapsed views; keyboard More; columns, interval and group controls; pause/resume; continued polling and reload defaults; 390px layout; visible server-failure/recovery states. No page errors. Results: [browser-interface.json](test-results/browser-interface.json).
-
-The run captured 16 screenshots with disposable demo data and no displayed credentials. Local documentation links resolved and screenshots were visually inspected. [Illustrated guide](docs/SCREENSHOTS.md).
-
-This also fixes a pre-existing browser startup guard that requested administrator credentials after player pairing. The fix uses the existing scoped player transport; API authorization is unchanged. Offline shell cache was refreshed. No physical panels, USB controllers, official NDI source, Chromecast or Android APK was tested by this browser run. Original tagged release attachments and checksums are unchanged.
+Android sources are version 0.11 (versionCode 110). Portable JDK and desktop policy checks are available; native SDK build awaits SDK license acceptance. No APK/device certification is inferred from source or desktop Java checks. This is an alpha release prepared for physical acceptance, not a claim of complete production/hardware certification.

@@ -11,7 +11,7 @@ import uuid
 from akp03e_controller import CarismaApi, DEFAULT_CONFIG, load_config, interactive_setup
 from controller_devices import Device, PROFILES, identify
 
-VERSION = '0.10.0-alpha'
+VERSION = '0.11.0-alpha'
 
 
 @dataclass

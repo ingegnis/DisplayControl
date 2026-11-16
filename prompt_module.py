@@ -164,6 +164,10 @@ class PromptStore:
             c.execute('''CREATE TABLE IF NOT EXISTS prompt_controller_requests(
                 controller TEXT NOT NULL, request_id TEXT NOT NULL, fingerprint TEXT NOT NULL,
                 response TEXT NOT NULL, created REAL NOT NULL, PRIMARY KEY(controller,request_id))''')
+            c.execute('CREATE INDEX IF NOT EXISTS prompt_request_age ON prompt_controller_requests(created)')
+            c.execute('DELETE FROM prompt_controller_requests WHERE created<?', (now-86400,))
+            c.execute('''DELETE FROM prompt_controller_requests WHERE rowid <= (
+                SELECT rowid FROM prompt_controller_requests ORDER BY rowid DESC LIMIT 1 OFFSET 16384)''')
             c.execute('INSERT OR IGNORE INTO prompt_project VALUES(1,1,?,?,?,?)',
                       ('Demo Carisma Prompt', json.dumps(project, ensure_ascii=False),
                        json.dumps(DEFAULT_SETTINGS), now))
@@ -295,6 +299,9 @@ class PromptStore:
             c.execute('DELETE FROM prompt_controller_requests WHERE created<?', (time.time()-86400,))
             c.execute('INSERT INTO prompt_controller_requests VALUES(?,?,?,?,?)',
                       (ctl['id'], request_id, fingerprint, json.dumps(response), time.time()))
+            # Bound HA checkpoints; older IDs expire after a day or 16,384 newer requests.
+            c.execute('''DELETE FROM prompt_controller_requests WHERE rowid <= (
+                SELECT rowid FROM prompt_controller_requests ORDER BY rowid DESC LIMIT 1 OFFSET 16384)''')
             return response
 
     def issue_code(self, station, role):

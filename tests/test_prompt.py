@@ -73,7 +73,9 @@ class PromptHttpTests(unittest.TestCase):
         req=urllib.request.Request(f'http://127.0.0.1:{cls.port}{path}',data=body,headers=hs,method=method)
         try:
             with urllib.request.urlopen(req,timeout=5) as r:return r.status,json.loads(r.read() or b'{}') if 'json' in r.headers.get('Content-Type','') else None
-        except urllib.error.HTTPError as e:return e.code,json.loads(e.read() or b'{}')
+        except urllib.error.HTTPError as e:
+            with e:
+                return e.code,json.loads(e.read() or b'{}')
     def test_public_pages_and_admin_auth(self):
         for p in ('/prompt.html','/prompt_player.html'):
             req=urllib.request.Request(f'http://127.0.0.1:{self.port}{p}')

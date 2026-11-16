@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.11.0-alpha
+
+- Complete SHOW PACKAGE: media, scripts/cues, metadata, hashes, validated preview, atomic STOP activation and previous-show recovery.
+- Two Core nodes and a stable coordinator: leases, commit fencing, private durable recovery, automatic promotion and preserved scoped identities/deduplication.
+- Optional coordinator OSC relay with sender/namespace restrictions.
+- Local Prompt/signage station shell, scoped proxy, native cache and generated Linux kiosk setup.
+- 177 Python tests, three JavaScript suites, real HTTP/browser failover/cache checks and 30 desktop Java policy checks.
 
 - Monitor opens with the panel matrix; More/Less toggles controls and details without pausing collection. Errors and stale indicators stay visible.
 - Illustrated guides with 16 screenshots of current pages, using disposable browser demo data.

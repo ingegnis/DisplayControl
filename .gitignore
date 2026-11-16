@@ -44,3 +44,12 @@ android-build/
 java-test/
 .setup/
 data/
+
+# Private cluster/station configuration and generated browser profiles
+**/cluster.json
+**/station.json
+**/authority.json
+**/kiosk-profile/
+*.apk
+*.server.lock
+*.coordinator.lock

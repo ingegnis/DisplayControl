@@ -50,7 +50,9 @@ class PhysicalPlayerTests(unittest.TestCase):
         req=urllib.request.Request('http://127.0.0.1:%d%s'%(self.port,path),data=body,method=method,headers=hs)
         try:
             with urllib.request.urlopen(req,timeout=8) as r:return r.status,r.read()
-        except urllib.error.HTTPError as e:return e.code,e.read()
+        except urllib.error.HTTPError as e:
+            with e:
+                return e.code,e.read()
     def jsoncall(self,*a,**k):
         status,data=self.call(*a,**k);return status,json.loads(data)
     def publish(self,p):

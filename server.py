@@ -25,8 +25,10 @@ from ndi.gateway import Gateway, GatewayError
 from physical_players import init_players, handle_players
 from monitoring import MonitorStore, handle_monitor
 from prompt_module import PromptStore, PromptOscServer, handle_prompt
-from storage import database
+from storage import database, exclusive_file_lock
 from branding import valid_branding, identity
+from show_package import ShowPackages, handle_show
+from cluster import ClusterCore, handle_cluster
 
 ROOT = Path(__file__).resolve().parent
 MAX_UPLOAD = 300 * 1024 * 1024
@@ -35,7 +37,7 @@ ALLOWED_MIME = {'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4
 ASSET_ID = re.compile(r'^[a-f0-9]{64}$')
 HEARTBEATS: dict = {}
 HEARTBEATS_LOCK = threading.Lock()
-DB_LOCK = threading.Lock()
+DB_LOCK = threading.RLock()
 
 
 def json_bytes(obj):
@@ -66,7 +68,7 @@ class Server(ThreadingHTTPServer):
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'CarismaDisplay/0.10.0-alpha'
+    server_version = 'CarismaDisplay/0.11.0-alpha'
 
     def log_message(self, fmt, *args):
         if not any(p in str(args) for p in ('/api/state', '/api/runtime', '/api/ndi/manifest/', '/api/ndi/media/', '/api/heartbeat', '/api/player/', '/api/preview', '/api/monitor', '/api/prompt')):
@@ -120,6 +122,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlsplit(self.path).path
+        if handle_cluster(self, path):
+            return
+        if handle_show(self, path):
+            return
         if handle_prompt(self, path):
             return
         if handle_monitor(self, path, HEARTBEATS, HEARTBEATS_LOCK):
@@ -127,7 +133,7 @@ class Handler(BaseHTTPRequestHandler):
         if handle_players(self, path, HEARTBEATS, HEARTBEATS_LOCK):
             return
         if path == '/api/info':
-            return self.reply({'product': 'carisma-display-control', 'version': '0.10.0-alpha', 'authRequired': True, 'serverTime': time.time()})
+            return self.reply({'product': 'carisma-display-control', 'version': '0.11.0-alpha', 'authRequired': True, 'serverTime': time.time()})
         if path == '/api/branding':
             # Public login/pairing identity; exclude project data and keys.
             with self.db() as conn:
@@ -136,6 +142,16 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(identity(state.get('site', {})))
         if path.startswith('/api/') and not self.authorized():
             return
+        if path == '/api/ha/status':
+            core = getattr(self.server, 'cluster', None)
+            if core is None:
+                return self.reply({'enabled': False})
+            try:
+                from cluster import json_request
+                return self.reply({'enabled': True, 'core': core.report(),
+                                   'coordinator': json_request(core.witness + '/cluster/status', core.key)})
+            except Exception:
+                return self.reply({'enabled': True, 'core': core.report(), 'error': 'Coordinatore non raggiungibile.'})
         if path.startswith('/api/ndi/'):
             try:
                 g = self.server.gateway
@@ -188,7 +204,7 @@ class Handler(BaseHTTPRequestHandler):
             except (BrokenPipeError, ConnectionResetError):
                 pass
             return
-        public = {'/': 'index.html', '/index.html': 'index.html', '/sw.js': 'sw.js', '/favicon.svg': 'favicon.svg', '/players.html': 'players.html', '/connect.html': 'connect.html', '/player.html': 'player.html', '/physical_boot.js': 'physical_boot.js', '/monitor.html': 'monitor.html', '/prompt.html': 'prompt.html', '/prompt_player.html': 'prompt_player.html', '/branding.js': 'branding.js', '/prompt_shared.js': 'prompt_shared.js'}
+        public = {'/': 'index.html', '/index.html': 'index.html', '/sw.js': 'sw.js', '/favicon.svg': 'favicon.svg', '/players.html': 'players.html', '/connect.html': 'connect.html', '/player.html': 'player.html', '/physical_boot.js': 'physical_boot.js', '/monitor.html': 'monitor.html', '/prompt.html': 'prompt.html', '/prompt_player.html': 'prompt_player.html', '/branding.js': 'branding.js', '/prompt_shared.js': 'prompt_shared.js', '/show.html': 'show.html'}
         if path not in public:
             return self.reply({'error': 'Risorsa non trovata.'}, 404)
         fp = ROOT / public[path]
@@ -198,6 +214,14 @@ class Handler(BaseHTTPRequestHandler):
         self.send_data(200, fp.read_bytes(), ctype)
 
     def do_PUT(self):
+        try:
+            if getattr(self.server, 'cluster', None):
+                self.server.cluster.require_write()
+            return self._put()
+        except GatewayError as exc:
+            return self.reply({'error': str(exc)}, exc.status)
+
+    def _put(self):
         if not self.authorized():
             return
         if urlsplit(self.path).path != '/api/state':
@@ -217,6 +241,19 @@ class Handler(BaseHTTPRequestHandler):
         self.reply({'revision': version})
 
     def do_POST(self):
+        path = urlsplit(self.path).path
+        if handle_cluster(self, path):
+            return
+        try:
+            if getattr(self.server, 'cluster', None):
+                self.server.cluster.require_write()
+            return self._post()
+        except GatewayError as exc:
+            return self.reply({'error': str(exc)}, exc.status)
+
+    def _post(self):
+        if handle_show(self, urlsplit(self.path).path):
+            return
         if handle_prompt(self, urlsplit(self.path).path):
             return
         if handle_monitor(self, urlsplit(self.path).path, HEARTBEATS, HEARTBEATS_LOCK):
@@ -291,6 +328,7 @@ def main():
     parser.add_argument('--host', default='127.0.0.1', help='Default: solo questo computer. Per LAN: 0.0.0.0')
     parser.add_argument('--port', default=8787, type=int)
     parser.add_argument('--data-dir', type=Path, default=ROOT / 'data')
+    parser.add_argument('--cluster-config', type=Path, help='Configurazione privata Core A/B e coordinatore')
     parser.add_argument('--open', action='store_true', help='Apri la console nel browser')
     parser.add_argument('--ndi-library', default='', help='Percorso assoluto runtime NDI 64 bit')
     parser.add_argument('--ffmpeg', default='', help='Percorso assoluto ffmpeg/ffmpeg.exe')
@@ -311,6 +349,7 @@ def main():
     if args.live_mode not in ['responsive', 'stable']:
         parser.error('CARISMA_LIVE_MODE non valido: usare responsive o stable.')
     args.data_dir.mkdir(parents=True, exist_ok=True)
+    instance_lock = exclusive_file_lock(args.data_dir / '.server.lock')
     (args.data_dir / 'assets').mkdir(exist_ok=True)
     tokenfile = args.data_dir / 'access.key'
     if not tokenfile.exists():
@@ -334,14 +373,18 @@ def main():
     server.control_token = token
     server.monitor = MonitorStore()
     server.prompt = prompt
+    server.shows = ShowPackages(server, valid_state, DB_LOCK)
+    server.cluster = ClusterCore(server, args.cluster_config) if args.cluster_config else None
     server.prompt_osc = PromptOscServer(prompt, bind=args.prompt_osc_bind, port=args.prompt_osc_port, allow=args.prompt_osc_allow)
     if args.prompt_osc_port > 0:
         server.prompt_osc.start()
     server.gateway = Gateway(ROOT, server.data_dir, library=args.ndi_library,
                              ffmpeg=args.ffmpeg, extra_ips=args.ndi_extra_ips,
                              max_streams=args.ndi_max_streams, live_mode=args.live_mode)
+    if server.cluster:
+        server.cluster.start()
     url = 'http://127.0.0.1:%d/?key=%s' % (args.port, token)
-    print('\nCARISMA / DISPLAY CONTROL v0.10.0-alpha / PROMPT + AKP03E\n')
+    print('\nCARISMA / DISPLAY CONTROL v0.11.0-alpha / PROMPT + AKP03E\n')
     print('Apri nel browser: ' + url)
     print('Diretta: ' + server.gateway.playback['label'])
     print('Dati: ' + str(server.data_dir))
@@ -363,9 +406,12 @@ def main():
     except KeyboardInterrupt:
         print('\nServer arrestato. I dati sono conservati.')
     finally:
+        if server.cluster:
+            server.cluster.close()
         server.prompt_osc.close()
         server.gateway.close()
         server.server_close()
+        instance_lock.close()
 
 
 if __name__ == '__main__':

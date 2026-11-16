@@ -26,7 +26,7 @@ import urllib.parse
 import urllib.request
 import uuid
 
-VERSION = "0.10.0-alpha"
+VERSION = "0.11.0-alpha"
 VID = 0x0300
 PID = 0x3002
 USAGE_PAGE = 0xFFA0
@@ -223,9 +223,13 @@ class CarismaApi:
             data=json.dumps(body,separators=(",",":"),ensure_ascii=False).encode("utf-8")
             headers["Content-Type"]="application/json"
         req=urllib.request.Request(url,data=data,headers=headers,method=method)
-        with urllib.request.urlopen(req,timeout=timeout) as r:
-            raw=r.read()
-            return json.loads(raw or b"{}")
+        try:
+            with urllib.request.urlopen(req,timeout=timeout) as r:
+                raw=r.read()
+                return json.loads(raw or b"{}")
+        except urllib.error.HTTPError as exc:
+            exc.close()
+            raise
 
     def pair(self, code, name="AKP03E Regia", server=None):
         errors=[]
@@ -265,6 +269,7 @@ class CarismaApi:
                 self.last_server=server; return data, "HTTP"
             except urllib.error.HTTPError as exc:
                 # Do not bypass HTTP refusals with OSC.
+                exc.close()
                 raise RuntimeError('Core rifiuta il comando (HTTP %s); verificare pairing e permessi.' % exc.code) from exc
             except Exception as exc:
                 reason = exc.reason if isinstance(exc, urllib.error.URLError) else exc

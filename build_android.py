@@ -147,7 +147,7 @@ def build(args):
         password.write_text(secrets.token_urlsafe(32),encoding='utf-8');password.chmod(0o600)
         run([home/'bin'/('keytool'+exe),'-genkeypair','-keystore',key,'-storepass:file',password,'-keypass:file',password,'-alias','carisma','-keyalg','RSA','-keysize','3072','-validity','3650','-dname','CN=Carisma Local Player','-storetype','JKS'],env)
     if not password.exists():raise RuntimeError('Manca la password della chiave locale. Ripristina il backup, non generare una chiave diversa per aggiornare un APK esistente.')
-    apk=out/'Carisma_Player_TV_v0.5-alpha.apk'
+    apk=out/'DisplayControl_Player_TV_v0.11.0-alpha.apk'
     run([tools/('apksigner'+bat),'sign','--ks',key,'--ks-key-alias','carisma','--ks-pass','file:'+str(password),'--key-pass','file:'+str(password),'--out',apk,aligned],env)
     run([tools/('apksigner'+bat),'verify','--verbose','--print-certs',apk],env)
     sha=hashlib.sha256(apk.read_bytes()).hexdigest();(out/'SHA256.txt').write_text(sha+'  '+apk.name+'\n',encoding='ascii')

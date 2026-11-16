@@ -24,7 +24,9 @@ class ControllerApiTests(unittest.TestCase):
   req=urllib.request.Request(f'http://127.0.0.1:{cls.port}{path}',data=body,headers=h,method=method)
   try:
    with urllib.request.urlopen(req,timeout=3) as r:return r.status,json.loads(r.read() or b'{}')
-  except urllib.error.HTTPError as e:return e.code,json.loads(e.read() or b'{}')
+  except urllib.error.HTTPError as e:
+      with e:
+          return e.code,json.loads(e.read() or b'{}')
  def test_pair_scoped_commands_and_take(self):
   st,c=self.call('/api/prompt/controller/pair-code','POST',{'name':'AKP03E'},admin=True);self.assertEqual(st,200)
   st,p=self.call('/api/prompt/controller/pair','POST',{'code':c['code'],'name':'AKP03E Regia'});self.assertEqual(st,201);token=p['token']

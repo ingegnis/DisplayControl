@@ -1,5 +1,13 @@
 # Technical references
 
+## 0.11 build tools
+
+- Android command-line tools and published hashes: https://developer.android.com/studio/
+- Android SDK license reviewed before the optional native build: https://developer.android.com/studio/terms
+- Portable OpenJDK download/checksum source: https://learn.microsoft.com/en-us/java/openjdk/download
+
+Toolchain binaries and local signing material are excluded from software source packages. Desktop Java policy checks do not certify an Android build or physical Chromecast playback.
+
 References support protocol/API implementation; they are not loaded at runtime. No tutorial driver or proprietary SDK header/runtime is bundled. The ctypes binding uses interoperable ABI definitions. WebRTC/aiortc were evaluated but are not part of this release.
 
 NDI references cover receive/frame ownership/reconnection, discovery/mDNS/Avahi, frame descriptors/stride/timestamps, dynamic loading, platform codecs and licensing. HX/H.265 discovery alone does not establish decoding support. FFmpeg HLS/fMP4 and MediaSource references cover browser delivery.

@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "prompt: real local-origin pairing and first synchronization",
+    "Prompt: local monotonic scrolling continues through remote server loss",
+    "prompt: browser reload while remote server is unavailable restores native cached content",
+    "prompt: local service restart preserves origin, scoped identity and browser cache",
+    "signage: real local-origin pairing and first synchronization",
+    "signage: browser reload while remote server is unavailable restores native cached content",
+    "signage: local service restart preserves origin, scoped identity and browser cache"
+  ],
+  "pageErrors": [],
+  "limits": [
+    "Local Windows Chrome and real HTTP/native browser storage",
+    "No Raspberry SD, physical power loss, HDMI or Chromecast test"
+  ]
+}

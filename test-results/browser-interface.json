@@ -7,6 +7,9 @@
     "Matrix keeps polling; reload returns to the default collapsed view",
     "Matrix and expanded controls fit a 390px mobile viewport",
     "Main pages captured via normal HTTP navigation with disposable demo data and no displayed credentials",
+    "SHOW PACKAGE downloads, validates, previews, activates in STOP and rolls back through the actual UI",
+    "Revoked browser identity returns to scoped pairing instead of requesting an administrator key",
+    "Injected discovery failure leaves real NDI gateway status and responsive buffer available",
     "Server failure remains visible in matrix mode and recovers on reconnect"
   ],
   "images": [
@@ -25,7 +28,8 @@
     "prompt-controllers.png",
     "player-pairing.png",
     "player-connect.png",
-    "signage-player.png"
+    "signage-player.png",
+    "show-package.png"
   ],
   "pageErrors": [],
   "limits": [

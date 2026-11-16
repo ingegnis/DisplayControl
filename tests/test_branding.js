@@ -7,4 +7,8 @@ const theme=b.palette(pixels);assert(b.contrast(theme.accent,'#ffffff')>=4.5);as
 assert(parseInt(theme.accent.slice(5),16)>parseInt(theme.accent.slice(1,3),16));
 assert.throws(()=>b.palette([0,0,0,0]));assert.equal(b.safeLogo('https://outside/logo.png'),'');assert.equal(b.safeLogo('data:image/svg+xml,<svg onload=alert(1)>'),'');
 for(let n=0;n<256;n+=8){const color='#'+[n,255-n,n].map(x=>x.toString(16).padStart(2,'0')).join('');assert(b.contrast(b.readable(color),'#ffffff')>=4.5);}
-console.log('Branding: palette, transparency, contrast and local-only image checks passed.');
+ctx.document={body:null};b.apply({name:'Studio $&',branding:{}},false);
+assert.equal(b.text('Carisma Prompt'),'Studio $& Prompt');
+assert.equal(b.text('Benvenuti al Teatro Carisma.'),'Benvenuti al Studio $&.');
+for(const technical of ['CARISMA_FFMPEG','CARISMA_NDI_LIBRARY','/carisma/prompt/speed','Carisma_Player.zip','Windows_Carisma.ps1','carisma-display-control'])assert.equal(b.text(technical),technical);
+console.log('Branding: palette, contrast, local images and technical identifiers passed.');

@@ -1,21 +1,21 @@
 {
-  "version": "0.10.0-alpha",
-  "reviewDate": "2026-11-16",
-  "filesReviewed": 182,
-  "textFilesScanned": 135,
+  "version": "0.11.0-alpha",
+  "date": "2026-11-16",
+  "filesReviewed": 222,
+  "textFilesScanned": 158,
   "findings": [],
-  "excludedCategories": [
-    "runtime data and credentials",
-    "databases and pairing files",
-    "virtual environments",
-    "USB paths and serial numbers",
-    "private QA logs and screenshots",
-    "vendor binaries and signing material"
+  "excluded": [
+    "show/runtime data",
+    "cluster configuration and private recovery checkpoints",
+    "credentials/pairings",
+    "signing material",
+    "vendor tools/binaries",
+    "private logs, browser profiles and virtual environments"
   ],
   "notes": [
-    "Exact tracked/new publication tree scanned with credential patterns and manually reviewed.",
-    "Published test credentials and reports are synthetic; log paths are sanitized.",
-    "No real controller attached; no hardware certification.",
-    "Pattern scanning cannot guarantee the absence of every possible secret."
+    "Scanned the actual tracked/new publication set; runtime files remain excluded.",
+    "Documentation screenshots and test fixtures are synthetic.",
+    "Pattern scanning cannot establish absence of every possible secret.",
+    "No physical hardware certification."
   ]
 }

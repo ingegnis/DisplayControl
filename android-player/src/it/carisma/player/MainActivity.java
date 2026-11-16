@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         settings=true;destroyWeb();
         ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);scroll.setBackgroundColor(Color.rgb(19,47,41));
         LinearLayout box=new LinearLayout(this);box.setOrientation(LinearLayout.VERTICAL);box.setPadding(dp(60),dp(20),dp(60),dp(20));box.setGravity(Gravity.CENTER_VERTICAL);scroll.addView(box);
-        box.addView(text("CARISMA / COLLEGA PLAYER",27));
+        box.addView(text("DISPLAYCONTROL / COLLEGA PLAYER",27));
         box.addView(text("Nella regia: Collega player fisici > scegli schermo > genera codice.",16));
         final EditText host=new EditText(this);host.setSingleLine();host.setTextColor(Color.WHITE);host.setHintTextColor(Color.LTGRAY);host.setHint("192.168.1.20:8787");host.setText(base);host.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_URI);box.addView(text("Indirizzo LAN del server (non quello del Chromecast)",14));box.addView(host);
         final EditText code=new EditText(this);code.setSingleLine();code.setTextColor(Color.WHITE);code.setHintTextColor(Color.LTGRAY);code.setHint("Codice di 8 cifre");code.setInputType(InputType.TYPE_CLASS_NUMBER);box.addView(code);
@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
     private void respond(final String id,final int code,final String body){runOnUiThread(new Runnable(){public void run(){if(web!=null)web.evaluateJavascript("window.CarismaNativeResult("+JSONObject.quote(id)+","+code+","+JSONObject.quote(body)+")",null);}});}
     @Override public void onBackPressed(){
         if(settings){if(!secret.isEmpty())showPlayer();else super.onBackPressed();return;}
-        new AlertDialog.Builder(this).setTitle("Carisma Player").setItems(new String[]{"Riprendi","Audio attivo/disattivo","Diagnostica sullo schermo","Ricarica player","Nuovo abbinamento","Esci"},new DialogInterface.OnClickListener(){public void onClick(DialogInterface d,int which){
+        new AlertDialog.Builder(this).setTitle("DisplayControl Player").setItems(new String[]{"Riprendi","Audio attivo/disattivo","Diagnostica sullo schermo","Ricarica player","Nuovo abbinamento","Esci"},new DialogInterface.OnClickListener(){public void onClick(DialogInterface d,int which){
             if(which==1&&web!=null)web.evaluateJavascript("document.querySelector('[data-action=player-audio]')?.click()",null);
             if(which==2&&web!=null)web.evaluateJavascript("document.body.classList.toggle('kiosk')",null);
             if(which==3)showPlayer();

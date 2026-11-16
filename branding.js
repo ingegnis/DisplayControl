@@ -28,7 +28,7 @@
   function safeTheme(value){return value&&['accent','sidebar'].every(k=>/^#[0-9a-f]{6}$/i.test(value[k]||''))?{accent:readable(value.accent),sidebar:readable(value.sidebar)}:ORIGINAL;}
   function safeLogo(value){return typeof value==='string'&&value.length<=180000&&/^data:image\/png;base64,[a-z0-9+/=]+$/i.test(value)?value:'';}
   function clean(site){const b=site?.branding||{};return {name:String(site?.name||'Carisma').trim().slice(0,80)||'Carisma',branding:{logo:safeLogo(b.logo),theme:b.theme?safeTheme(b.theme):null}};}
-  function text(value){return String(value).replace(/Teatro Carisma|Carisma/gi,()=>current.name);}
+  function text(value){return String(value).replace(/(?<![\w/\\:.-])(?:Teatro\s+Carisma|Carisma)\b(?![_/-]|\.[A-Za-z0-9]|:[/\\])/gi,()=>current.name);}
   function mount(){
     if(!document.body)return;
     observer?.disconnect();

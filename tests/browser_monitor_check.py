@@ -19,7 +19,9 @@ with tempfile.TemporaryDirectory() as folder:
         r=urllib.request.Request(origin+path,data=body,headers=headers,method=method)
         try:
             with urllib.request.urlopen(r,timeout=8) as res:return res.status,res.read()
-        except urllib.error.HTTPError as e:return e.code,e.read()
+        except urllib.error.HTTPError as e:
+            with e:
+                return e.code,e.read()
     try:
         for _ in range(80):
             try:req('/api/info');break

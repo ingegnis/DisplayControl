@@ -23,7 +23,7 @@ try {
     if($cmd){$adb=$cmd.Source}
   }
   if(-not $adb){throw 'ADB non trovato. Compila prima l app o installa Android SDK Platform Tools.'}
-  $apk=Join-Path $PSScriptRoot 'android-build\Carisma_Player_TV_v0.5-alpha.apk'
+  $apk=Join-Path $PSScriptRoot 'android-build\DisplayControl_Player_TV_v0.11.0-alpha.apk'
   if(-not(Test-Path -LiteralPath $apk)){throw 'APK non presente. Esegui prima Compila_Player_Android_Windows.bat.'}
   Write-Host 'Collega solo il Chromecast che vuoi installare. Questo script non modifica firmware o launcher.'
   Write-Host '1 = ADB gia collegato via USB/rete; 2 = debug wireless con codice; 3 = connessione IP:porta gia abilitata'

@@ -166,6 +166,9 @@ def run(capture_dir=None):
                     for section in ['screens', 'contents', 'playlists', 'schedules', 'ndi', 'diagnostics', 'settings']:
                         console.click('[data-nav="' + section + '"]')
                         console.wait_for_function('page === ' + json.dumps(section))
+                        if section == 'ndi':
+                            console.wait_for_function('ndiInfo && ndiInfo.playback && !ndiRefreshBusy', timeout=15000)
+                            assert console.evaluate('ndiInfo.playback.targetBufferSeconds') == .75
                         console.wait_for_timeout(200)
                         capture(console, 'console-' + section + '.png')
 
@@ -196,11 +199,49 @@ def run(capture_dir=None):
                     capture(players[0], 'signage-player.png')
                     checks.append('Main pages captured via normal HTTP navigation with disposable demo data and no displayed credentials')
 
+                    show = admin_ctx.new_page()
+                    show.goto(origin + '/show.html')
+                    show.wait_for_function('status && !busy')
+                    capture(show, 'show-package.png')
+                    with show.expect_download() as download_info:
+                        show.click('#export')
+                    package = Path(folder) / 'demo.show.zip'
+                    download_info.value.save_as(str(package))
+                    show.locator('#file').set_input_files(str(package))
+                    show.click('#inspect')
+                    show.wait_for_selector('#preview:visible')
+                    assert show.locator('#title').inner_text() == 'Demo / prova generale'
+                    assert show.evaluate('preview.cues') == 3
+                    show.once('dialog', lambda dialog: dialog.accept())
+                    show.click('#activate')
+                    show.wait_for_function('!busy && status.active !== null')
+                    assert not api('/api/prompt/state')['runtime']['playing']
+                    show.once('dialog', lambda dialog: dialog.accept())
+                    show.click('#rollback')
+                    show.wait_for_function('!busy && document.getElementById("message").textContent.includes("ripristinato")')
+                    checks.append('SHOW PACKAGE downloads, validates, previews, activates in STOP and rolls back through the actual UI')
+
+                    api('/api/devices/revoke', {'screenId': state['screens'][0]['id']})
+                    players[0].reload()
+                    players[0].wait_for_url('**/connect.html')
+                    assert players[0].locator('#code').is_visible()
+                    checks.append('Revoked browser identity returns to scoped pairing instead of requesting an administrator key')
+
+                    console.click('[data-nav="ndi"]')
+                    console.wait_for_function('ndiInfo && !ndiRefreshBusy')
+                    console.route('**/api/ndi/sources', lambda route: route.fulfill(status=503, content_type='application/json', body='{"error":"Synthetic discovery failure"}'))
+                    console.evaluate('refreshNDI(true)')
+                    assert console.evaluate('ndiInfo.playback.targetBufferSeconds') == .75
+                    assert console.evaluate('ndiSources.length') == 0
+                    console.unroute('**/api/ndi/sources')
+                    checks.append('Injected discovery failure leaves real NDI gateway status and responsive buffer available')
+
                     monitor.context.route('**/api/monitor?**', lambda route: route.abort())
                     monitor.evaluate('resume()')
                     monitor.wait_for_selector('#alert:visible')
                     assert monitor.locator('[data-monitor-detail]:visible').count() == 0
-                    assert monitor.locator('.stale:visible').count() == 4
+                    previews = monitor.evaluate('snapshot.screens.filter(screen => screen.preview).length')
+                    assert previews > 0 and monitor.locator('.stale:visible').count() == previews
                     monitor.context.unroute('**/api/monitor?**')
                     monitor.evaluate('resume()')
                     monitor.wait_for_function('serverOK && document.getElementById("alert").hidden')
