@@ -2,7 +2,7 @@
 """Build Carisma's Android TV APK using the official SDK and a local JDK.
 No Gradle, Maven, pip or Android Studio project sync. Requires Internet only to
 provision missing SDK packages. SDK licenses are shown, never auto-accepted.
-This script has unit-tested utilities; full SDK build needs validation on the PC.
+Native SDK build and signing are verified; physical device testing is separate.
 """
 from __future__ import annotations
 import argparse
@@ -148,7 +148,8 @@ def build(args):
         run([home/'bin'/('keytool'+exe),'-genkeypair','-keystore',key,'-storepass:file',password,'-keypass:file',password,'-alias','carisma','-keyalg','RSA','-keysize','3072','-validity','3650','-dname','CN=Carisma Local Player','-storetype','JKS'],env)
     if not password.exists():raise RuntimeError('Manca la password della chiave locale. Ripristina il backup, non generare una chiave diversa per aggiornare un APK esistente.')
     apk=out/'DisplayControl_Player_TV_v0.11.0-alpha.apk'
-    run([tools/('apksigner'+bat),'sign','--ks',key,'--ks-key-alias','carisma','--ks-pass','file:'+str(password),'--key-pass','file:'+str(password),'--out',apk,aligned],env)
+    # The generated key uses the store password; reading the same file twice consumes two lines.
+    run([tools/('apksigner'+bat),'sign','--ks',key,'--ks-key-alias','carisma','--ks-pass','file:'+str(password),'--out',apk,aligned],env)
     run([tools/('apksigner'+bat),'verify','--verbose','--print-certs',apk],env)
     sha=hashlib.sha256(apk.read_bytes()).hexdigest();(out/'SHA256.txt').write_text(sha+'  '+apk.name+'\n',encoding='ascii')
     (ROOT/'.setup').mkdir(exist_ok=True);(ROOT/'.setup'/'android-sdk-path.txt').write_text(str(sdk),encoding='utf-8')

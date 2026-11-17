@@ -36,7 +36,7 @@ Prompt preview and players share `prompt_shared.js`: a fixed 1280×720 page, ide
 - The controller service needs Python 3.11+, hidapi and Pillow, installed in `.controller-venv/`. Legacy AKP03E launchers use the same service.
 - Independent standalone Cores need separate tokens; pairing alone does not replicate data. For automatic Core failover use the configured [coordinator cluster](docs/CLUSTER.md). OSC fallback is unacknowledged; ambiguous HTTP results do not replay relative commands, and authentication refusals do not fall back to OSC.
 - NDI requires separate FFmpeg and official NDI runtime installations. See [NDI setup](LEGGIMI_NDI.md) and [Windows setup](LEGGIMI_SETUP_WINDOWS_v0.4.1.md). Vendor binaries are excluded.
-- Android TV sources are included; no tested APK is supplied.
+- Android TV APK is available in the [0.11 release](https://github.com/ingegnis/DisplayControl/releases/tag/v0.11.0-alpha). Native compilation and signing passed; physical operation remains untested. See the [build supplement](docs/ANDROID_BUILD_v0.11.md).
 
 ## Verification
 

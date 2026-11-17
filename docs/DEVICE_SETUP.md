@@ -28,7 +28,7 @@ Use one of AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, Mars Gaming MSD-TWO or St
 - Export a [SHOW PACKAGE](SHOW_PACKAGE.md) from the current show. Import/preview/activate through the coordinator; confirm script, cues, logo/colors, media, playlists, schedules and screen definitions.
 - Install and pair the [USB service](../CONTROLLERS.md) against the coordinator URL. Check every button/encoder, display orientation, disconnect/reconnect and operation with Prompt closed.
 - Run PRIMARY/BACKUP [local stations](PLAYER_STATION.md), using separate codes and roles. Wait for the full script/cache and verify font availability and matching reading lines.
-- Pair one signage browser, start with a clock/image, then local video. Chromecast requires an APK build and actual device installation; source/desktop Java tests do not certify it.
+- Pair one signage browser, start with a clock/image, then local video. For Chromecast, download the signed APK from the [0.11 release](https://github.com/ingegnis/DisplayControl/releases/tag/v0.11.0-alpha), verify its supplemental checksum and follow the existing Android installation guide. Native build checks passed; actual installation and physical playback remain to be tested. See [build details](ANDROID_BUILD_v0.11.md).
 
 ## 3. Failure rehearsal
 
