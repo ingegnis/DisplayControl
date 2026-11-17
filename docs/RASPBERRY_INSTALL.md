@@ -1,4 +1,4 @@
-# Raspberry Pi player — installer 0.11-r1
+# Raspberry Pi player — installer 0.11-r2
 
 Prepared for the user's Raspberry Pi 3B+. Supports one Prompt or Signage station per Raspberry. The application shell is 0.11.0-alpha, compatible with the 0.11 Core/coordinator. This is an application installer over Raspberry Pi OS Desktop, not an SD image or replacement OS.
 
@@ -25,10 +25,10 @@ On the **Raspberry terminal**, run:
 ```sh
 mkdir -p ~/Downloads/displaycontrol-rpi
 cd ~/Downloads/displaycontrol-rpi
-curl -fL -o DisplayControl_Raspberry_v0.11-r1.tar.gz https://github.com/ingegnis/DisplayControl/releases/download/raspberry-v0.11-r1/DisplayControl_Raspberry_v0.11-r1.tar.gz
-curl -fL -o DisplayControl_Raspberry_v0.11-r1_SHA256.txt https://github.com/ingegnis/DisplayControl/releases/download/raspberry-v0.11-r1/DisplayControl_Raspberry_v0.11-r1_SHA256.txt
-sha256sum -c DisplayControl_Raspberry_v0.11-r1_SHA256.txt --ignore-missing
-tar -xzf DisplayControl_Raspberry_v0.11-r1.tar.gz
+curl -fL -o DisplayControl_Raspberry_v0.11-r2.tar.gz https://github.com/ingegnis/DisplayControl/releases/download/raspberry-v0.11-r2/DisplayControl_Raspberry_v0.11-r2.tar.gz
+curl -fL -o DisplayControl_Raspberry_v0.11-r2_SHA256.txt https://github.com/ingegnis/DisplayControl/releases/download/raspberry-v0.11-r2/DisplayControl_Raspberry_v0.11-r2_SHA256.txt
+sha256sum -c DisplayControl_Raspberry_v0.11-r2_SHA256.txt --ignore-missing
+tar -xzf DisplayControl_Raspberry_v0.11-r2.tar.gz
 cd DisplayControl-Raspberry
 sh Install_Raspberry_Player.sh
 ```
@@ -51,7 +51,7 @@ For explicit installation without the questions:
 sh Install_Raspberry_Player.sh --server http://192.168.1.20:8787 --mode prompt --install-deps
 ```
 
-For Signage replace `prompt` with `signage`. Run **without sudo** as the desktop user; the installer elevates only apt. Do not run two installers at once. To inspect the plan without writing files or running apt/services:
+For Signage replace `prompt` with `signage`. Run **without sudo** as the desktop user; the installer requests sudo for apt and the official screen-blanking setting. Do not run two installers at once. To inspect the plan without writing files or running apt/services:
 
 ```sh
 sh Install_Raspberry_Player.sh --server http://192.168.1.20:8787 --mode prompt --dry-run
@@ -59,16 +59,25 @@ sh Install_Raspberry_Player.sh --server http://192.168.1.20:8787 --mode prompt -
 
 If installing over an old `prepare_kiosk.py` setup, first stop its service and rename `~/.config/autostart/displaycontrol-kiosk.desktop` to a name that does not end in `.desktop`; retain its old private configuration. The new installer refuses this legacy autostart to avoid two browser launches. Existing managed service files can be migrated only after preserving their data; otherwise use a fresh Desktop user.
 
+Already installed r1? Download/extract r2 and run the full installer with the same server/mode to update it, or apply only the screen setting without touching pairing/cache:
+
+```sh
+sh Install_Raspberry_Player.sh --screen-only
+sudo reboot
+```
+
+`--screen-only --dry-run` prints the intended action without running sudo or writing files. The official tool handles labwc/X11 settings; existing user labwc startup is backed up under `~/.local/state/displaycontrol-screen-backups/`. A failed/unsupported OS setting produces an explicit error. Without `raspi-config`, use Raspberry Pi OS or deliberately pass `--keep-screen-settings` and configure that other desktop manually. The official OS tool may also adjust the login greeter's blanking setting. To re-enable OS blanking later, use Raspberry settings or `sudo raspi-config nonint do_blanking 0`.
+
 ## 3. Desktop boot and screen
 
 In Raspberry Pi's Control Centre / Raspberry Pi Configuration (names vary by OS release):
 
 - Enable **boot to Desktop** and **desktop auto-login** for the same account that ran the installer.
-- Disable **Screen Blanking** and any screen lock/sleep timer. Do not disable system sleep/idle by killing unrelated desktop services.
+- **Screen Blanking is disabled automatically by the installer** through `sudo raspi-config nonint do_blanking 1`, then checked with `get_blanking`. Reboot to apply it. Other screen lock tools and the display's own sleep timer are separate settings. Use `--keep-screen-settings` only when you deliberately want to leave OS blanking unchanged.
 - In screen settings select the connected HDMI display and start at **1280×720, 60 Hz** if offered. Use landscape for initial testing. Change rotation/resolution with OS screen settings; Prompt mirroring is configured in DisplayControl.
 - For Signage audio, select the actual HDMI/audio output and set the desired volume in OS settings.
 
-If needed run `sudo raspi-config` and use the equivalent interactive boot/display options. The installer does not silently change OS login, Wi-Fi, firewall, HDMI firmware or reboot the Pi.
+If needed run `sudo raspi-config` and use the equivalent interactive boot/display options. The installer changes OS screen blanking as described above; it does not change OS login, Wi-Fi, firewall or HDMI firmware, and never reboots automatically.
 
 Then run:
 

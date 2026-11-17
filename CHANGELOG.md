@@ -1,5 +1,10 @@
 # Changelog
 
+## Raspberry installer 0.11-r2
+
+- Disable OS screen blanking by default using the official Raspberry Pi tool and verify the result; retain a user configuration backup.
+- Add `--screen-only` for existing installs and `--keep-screen-settings` as an explicit opt-out.
+
 ## Raspberry installer 0.11-r1
 
 - Standalone player bundle for Raspberry Pi OS Desktop, prepared for the Pi 3B+; Prompt and Signage modes.

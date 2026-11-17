@@ -60,6 +60,27 @@ def managed_block(text, command=None):
     return text
 
 
+def disable_screen_blanking(home):
+    tool = shutil.which('raspi-config')
+    if not tool:
+        raise ValueError('raspi-config missing. Use Raspberry Pi OS or --keep-screen-settings and configure blanking manually.')
+    labwc = home / '.config/labwc/autostart'
+    if labwc.is_symlink() or not labwc.resolve().is_relative_to(home.resolve()):
+        raise ValueError('Screen configuration escapes user home.')
+    if labwc.is_file():
+        backup = home / '.local/state/displaycontrol-screen-backups' / datetime.now().strftime('%Y%m%d-%H%M%S-%f')
+        if not backup.resolve().is_relative_to(home.resolve()):
+            raise ValueError('Screen backup escapes user home.')
+        backup.mkdir(parents=True, mode=0o700)
+        shutil.copy2(labwc, backup / 'labwc-autostart')
+    # Official tool handles labwc and X11 settings for the sudo caller's account.
+    subprocess.run(['sudo', tool, 'nonint', 'do_blanking', '1'], check=True)
+    result = subprocess.run(['sudo', tool, 'nonint', 'get_blanking'], check=True, capture_output=True, text=True)
+    if result.stdout.strip() != '1':
+        raise ValueError('OS did not confirm screen blanking is disabled. Review Raspberry screen settings.')
+    print('OS screen blanking disabled and verified. Reboot to apply it to the desktop session.')
+
+
 def validate(home, source, server, mode, port):
     server = origin(server)
     if mode not in ('prompt', 'signage') or not 1024 <= port <= 65535:
@@ -190,11 +211,24 @@ def main():
     parser.add_argument('--port', type=int, default=8877)
     parser.add_argument('--install-deps', action='store_true')
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--keep-screen-settings', action='store_true', help='Leave OS screen blanking unchanged')
+    parser.add_argument('--screen-only', action='store_true', help='Disable OS screen blanking without reinstalling/re-pairing')
     args = parser.parse_args()
     if sys.platform != 'linux' or os.geteuid() == 0:
         parser.error('Run on Raspberry/Linux as the desktop user, without sudo.')
     if sys.version_info < (3, 11):
         parser.error('Python 3.11+ required. Use current Raspberry Pi OS Desktop or Bookworm Desktop.')
+    if args.screen_only:
+        if args.keep_screen_settings:
+            parser.error('--screen-only conflicts with --keep-screen-settings')
+        try:
+            if args.dry_run:
+                print('Would run sudo raspi-config nonint do_blanking 1, verify get_blanking, and back up user labwc startup.')
+            else:
+                disable_screen_blanking(Path.home())
+            return
+        except (OSError, ValueError, subprocess.CalledProcessError) as exc:
+            parser.exit(1, 'SCREEN CONFIGURATION INCOMPLETE: ' + str(exc) + '\n')
     guided = not args.server or not args.mode
     if args.dry_run and guided:
         parser.error('--dry-run requires --server and --mode')
@@ -218,6 +252,8 @@ def main():
             raise ValueError('Chromium missing; rerun with --install-deps on Raspberry Pi OS Desktop.')
         if not args.dry_run:
             subprocess.run(['systemctl', '--user', 'show-environment'], check=True, stdout=subprocess.DEVNULL)
+            if not args.keep_screen_settings:
+                disable_screen_blanking(Path.home())
         result = install(Path.home(), SOURCE, server, mode, args.port, browser or '/usr/bin/chromium', not args.dry_run)
         print(json.dumps(result, indent=2))
         if not args.dry_run:
@@ -231,7 +267,9 @@ def main():
                 time.sleep(.25)
             else:
                 raise ValueError('Local station did not become reachable. Check systemctl --user status displaycontrol-station.service.')
-            print('Installed. Enable DESKTOP auto-login and disable screen blanking in Raspberry Pi settings.')
+            print('Installed. Enable DESKTOP auto-login in Raspberry Pi settings.')
+            if args.keep_screen_settings:
+                print('OS screen settings left unchanged; disable screen blanking manually if needed.')
             print('Then reboot. Pair using the code generated in the regia console; no administrator key belongs here.')
             print('Private data/cache retained. Manage with: ' + result['directory'] + '/manage.sh status')
     except (OSError, ValueError, subprocess.CalledProcessError) as exc:

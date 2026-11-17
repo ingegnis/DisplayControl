@@ -17,6 +17,35 @@ spec.loader.exec_module(kiosk)
 
 
 class RaspberryInstallerTests(unittest.TestCase):
+    def test_screen_blanking_uses_official_tool_and_preserves_user_backup(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(installer.shutil, 'which', return_value='/usr/bin/raspi-config'), \
+             patch.object(installer.subprocess, 'run', return_value=types.SimpleNamespace(stdout='1\n')) as command:
+            home = Path(directory)
+            original = home / '.config/labwc/autostart'
+            original.parent.mkdir(parents=True)
+            original.write_text('existing startup\nswayidle example &\n')
+            installer.disable_screen_blanking(home)
+            self.assertEqual(command.call_args_list[0].args[0], ['sudo', '/usr/bin/raspi-config', 'nonint', 'do_blanking', '1'])
+            self.assertEqual(command.call_args_list[1].args[0], ['sudo', '/usr/bin/raspi-config', 'nonint', 'get_blanking'])
+            backups = list((home / '.local/state/displaycontrol-screen-backups').glob('*/labwc-autostart'))
+            self.assertEqual(len(backups), 1)
+            self.assertEqual(backups[0].read_text(), original.read_text())
+
+    def test_screen_blanking_failure_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(installer.shutil, 'which', return_value='/usr/bin/raspi-config'), \
+             patch.object(installer.subprocess, 'run', return_value=types.SimpleNamespace(stdout='0\n')):
+            with self.assertRaisesRegex(ValueError, 'did not confirm'):
+                installer.disable_screen_blanking(Path(directory))
+
+    def test_missing_os_tool_does_not_write_or_claim_success(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(installer.shutil, 'which', return_value=None), \
+             patch.object(installer.subprocess, 'run') as command:
+            home = Path(directory)
+            with self.assertRaisesRegex(ValueError, 'raspi-config missing'):
+                installer.disable_screen_blanking(home)
+            self.assertEqual(list(home.iterdir()), [])
+            command.assert_not_called()
+
     def test_bad_origins_rejected_before_writes(self):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
