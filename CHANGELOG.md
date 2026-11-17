@@ -1,5 +1,13 @@
 # Changelog
 
+## Raspberry installer 0.11-r1
+
+- Standalone player bundle for Raspberry Pi OS Desktop, prepared for the Pi 3B+; Prompt and Signage modes.
+- Guided per-user installation, apt dependency option, local station service, labwc/desktop autostart and supervised Chromium with private persistent profile.
+- Preserve pairing/cache on update; refuse silent server/mode/port changes, unexpected startup files and corrupted runtime manifests.
+- Daily stop/start/restart/status commands, bounded supervisor log and complete preparation/recovery guide.
+- No physical Raspberry/ARM/HDMI or power-loss certification. Core and Android application versions remain 0.11.0-alpha.
+
 ## 0.11.0-alpha
 
 - Complete SHOW PACKAGE: media, scripts/cues, metadata, hashes, validated preview, atomic STOP activation and previous-show recovery.

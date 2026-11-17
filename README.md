@@ -31,6 +31,7 @@ Prompt preview and players share `prompt_shared.js`: a fixed 1280×720 page, ide
 
 ## Optional components
 
+- Raspberry Pi: use the dedicated [installer and Pi 3B+ guide](docs/RASPBERRY_INSTALL.md) for a persistent Prompt/Signage kiosk. Physical acceptance remains required.
 - USB: install, pair once, then start the background service. Windows: `Installa_Controller_Windows.bat`, `Configura_Controller_Windows.bat`, `Avvia_Controller_Windows.bat`. macOS/Linux: `sh Installa_Controller_Linux_Mac.sh`, then `sh Avvia_Controller_Linux_Mac.sh --setup` and `sh Avvia_Controller_Linux_Mac.sh`.
 - AJAZZ AKP03E, Contour ShuttleXpress/PRO v2, Mars Gaming MSD-TWO and Stream Deck Neo are detected automatically. Swap without pairing again; Prompt may be closed. See [CONTROLLERS.md](CONTROLLERS.md).
 - The controller service needs Python 3.11+, hidapi and Pillow, installed in `.controller-venv/`. Legacy AKP03E launchers use the same service.

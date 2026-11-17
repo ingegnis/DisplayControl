@@ -34,3 +34,6 @@ Windows setup references were consulted 2026-10-29; no supplier binaries are inc
 - https://github.com/tomekceszke/ajazz-akp03e
 - https://github.com/mishamyrt/ajazz-sdk
 - https://pypi.org/project/hidapi/
+- https://www.raspberrypi.com/software/operating-systems/
+- https://www.raspberrypi.com/documentation/computers/configuration.html
+- https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/

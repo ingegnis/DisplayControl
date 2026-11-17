@@ -1,5 +1,7 @@
 # Local player station — Raspberry or PC
 
+For installation today on Raspberry Pi OS Desktop, use the [complete Raspberry installer guide](RASPBERRY_INSTALL.md). It installs the local station, supervised Chromium, user service and desktop/labwc autostart while retaining private data. The generator described below remains a manual alternative; do not enable both launchers.
+
 `player_station.py` serves the bundled player shell on localhost and proxies only scoped player APIs to the server/coordinator. It needs Python 3.9+ and a browser; no third-party Python packages. The interface can load even when the remote server is unavailable. Script/media continuity still requires a completed first synchronization and persistent browser storage.
 
 Prompt example:
