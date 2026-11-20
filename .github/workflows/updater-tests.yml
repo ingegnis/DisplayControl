@@ -1,0 +1,27 @@
+name: Updater safety checks
+
+on:
+  pull_request:
+    paths:
+      - "carisma_updater.py"
+      - "tests/test_carisma_updater.py"
+      - ".github/workflows/updater-tests.yml"
+  push:
+    branches:
+      - "feature/safe-local-updater"
+
+permissions:
+  contents: read
+
+jobs:
+  updater-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile updater
+        run: python -m py_compile carisma_updater.py tests/test_carisma_updater.py
+      - name: Run isolated tests
+        run: python -m unittest discover -s tests -p test_carisma_updater.py -v
