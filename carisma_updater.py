@@ -69,7 +69,7 @@ def extract(archive, destination):
                 fail("Unsafe ZIP entry: " + item.filename)
             names.append(p.parts)
         roots = {p[0] for p in names}
-        wrapped = len(roots) == 1 and all(len(p) > 1 for p in names)
+        wrapped = len(roots) == 1 and all(len(p) > 1 for p in [PurePosixPath(e.filename).parts for e in members])
         for entry in members:
             parts = PurePosixPath(entry.filename).parts
             relative = parts[1:] if wrapped else parts
@@ -176,6 +176,9 @@ def activate(home, name, unit):
                 systemctl("stop", unit)
                 switch(current, previous)
                 systemctl("start", unit)
+            else:
+                systemctl("stop", unit)
+                current.unlink()
             raise
     print("Active:", target)
     print("Data backup:", backup)
